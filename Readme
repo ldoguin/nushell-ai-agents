@@ -1,0 +1,21 @@
+# Nushell Agents
+
+This repository contains an example of Ai agents built with Nushell.
+
+```nushell
+source agent.nu
+run "who are the contibutors of the github project couchbaselabs/couchbase-shell "
+```
+
+## Enabling slide nushell hightlighting
+
+The slidedeck is displayed with `presenterm`. 
+
+```
+cd slides
+presenterm -x couchbase.md
+```
+
+```
+bat cache --build
+```

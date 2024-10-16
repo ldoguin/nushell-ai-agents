@@ -1,0 +1,9 @@
+# Ignore all dotfiles...
+.*
+*~
+
+# except for .gitignore
+!.gitignore
+
+# ignore project files
+scratchpad
