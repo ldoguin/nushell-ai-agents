@@ -1,4 +1,5 @@
-image: laurentdoguin/workspace-couchbase-base
+image:
+  file: Dockerfile
 
 # Commands that will run on workspace start
 tasks:
@@ -9,7 +10,6 @@ tasks:
     init: |
       source ./setLocalEnv
       eval $(gp env -e)
-      apt update && apt install -y ddgr nushell
     command: |
       gp await-port 8091
       cbsh -c "source ./tools/cbsh.nu; dbSetup $COUCHBASE_DEFAULT_BUCKET $COUCHBASE_DEFAULT_SCOPE $COUCHBASE_DEFAULT_COLLECTION"

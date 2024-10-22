@@ -6,6 +6,7 @@
 This repository contains an example of Ai agents built with Nushell.
 
 ```nushell
+cbsh
 source agent.nu
 run "who are the contibutors of the github project couchbaselabs/couchbase-shell "
 ```
@@ -21,7 +22,6 @@ The only mandatory dependency is [Nushell](https://nushell.sh). Everything else 
 ##### nu_plugin_audio_hook
 
 Install [nu_plugin_audio_hook](https://github.com/FMotalleb/nu_plugin_audio_hook) to get sounds notification at the end of an agent request.
-
 
 ### Models
 
