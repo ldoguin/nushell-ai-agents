@@ -1,0 +1,8 @@
+export COUCHBASE_CONNECTION_STRING="couchbase://localhost"
+export COUCHBASE_USERNAME="Administrator"
+export COUCHBASE_PASSWORD="password"
+export COUCHBASE_USE_CAPELLA=false
+export COUCHBASE_DEFAULT_BUCKET="default"
+export COUCHBASE_DEFAULT_SCOPE="_default"
+export COUCHBASE_DEFAULT_COLLECTION="_default"
+export COUCHBASE_OTLP_ENABLED=false
