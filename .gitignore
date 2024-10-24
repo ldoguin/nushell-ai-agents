@@ -7,3 +7,5 @@
 
 # ignore project files
 scratchpad
+
+logs/*

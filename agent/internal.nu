@@ -49,7 +49,7 @@ export def execute [] {
         let message = ( $choice0.message | insert finish_reason  $choice0.finish_reason )
         $result = ( $result | insert message $message )
     }
-    $result | to json | save $save_path
+    $result | to json | save $"logs/($save_path)"
     $result
 }
 

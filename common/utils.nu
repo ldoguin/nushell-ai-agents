@@ -1,11 +1,11 @@
 # Manage a counter in the "counter" file, increment each time it's called
 export def counter [] {
-    if  ( not ( ls | select name | any { |x| $x.name == "counter" } ) ) {
-        0 | save "counter"
+    if  ( not ( ls logs | select name | any { |x| $x.name == "logs/counter" } ) ) {
+        0 | save "logs/counter"
     }
-    mut count = open "counter" | into int
+    mut count = open "logs/counter" | into int
     $count = $count + 1
-    $count | save -f "counter"
+    $count | save -f "logs/counter"
     $count
 }
 
@@ -18,9 +18,9 @@ export def new_logfile [] {
 # Log the input in the "myHistory" file
 export def log [] {
     let s = $in
-    "\n" | save -a  "myHistory"
+    "\n" | save -a  "logs/myHistory"
     if ( (  ($s | (describe ) ) != "nothing" ) and ( $s != "" ) ) {
-        $s | to text|  save -a "myHistory"  
+        $s | to text|  save -a "logs/myHistory"  
     }
     
 }
