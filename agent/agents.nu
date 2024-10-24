@@ -74,6 +74,6 @@ export def run_agent [query] {
             break;
         }
     }
-    sound play drop.mp3 -d 0.2sec
+    # sound play drop.mp3 -d 0.2sec
     $answer
 }
