@@ -14,7 +14,7 @@ export def import_git_repo [repoPath : string, repoName : string ] {
         mkdir scratchpad
     }
     cd ./scratchpad
-    if ( ( ls | where name == $repoPath ) == []) {
+    if ( ( ls | where name == $repoName ) == []) {
         git clone $repoPath
         cd $repoName
     } else {
