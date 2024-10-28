@@ -31,7 +31,7 @@ export def import_git_repo [repoPath : string, repoName : string ] {
     query $"SELECT c.*, meta\(\).id as id, c.subject || '  '  || c.body as text FROM `($repoName)` as c"  | wrap content| insert id { |row| $row.content.id } | insert content.textVector { |row|  (  $row.content.text | vector enrich-text | $in.content.vector ) } | doc upsert
     # Create a Vector Index
     let indexName = $"(cb-env | $in.bucket).( cb-env | $in.scope ).($repoName)"
-    if ( ( query indexes | where  type == "fts" and nname == indexName ) == [] ) {
+    if ( ( query indexes | where  type == "fts" and name == indexName ) == [] ) {
         vector create-index --similarity-metric dot_product $repoName textVector 1536
     }
 }
