@@ -5,6 +5,9 @@ image:
 tasks:
   - name: Start Couchbase Server
     command: |
+      sudo chown gitpod /home/gitpod/.cbsh/config
+      sudo chgrp gitpod /home/gitpod/.cbsh/config
+      mkdir logs
       sudo /entrypoint.sh couchbase-server
   - name: Build the Java Project
     init: |

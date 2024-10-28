@@ -14,7 +14,7 @@ export def import_git_repo [repoPath : string, repoName : string ] {
         mkdir scratchpad
     }
     cd ./scratchpad
-    if ( ( ls | where name == "couchbase-shell" ) == []) {
+    if ( ( ls | where name == $repoPath ) == []) {
         git clone $repoPath
         cd $repoName
     } else {
@@ -28,7 +28,7 @@ export def import_git_repo [repoPath : string, repoName : string ] {
     # Import the doc in selected collection
     open commitlog.json |  wrap content | insert id { |it|  echo $it.content.commitHash } | doc upsert
     # Enrich the document with default model 
-    query $"SELECT c.*, meta\(\).id as id, c.subject || '  '  || c.body as text FROM `($repoName)` as c"  | reject cluster | wrap content| insert id { |row| $row.content.id } | insert content.textVector { |row|  (  $row.content.text | vector enrich-text | $in.content.vector ) } | doc upsert
+    query $"SELECT c.*, meta\(\).id as id, c.subject || '  '  || c.body as text FROM `($repoName)` as c"  | wrap content| insert id { |row| $row.content.id } | insert content.textVector { |row|  (  $row.content.text | vector enrich-text | $in.content.vector ) } | doc upsert
     # Create a Vector Index
     let indexName = $"(cb-env | $in.bucket).( cb-env | $in.scope ).($repoName)"
     if ( ( query indexes | where  type == "fts" and nname == indexName ) == [] ) {
