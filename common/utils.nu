@@ -1,7 +1,7 @@
 # Manage a counter in the "counter" file, increment each time it's called
 export def counter [] {
-    if  ( not ( ls logs | select name | any { |x| $x.name == "logs/counter" } ) ) {
-        0 | save "logs/counter"
+    if  ( not ( "logs/counter" | path exists ) ) {
+        0 | save  "logs/counter"
     }
     mut count = open "logs/counter" | into int
     $count = $count + 1
