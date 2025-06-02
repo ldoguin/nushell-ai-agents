@@ -1,9 +1,7 @@
-use ../tools/tools.nu [tool_library]
 use ../common/utils.nu *
 
 # Call local ollama API
-export def callama [$model, $messages, $stream, $endpoint] {
-    let model_tools = tool_library
+export def callama [$model, $messages, $stream, $endpoint, $model_tools] {
     let url = $"http://localhost:11434/($endpoint)" 
     let json = {
         model: $model,
@@ -25,8 +23,7 @@ export def callama [$model, $messages, $stream, $endpoint] {
 }
 
 # Call openai api
-export def calloai [$messages] {
-    let model_tools = tool_library
+export def calloai [$messages, $model_tools] {
     let url = "https://api.openai.com/v1/chat/completions" 
     let json = {
         model: "gpt-4o-mini",

@@ -14,26 +14,26 @@ def build_agent [model_call: closure, prompt? : string] {
     $agent
 }
 
-export def qwen_general_agent [] {
+export def qwen_general_agent [ $model_tools ] {
     let system_prompt = open agent/prompts/toolSystemPrompt.txt
-    mut agent = build_agent { |messages| callama "qwen2.5:7b" $messages false "api/chat" } $system_prompt
+    mut agent = build_agent { |messages| callama "qwen2.5:7b" $messages false "api/chat" $model_tools } $system_prompt
     $agent
 }
 
-export def qwen_code_agent [] {
+export def qwen_code_agent [ $model_tools ] {
     let system_prompt = open agent/prompts/coder.txt
-    mut agent = build_agent { |messages| callama "qwen2.5-coder" $messages false "api/chat" } $system_prompt
+    mut agent = build_agent { |messages| callama "qwen2.5-coder" $messages false "api/chat" $model_tools } $system_prompt
     $agent
 }
 
-export def openai-mini-o_agent [] {
-    mut agent = build_agent { |messages| calloai $messages }
+export def openai-mini-o_agent [ $model_tools ] {
+    mut agent = build_agent { |messages| calloai $messages $model_tools }
     $agent
 }
 
-export def qwen-reasoner_agent [] {
+export def qwen-reasoner_agent [ $model_tools ] {
     let system_prompt = open agent/prompts/reasoner.txt
-    mut agent = build_agent { |messages| calloai $messages } $system_prompt
+    mut agent = build_agent { |messages| calloai $messages $model_tools } $system_prompt
     $agent
 }
 
