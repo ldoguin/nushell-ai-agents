@@ -21,19 +21,27 @@ export def import_git_repo [repoPath : string, repoName : string ] {
         cd $repoName
         git pull
     }
-    # with bash, extract your commit history to json
-    bash -c "source  ../../tools/git-log-json.sh; git-log-json > commitlog.json"
+    # extract your commit history to json
+    git_log
     # with cbsh, create scope, collection and collection Primary Index
     dbSetup "cbsh" "gitlog" $repoName
     # Import the doc in selected collection
-    open commitlog.json |  wrap content | insert id { |it|  echo $it.content.commitHash } | doc upsert
+    open commitlog.json |  wrap content | insert id { |it|  echo $it.content.commit_hash } | doc insert
     # Enrich the document with default model 
-    query $"SELECT c.*, meta\(\).id as id, c.subject || '  '  || c.body as text FROM `($repoName)` as c"  | wrap content| insert id { |row| $row.content.id } | insert content.textVector { |row|  (  $row.content.text | vector enrich-text | $in.content.vector ) } | doc upsert
-    # Create a Vector Index
-    let indexName = $"(cb-env | $in.bucket).( cb-env | $in.scope ).($repoName)"
-    if ( ( query indexes | where  type == "fts" and name == indexName ) == [] ) {
-        vector create-index --similarity-metric dot_product $repoName textVector 1536
+    let docsToUpdate = query $"SELECT c.*, meta\(\).id as id, c.message || '  '  || c.body as text FROM `($repoName)` as c WHERE IFMISSINGORNULL\(textVector, \"\"\) = \"\" "
+    if (  $docsToUpdate != null ) {
+        $docsToUpdate | wrap content| insert id { |row| $row.content.id } | insert content.textVector { |row|  (  $row.content.text | vector enrich-text | $in.content.vector ) } | doc upsert
+        # Create a Vector Index
+        let indexName = $"(cb-env | $in.bucket).( cb-env | $in.scope ).($repoName)"
+        if ( ( query indexes | where  type == "fts" and name == $indexName ) == [] ) {
+            vector create-index --similarity-metric dot_product $repoName textVector 1536
+        }
     }
+}
+
+export def git_log [] {
+   let logs = git log --all --pretty=format:'%n{%n"branch": "%d",%n  "commit_hash": "%H",%n  "author": "%an",%n  "author_email": "%ae",%n  "date": "%ad",%n  "commiter_name": "%cN",%n  "commiter_email": "%cE",%n  "message": "%f",%n "body": "%b"%n}' | lines | find --regex "^origin" --invert | str replace "}" "}," | append "]" | prepend "[" | drop nth 3 | to text | from json
+   $logs | save -f commitlog.json
 }
 
 # Create the given bucket, scope, collection and primary index if they don't exist.
