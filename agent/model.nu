@@ -17,9 +17,8 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools] {
     $json | log
     let jsonString = ( $json | to json )
     print $" ($url) ($jsonString) " 
-    let response = curl  $"($url)" -d $jsonString
-    print $response | log
-    $response | from json
+    let response = http post  $url  $jsonString
+    $response
 }
 
 # Call openai api
@@ -33,6 +32,6 @@ export def calloai [$messages, $model_tools] {
         temperature: 0
     };
     let jsonString = ( $json | to json )
-    let response = curl   -H "Content-Type: application/json" -H $"Authorization: Bearer ($env.OPENAI_API_KEY) "  -s $"($url)" -d $jsonString
-    $response | from json
+    let response = http post  $url  $jsonString --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json"
+    $response
 }
