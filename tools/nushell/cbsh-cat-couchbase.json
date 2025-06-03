@@ -1,0 +1,23 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "cb-env",
+      "description": "Modify the default execution environment of commands",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "--capella": {
+            "type": "string",
+            "description": "show default execution environment of capella"
+          },
+          "--timeouts": {
+            "type": "string",
+            "description": "show default execution environment for timeouts"
+          }
+        },
+        "required": []
+      }
+    }
+  }
+]

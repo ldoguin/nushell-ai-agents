@@ -2,6 +2,13 @@ use ../common/utils.nu *
 use cbsh.nu *
 
 # Function Library
+# Function Library
+export def cbsh_tool_library [] {
+    let tools = open "tools/nushell/cbsh-cat-couchbase.json"
+    print $tools
+    $tools
+}
+
 export def tool_library [] {
     let tools = [
         {
@@ -193,6 +200,6 @@ export def callTool [$toolCall] {
         print $fInArg
     }
     print $" source agent.nu; ($functionName)   ($arguments) "
-    let result_tool = nu -c ( $" source tools/tools.nu; ($functionName)   ($arguments)  " )
+    let result_tool = cbsh -c ( $" source tools/tools.nu; ($functionName)   ($arguments)  " )
     $result_tool
 }
