@@ -16,9 +16,19 @@ def think_code [$query] {
 }
 
 def run [$query] {
-    print "## Calling run"
-    let model_tools = cbsh_tool_library
-    mut agent = openai-mini-o_agent $model_tools
-    let answer = $agent | run_agent $query 
+    let s = $in
+    init_logger
+    "## Calling run" | log
+    let to = open cbes-tool.json
+    let model_tools = $to
+    mut agent = openai-cbes-mini-o_agent $model_tools
+    mut agentPrompt = "";
+    if ( $s != null ) {
+        $agentPrompt = ( [$query, " ", $s] | str join )
+    } else {
+        $agentPrompt = $query
+    }
+    print $agentPrompt
+    let answer = $agent | run_agent $agentPrompt
     $answer
 }

@@ -1,0 +1,359 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "get_server_info",
+      "description": "Retrieve general information about the Couchbase Edge Server.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list_databases",
+      "description": "List all databases (keyspaces) on the Couchbase Edge Server.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_database_info",
+      "description": "Get metadata about a specific database or keyspace.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "Name of the keyspace to retrieve info for"
+          }
+        },
+        "required": ["keyspace"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create_document",
+      "description": "Create a new document in a keyspace with an auto-generated ID.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to insert the document into"
+          },
+          "document": {
+            "type": "object",
+            "description": "The document content to create"
+          }
+        },
+        "required": ["keyspace", "document"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_document",
+      "description": "Retrieve a document by its ID from a keyspace.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace containing the document"
+          },
+          "doc_id": {
+            "type": "string",
+            "description": "The ID of the document to retrieve"
+          }
+        },
+        "required": ["keyspace", "doc_id"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "upsert_document",
+      "description": "Create or update a document with a specific ID in a keyspace.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace for the document"
+          },
+          "doc_id": {
+            "type": "string",
+            "description": "The document ID to create or update"
+          },
+          "document": {
+            "type": "object",
+            "description": "The document content"
+          }
+        },
+        "required": ["keyspace", "doc_id", "document"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete_document",
+      "description": "Delete a document from a keyspace using its ID and revision.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace containing the document"
+          },
+          "doc_id": {
+            "type": "string",
+            "description": "The ID of the document to delete"
+          },
+          "rev": {
+            "type": "string",
+            "description": "The revision ID of the document"
+          }
+        },
+        "required": ["keyspace", "doc_id", "rev"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "run_query",
+      "description": "Execute an ad-hoc SQL++ query against a keyspace.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace context for the query"
+          },
+          "query": {
+            "type": "string",
+            "description": "The SQL++ query string to run"
+          }
+        },
+        "required": ["keyspace", "query"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_changes",
+      "description": "Retrieve the changes feed for a keyspace.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to fetch changes from"
+          }
+        },
+        "required": ["keyspace"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "start_replication",
+      "description": "Start a new replication process with the specified configuration.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "replication_id": {
+            "type": "string",
+            "description": "The unique ID for the replication"
+          },
+          "config": {
+            "type": "object",
+            "description": "The replication configuration (source, target, continuous, etc.)"
+          }
+        },
+        "required": ["replication_id", "config"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_replication_status",
+      "description": "Get the status of a specific replication process.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "replication_id": {
+            "type": "string",
+            "description": "The replication ID to check status for"
+          }
+        },
+        "required": ["replication_id"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "stop_replication",
+      "description": "Stop a replication process by its ID.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "replication_id": {
+            "type": "string",
+            "description": "The replication ID to stop"
+          }
+        },
+        "required": ["replication_id"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "cert_path",
+      "description": "Set or retrieve the TLS certificate file path for secure HTTPS communication with Couchbase Edge Server.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The file path to the PEM certificate used for TLS. If omitted, the current value will be returned."
+          }
+        },
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create_certificate",
+      "description": "Generate a TLS certificate and private key for Couchbase Edge Server using a common name (CN).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cn_expression": {
+            "type": "string",
+            "description": "The Common Name (CN) to be used in the certificate, such as a domain name or IP address."
+          },
+          "cert_path": {
+            "type": "string",
+            "description": "The file path where the generated certificate (.pem) will be saved."
+          },
+          "key_path": {
+            "type": "string",
+            "description": "The file path where the private key (.key) will be saved."
+          }
+        },
+        "required": ["cn_expression", "cert_path", "key_path"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "add_user",
+      "description": "Add a user to the Couchbase Edge Server users file. Optionally set role and password.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "users_file": {
+            "type": "string",
+            "description": "The path to the users file."
+          },
+          "username": {
+            "type": "string",
+            "description": "The username to add."
+          },
+          "create": {
+            "type": "boolean",
+            "description": "Whether to create the users file if it doesn't exist."
+          },
+          "role": {
+            "type": "string",
+            "description": "The role to assign to the user.",
+            "default": ""
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for the user (use only if you want to avoid password prompt; insecure).",
+            "default": ""
+          }
+        },
+        "required": ["users_file", "username"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create_certificate",
+      "description": "Create a self-signed X.509 certificate and private key for testing Couchbase Edge Server.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "description": "The Common Name (CN), usually a domain or IP address."
+          },
+          "certfile": {
+            "type": "string",
+            "description": "The file path where the certificate (.pem) will be saved."
+          },
+          "keyfile": {
+            "type": "string",
+            "description": "The file path where the private key (.key) will be saved."
+          }
+        },
+        "required": ["hostname", "certfile", "keyfile"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "reset_uuid",
+      "description": "Regenerate a Couchbase database file's UUID. Required after copying a DB file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dbfile": {
+            "type": "string",
+            "description": "The path to the database file."
+          }
+        },
+        "required": ["dbfile"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_version",
+      "description": "Print the current Couchbase Edge Server version.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  }
+]

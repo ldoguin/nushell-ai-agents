@@ -131,7 +131,7 @@ export def ask_repo [repoName, question] {
 }
 
 export def import_git_repo [repoPath : string, repoName : string ] {
-    let r = cbsh -c $"source tools/cbsh.nu; import_git_repo \"($repoPath)\" \"($repoName)\" "
+    let r =  cbsh -c $"source tools/cbsh.nu; import_git_repo \"($repoPath)\" \"($repoName)\" "
     $r
 }
 

@@ -31,6 +31,12 @@ export def openai-mini-o_agent [ $model_tools ] {
     $agent
 }
 
+export def openai-cbes-mini-o_agent [ $model_tools ] {
+    let system_prompt = open agent/prompts/cbes.txt
+    mut agent = build_agent { |messages| calloai $messages $model_tools } $system_prompt
+    $agent
+}
+
 export def qwen-reasoner_agent [ $model_tools ] {
     let system_prompt = open agent/prompts/reasoner.txt
     mut agent = build_agent { |messages| calloai $messages $model_tools } $system_prompt
