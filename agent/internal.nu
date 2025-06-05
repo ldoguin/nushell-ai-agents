@@ -2,7 +2,7 @@ use ../common/utils.nu *
 use ../tools/tools.nu *
 
 export def call [ $agent, $message] {
-    print $agent $message
+    echo $agent $message | log
     mut magent = $agent
     if ($message != null) {
         $magent.messages = ($magent.messages | append {"role": "user", "content": $message})

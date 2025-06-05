@@ -18,9 +18,20 @@ export def new_logfile [] {
 # Log the input in the "myHistory" file
 export def log [] {
     let s = $in
-    "\n" | save -a  "logs/myHistory"
+    "\n" | save -a  "logs/history.log"
     if ( (  ($s | (describe ) ) != "nothing" ) and ( $s != "" ) ) {
-        $s | to text|  save -a "logs/myHistory"  
+        $s | to text|  save -a "logs/history.log"  
+    }
+    
+}
+
+# Log the input in the "myHistory" file
+export def init_logger [] {
+    if  ( not ( "logs/history.log" | path exists ) ) {
+        touch  "logs/history.log"
+    } else {
+        let log_file_suffix = ( ls logs/history.log* | length )
+        mv logs/history.log $"logs/history.log.($log_file_suffix)"
     }
     
 }

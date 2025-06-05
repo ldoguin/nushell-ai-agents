@@ -2,10 +2,8 @@ use ../common/utils.nu *
 use cbsh.nu *
 
 # Function Library
-# Function Library
 export def cbsh_tool_library [] {
     let tools = open "tools/nushell/cbsh-cat-couchbase.json"
-    print $tools
     $tools
 }
 
@@ -177,10 +175,10 @@ export def search_internet [query] {
 
 
 export def callTool [$toolCall] {
-    print $toolCall
+    $toolCall | log
     let functionName = $toolCall.name
     mut arguments = parseArg $toolCall.arguments;
-    print $arguments
+    $arguments | log
     mut fInArg = ( $arguments | parse --regex '(?P<fname>\w+)\((?P<arguments>.*?)\)' )
     if ( $fInArg != [] ) {
         mut responses = []
@@ -199,7 +197,12 @@ export def callTool [$toolCall] {
         $fInArg = ( $fInArg | merge $responses )
         print $fInArg
     }
-    print $" source agent.nu; ($functionName)   ($arguments) "
-    let result_tool = cbsh -c ( $" source tools/tools.nu; ($functionName)   ($arguments)  " )
-    $result_tool
+    $" source agent.nu; ($functionName)   ($arguments) " | log
+    let result_tool = ( cbsh -c ( $" source tools/tools.nu; source cbes.nu; ($functionName)   ($arguments)  " ) ) | complete
+    if ( $result_tool.exit_code == 0 ) {
+        return $result_tool.stdout
+    } else {
+        print $result_tool.stderr
+        return $result_tool
+    }
 }

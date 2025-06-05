@@ -48,30 +48,26 @@ export def run_agent [query] {
         let response = call $agent $next_prompt
         let $msg = ( $response.result | from json | $in.message )
         if ( ( $msg.role == "assistant") and ( $msg.content != null ) ) {
-            print $msg
+            $msg | log
             let steps = ( $msg.content | split row  "\n" )
             let step = ($steps  | parse --regex '^(?P<step>Action|Observation|Thought|Pause|Answer): (?P<content>.*)$')
             for $s in ( $step | enumerate) {
                 if ( $s.item.step == "Answer") {
                     $answer = $s.item.content
-                    print $answer
+                    $answer | log
                 }
             }
         }
         if ( ($msg | column_exist "finish_reason") and ( $msg.finish_reason == "stop" ) ) {
-            print "Found the answer"
             $answer = ( $agent.messages | last ).content
-            print $answer
-            break;
+            return $answer
         }
         $agent = $response.agent
 
         $next_prompt = null
 
         if ( $answer != null ) {
-            print "Found the answer"
-            print $answer
-            break;
+            return $answer
         }
     }
     # sound play drop.mp3 -d 0.2sec
