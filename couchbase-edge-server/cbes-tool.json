@@ -1,5 +1,22 @@
 [
   {
+      "type": "function",
+      "function": {
+          "name": "search_internet",
+          "description": "this function will call the duckduck go search engine, retrieve the top 10 links returned by the search in markdown format.",
+          "parameters": {
+              "type": "object",
+              "properties": {
+                  "search": {
+                      "type": "string",
+                      "description": "the search terms to be queried"
+                  }
+              },
+              "required": ["search"]
+          }
+      }
+  },
+  {
     "type": "function",
     "function": {
       "name": "get_server_info",
@@ -54,7 +71,7 @@
           },
           "document": {
             "type": "object",
-            "description": "The document content to create"
+            "description": "The document content to create, it must be a json string"
           }
         },
         "required": ["keyspace", "document"]

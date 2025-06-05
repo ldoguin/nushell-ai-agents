@@ -15,11 +15,13 @@ def think_code [$query] {
     $answer
 }
 
+
+
 def run [$query] {
     let s = $in
     init_logger
     "## Calling run" | log
-    let to = open cbes-tool.json
+    let to = open couchbase-edge-server/cbes-tool.json
     let model_tools = $to
     mut agent = openai-cbes-mini-o_agent $model_tools
     mut agentPrompt = "";

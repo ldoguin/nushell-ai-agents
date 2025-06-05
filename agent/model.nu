@@ -30,7 +30,17 @@ export def calloai [$messages, $model_tools] {
         stream: false,
         temperature: 0
     };
-    let jsonString = ( $json | to json )
+    let jsonString = ( $json | to json | escape-string $in )
     let response = http post  $url  $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json"
     $response
+}
+
+def escape-string [input: string] {
+  $input
+  | str replace --all '\' '\\\\'
+  | str replace --all '"' '\\"'
+  | str replace --all "'" "\\'"
+  | str replace --all "\n" '\\n'
+  | str replace --all "\r" '\\r'
+  | str replace --all "\t" '\\t'
 }

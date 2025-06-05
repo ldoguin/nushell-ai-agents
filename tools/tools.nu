@@ -197,8 +197,8 @@ export def callTool [$toolCall] {
         $fInArg = ( $fInArg | merge $responses )
         print $fInArg
     }
-    $" source agent.nu; ($functionName)   ($arguments) " | log
-    let result_tool = ( cbsh -c ( $" source tools/tools.nu; source cbes.nu; ($functionName)   ($arguments)  " ) ) | complete
+    $" source tools/tools.nu; source couchbase-edge-server/cbes.nu; ($functionName)   ($arguments)  " | log
+    let result_tool = ( cbsh -c ( $" source tools/tools.nu; source couchbase-edge-server/cbes.nu; ($functionName)   ($arguments)  " ) ) | complete
     if ( $result_tool.exit_code == 0 ) {
         return $result_tool.stdout
     } else {
