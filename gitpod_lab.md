@@ -91,6 +91,10 @@ query all document for all keyspaces {"db_name":"american234","db_uuid":"d809029
 
 {"db_name":"american234","db_uuid":"d8090291e33543af9bde2146f9f5ef87","collections":{"AmericanAirlines.AA234":{"doc_count":0,"update_seq":0}}}
 
-
+👤 Administrator 🏠 default
+> ls . | get 0 | to json -r | run "create a new document in keyspace american234.AmericanAirlines.AA234 with the following content "
+create a new document in keyspace american234.AmericanAirlines.AA234 with the following content  {"name":"Dockerfile","type":"file","size":205,"modified":"2025-06-03 16:15:32.038444781 +00:00"}
+{"keyspace":"american234.AmericanAirlines.AA234","document":"{\"name\":\"Dockerfile\",\"type\":\"file\",\"size\":205,\"modified\":\"2025-06-03 16:15:32.038444781 +00:00\"}"}
+{"ok":true,"id":"~lWpPj1CLWwwjoiWMzplVk9","rev":"1-151ab05f7cc5adf561f073cb57d1a79d11b64408"}
 
 ```
