@@ -70,7 +70,7 @@
             "description": "The keyspace to insert the document into"
           },
           "document": {
-            "type": "object",
+            "type": "string",
             "description": "The document content to create, it must be a json string"
           }
         },

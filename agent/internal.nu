@@ -55,10 +55,16 @@ export def execute [] {
 
 export def parseArg [$arg] {
     if ( ( ($arg | describe ) == "string" ) and ( $arg | str index-of "{" | $in == 0 ) ) {
-        let a = ( $arg | from json | (values)| str replace -r '^' '"'   | str replace -r  '$' '"' | str join ' ' )
+        let a = ( $arg | from json | (values)|  escape-string | str replace -r '^' '"'   | str replace -r  '$' '"' | str join ' ' )
         $a
     } else {
-        let a = ( $arg |  values |  flatten | str replace -r '^' '"'   | str replace -r  '$' '"' | str join " " ) #  str replace -r '^"' '' | str replace -r  '"$' '' | 
+        let a = ( $arg |  values |  flatten | escape-string | str replace -r '^' '"'   | str replace -r  '$' '"' | str join " " ) #  str replace -r '^"' '' | str replace -r  '"$' '' | 
         $a
     }
+}
+
+def escape-string [] {
+  let $input = $in
+  $input
+  | str replace --all '"' '\"'
 }
