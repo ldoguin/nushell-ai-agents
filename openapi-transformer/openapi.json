@@ -1,0 +1,2238 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Edge Server",
+    "description": "# Introduction\n\nEdge Server is a lightweight standalone database for resource-constrained edge.\nIt exposes a RESTful interface that enables you to get database information, perform document operations, run SQL++ queries, and manage changes feeds and replication.",
+    "version": "1.0",
+    "license": {
+      "name": "Business Source License 1.1 (BSL)",
+      "url": "https://github.com/couchbase/edge-server/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "{protocol}://{hostname}:59840",
+      "description": "Public API",
+      "variables": {
+        "protocol": {
+          "description": "The protocol to use (HTTP or HTTPS)",
+          "default": "http",
+          "enum": [
+            "http",
+            "https"
+          ]
+        },
+        "hostname": {
+          "description": "The hostname to use",
+          "default": "localhost"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Database",
+      "description": "Edge Server enables you to access one or more databases.\nWithin each database, documents are stored in keyspaces.\nEach keyspace maps to a collection, which is stored in a scope within the database.\nFor details, see [Database Operations with Edge Server](https://docs.couchbase.com/couchbase-edge-server/current/rest-based-access/database-operations.html)."
+    },
+    {
+      "name": "Document",
+      "description": "You can create, read, update, and delete documents in a keyspace using the REST API's document operations.\nFor details, see [Document Access with Edge Server](https://docs.couchbase.com/couchbase-edge-server/current/rest-based-access/document-access.html)."
+    },
+    {
+      "name": "Replication",
+      "description": "The replicate endpoint enables you to synchronize Edge Server with another server, for example Sync Gateway or Couchbase Capella App Services.\nFor details, see [Manage Replication with Edge Server](https://docs.couchbase.com/couchbase-edge-server/current/rest-based-access/replication.html)."
+    },
+    {
+      "name": "Changes",
+      "description": "You can monitor changes in a keyspace using the keyspaces's changes feed.\nFor details, see [Monitor Changes with Edge Server](https://docs.couchbase.com/couchbase-edge-server/current/rest-based-access/changes-feed.html)."
+    },
+    {
+      "name": "Query",
+      "description": "You can run SQL++ queries in a keyspace using the keyspace's query endpoint.\nFor details, see [Run Queries with Edge Server](https://docs.couchbase.com/couchbase-edge-server/current/rest-based-access/queries-api.html)."
+    }
+  ],
+  "externalDocs": {
+    "description": "Couchbase Edge Server / REST-Based Access",
+    "url": "https://docs.couchbase.com/couchbase-edge-server/current/rest-based-access/rest-api-landing.html"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Get server information",
+        "description": "Returns information about the Edge Server node.",
+        "responses": {
+          "200": {
+            "description": "Returns server information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          }
+        },
+        "tags": [
+          "Database"
+        ],
+        "operationId": "get_-"
+      }
+    },
+    "/_all_dbs": {
+      "get": {
+        "summary": "Get list of all database names",
+        "description": "Returns a list of all database names.",
+        "responses": {
+          "200": {
+            "description": "Returns list of database names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DBList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          }
+        },
+        "tags": [
+          "Database"
+        ],
+        "operationId": "get__all_dbs-"
+      }
+    },
+    "/_active_tasks": {
+      "get": {
+        "summary": "List active replications only",
+        "description": "Get a list of all active tasks",
+        "responses": {
+          "200": {
+            "description": "Returns list of active replications, changes feeds, and sync tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActiveTaskList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          }
+        },
+        "tags": [
+          "Replication"
+        ],
+        "operationId": "get__active_tasks-"
+      }
+    },
+    "/_replicate": {
+      "get": {
+        "summary": "Get status of all replications",
+        "description": "Gets the status of all replication tasks.",
+        "responses": {
+          "200": {
+            "description": "Returns list of all replication tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActiveReplicationList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          }
+        },
+        "tags": [
+          "Replication"
+        ],
+        "operationId": "get__replicate-"
+      },
+      "post": {
+        "summary": "Start a replication",
+        "description": "Instructs Edge Server to initiate replication with another server, e.g. Sync Gateway.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplicationConfig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replication queued successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "description": "Whether the replication was queued successfully",
+                      "type": "boolean"
+                    },
+                    "task_id": {
+                      "description": "Task ID of the newly created replication",
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          }
+        },
+        "tags": [
+          "Replication"
+        ],
+        "operationId": "post__replicate-"
+      }
+    },
+    "/_replicate/{taskid}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/taskid"
+        }
+      ],
+      "get": {
+        "summary": "Get status of a replication",
+        "description": "Gets the status of the replication task with the given ID.",
+        "responses": {
+          "200": {
+            "description": "Returns status of the active replication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActiveTaskReplication"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Replication"
+        ],
+        "operationId": "get__replicate-taskid-"
+      },
+      "delete": {
+        "summary": "Stop replication",
+        "description": "Stops the replication task with the given ID.",
+        "responses": {
+          "200": {
+            "description": "Replication stopped successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "description": "Replication stopped successfully",
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Replication"
+        ],
+        "operationId": "delete__replicate-taskid-"
+      }
+    },
+    "/{keyspace}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        }
+      ],
+      "get": {
+        "summary": "Get database or keyspace information",
+        "description": "Retrieves information about a database or keyspace.",
+        "responses": {
+          "200": {
+            "description": "Returns database or keyspace information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DatabaseInfo"
+                    },
+                    {
+                      "$ref": "#/components/schemas/KeyspaceInfo"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Database"
+        ],
+        "operationId": "get_db-"
+      },
+      "put": {
+        "summary": "Create a document",
+        "description": "Creates a document with an automatically-generated document ID.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The document to be created, as a JSON object.",
+                "additionalProperties": true,
+                "example": {
+                  "type": "airport",
+                  "country": "United Kingdom",
+                  "icao": "EGOV",
+                  "airportname": "Anglesey Airport",
+                  "city": "Valley",
+                  "faa": "VLY",
+                  "tz": "Europe/London"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/New-revision"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "put_db-"
+      }
+    },
+    "/{keyspace}/_all_docs": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        }
+      ],
+      "get": {
+        "summary": "Get all documents in the keyspace",
+        "description": "Returns all documents in the database, based on the specified query parameters.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/result-rows-descending"
+          },
+          {
+            "$ref": "#/components/parameters/include_docs"
+          },
+          {
+            "$ref": "#/components/parameters/keys"
+          },
+          {
+            "$ref": "#/components/parameters/limit-result-rows"
+          },
+          {
+            "$ref": "#/components/parameters/skip-result-rows"
+          },
+          {
+            "$ref": "#/components/parameters/startkey"
+          },
+          {
+            "$ref": "#/components/parameters/endkey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/all-docs"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "get_keyspace-_all_docs-"
+      },
+      "post": {
+        "summary": "Get all documents in the keyspace",
+        "description": "Returns all documents in the database, based on the parameters specified in the request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "descending": {
+                    "type": "boolean",
+                    "description": "Reverses sort order (descending document ID)",
+                    "default": false
+                  },
+                  "include_docs": {
+                    "type": "boolean",
+                    "description": "Adds body of each doc",
+                    "default": true
+                  },
+                  "keys": {
+                    "type": "array",
+                    "description": "Limits results to the specified document IDs",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "limit": {
+                    "type": "number",
+                    "description": "Limits number of results"
+                  },
+                  "skip": {
+                    "type": "number",
+                    "description": "Offset into results"
+                  },
+                  "startkey": {
+                    "type": "string",
+                    "description": "Document ID to start at"
+                  },
+                  "endkey": {
+                    "type": "string",
+                    "description": "Document ID to end at (max value, or min if descending)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/all-docs"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "post_keyspace-_all_docs-"
+      },
+      "head": {
+        "summary": "Check if any documents exist",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/include_docs"
+          },
+          {
+            "$ref": "#/components/parameters/keys"
+          },
+          {
+            "$ref": "#/components/parameters/startkey"
+          },
+          {
+            "$ref": "#/components/parameters/endkey"
+          },
+          {
+            "$ref": "#/components/parameters/limit-result-rows"
+          }
+        ],
+        "description": "Returns a status code indicating whether any documents exist.",
+        "tags": [
+          "Document"
+        ],
+        "operationId": "head_keyspace-_all_docs-"
+      }
+    },
+    "/{keyspace}/_bulk_docs": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        }
+      ],
+      "post": {
+        "summary": "Bulk document operations",
+        "description": "Allows multiple documented to be created, updated or deleted in bulk.\n\nTo create a new document, add the body as an object in the `docs` array.\nA document ID is generated by Edge Server unless `_id` is specified.\n\nTo update an existing document, provide the document ID (`_id`) and revision ID (`_rev`) as well as the new body values.\n\nTo delete an existing document, provide the document ID (`_id`), revision ID (`_rev`), and set the deletion flag (`_deleted`) to true.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_edits": {
+                    "description": "This controls whether to assign new revision identifiers to new edits (`true`) or use the existing ones (`false`).",
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "docs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "description": "A document",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "description": "document ID"
+                        },
+                        "_rev": {
+                          "type": "string",
+                          "description": "revision ID"
+                        }
+                      },
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "required": [
+                  "docs"
+                ]
+              },
+              "example": {
+                "new_edits": true,
+                "docs": [
+                  {
+                    "_id": "FooBar",
+                    "foo": "bar"
+                  },
+                  {
+                    "_id": "AliceSettings",
+                    "_rev": "5-832a6db48ed130adadede928aee54576",
+                    "FailedLoginAttempts": 7
+                  },
+                  {
+                    "_id": "BobSettings",
+                    "_rev": "1-fa76ba41ee5fdfee1b91fc478ed09e59",
+                    "_deleted": true
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "All operations executed.\n\nEach object in the returned array represents a document. Each document should be checked to make sure it was successfully added to the database.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "description": "The ID of the document that the operation was performed on.",
+                        "type": "string"
+                      },
+                      "rev": {
+                        "description": "The new revision of the document if the operation was a success.",
+                        "type": "string"
+                      },
+                      "error": {
+                        "description": "The error type if the operation of the document failed.",
+                        "type": "string"
+                      },
+                      "reason": {
+                        "description": "The reason the operation failed.",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "The HTTP status code for why the operation failed.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ]
+                  },
+                  "uniqueItems": true
+                },
+                "examples": {
+                  "Success": {
+                    "value": [
+                      {
+                        "id": "FooBar",
+                        "rev": "1-cd809becc169215072fd567eebd8b8de"
+                      },
+                      {
+                        "id": "AliceSettings",
+                        "rev": "6-b3e8dcf825b71ccee112f3572ec4323c"
+                      },
+                      {
+                        "id": "BobSettings",
+                        "rev": "2-5145e1086bb8d1d71a531e9f6b543c58"
+                      }
+                    ]
+                  },
+                  "PartialSuccess": {
+                    "summary": "Partial success",
+                    "value": [
+                      {
+                        "error": "conflict",
+                        "id": "FooBar",
+                        "reason": "Document exists",
+                        "status": 409
+                      },
+                      {
+                        "id": "AliceSettings",
+                        "rev": "6-b3e8dcf825b71ccee112f3572ec4323c"
+                      },
+                      {
+                        "error": "conflict",
+                        "id": "BobSettings",
+                        "reason": "Document revision conflict",
+                        "status": 409
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "post_keyspace-_bulk_docs-"
+      }
+    },
+    "/{keyspace}/_changes": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        }
+      ],
+      "get": {
+        "summary": "Get changes list",
+        "description": "Retrieves a sorted list of changes made to documents in the database, in time order of application. Each document appears at most once, ordered by its most recent change, regardless of how many times it has been changed.\n\nThis request can be used to listen for update and modifications to the database for post processing or synchronization. A continuously connected changes feed is a reasonable approach for generating a real-time log for most applications.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of changes to return.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Starts the results from the change immediately after the given sequence ID. Sequence IDs should be considered opaque; they come from the last_seq property of a prior response.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "style",
+            "in": "query",
+            "description": "Controls whether to return the current winning revision (`main_only`) or all the leaf revision including conflicts and deleted former conflicts (`all_docs`).",
+            "schema": {
+              "type": "string",
+              "default": "main_only",
+              "enum": [
+                "main_only",
+                "all_docs"
+              ]
+            }
+          },
+          {
+            "name": "active_only",
+            "in": "query",
+            "description": "Set true to exclude deleted documents and notifications for documents the user no longer has access to from the changes feed.",
+            "schema": {
+              "type": "boolean",
+              "default": "false"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/include_docs"
+          },
+          {
+            "name": "revocations",
+            "in": "query",
+            "description": "If true, revocation messages are sent on the changes feed.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Set a filter to either filter by channels or document IDs.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sync_gateway/bychannel",
+                "_doc_ids"
+              ]
+            }
+          },
+          {
+            "name": "channels",
+            "in": "query",
+            "description": "A comma-separated list of channel names to filter the response to only the channels specified. To use this option, the `filter` query option must be set to `sync_gateway/bychannels`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "doc_ids",
+            "in": "query",
+            "description": "A valid JSON array of document IDs to filter the documents in the response to only the documents specified. To use this option, the `filter` query option must be set to `_doc_ids` and the `feed` parameter must be `normal`. Also accepts a comma separated list of document IDs instead.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "heartbeat",
+            "in": "query",
+            "description": "The interval (in milliseconds) to send an empty line (CRLF) in the response. This is to help prevent gateways from deciding the socket is idle and therefore closing it. This is only applicable to `feed=longpoll` or `feed=continuous`. This overrides any timeouts to keep the feed alive indefinitely. Setting to 0 results in no heartbeat. The maximum heartbeat can be set in the replication configuration.",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 25000
+            }
+          },
+          {
+            "name": "timeout",
+            "in": "query",
+            "description": "This is the maximum period (in milliseconds) to wait for a change before the response is sent, even if there are no results. This is only applicable for `feed=longpoll` or `feed=continuous` changes feeds. Setting to 0 results in no timeout.",
+            "schema": {
+              "type": "integer",
+              "default": 300000,
+              "maximum": 900000,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "feed",
+            "in": "query",
+            "description": "The type of changes feed to use. ",
+            "schema": {
+              "type": "string",
+              "default": "normal",
+              "enum": [
+                "longpoll",
+                "continuous",
+                "sse"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/changes-feed"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Changes"
+        ],
+        "operationId": "get_keyspace-_changes-"
+      },
+      "post": {
+        "summary": "Get changes list",
+        "description": "Retrieves a sorted list of changes made to documents in the database, in time order of application. Each document appears at most once, ordered by its most recent change, regardless of how many times it has been changed.\n\nThis request can be used to listen for update and modifications to the database for post processing or synchronization. A continuously connected changes feed is a reasonable approach for generating a real-time log for most applications.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "description": "Maximum number of changes to return.",
+                    "type": "string"
+                  },
+                  "style": {
+                    "description": "Controls whether to return the current winning revision (`main_only`) or all the leaf revision including conflicts and deleted former conflicts (`all_docs`).",
+                    "type": "string"
+                  },
+                  "active_only": {
+                    "description": "Set true to exclude deleted documents and notifications for documents the user no longer has access to from the changes feed.",
+                    "type": "string"
+                  },
+                  "include_docs": {
+                    "description": "Include the body associated with each document.",
+                    "type": "boolean"
+                  },
+                  "revocations": {
+                    "description": "If true, revocation messages are sent on the changes feed.",
+                    "type": "string"
+                  },
+                  "filter": {
+                    "description": "Set a filter to either filter by channels or document IDs.",
+                    "type": "string"
+                  },
+                  "channels": {
+                    "description": "A comma-separated list of channel names to filter the response to only the channels specified. To use this option, the `filter` query option must be set to `sync_gateway/bychannels`.",
+                    "type": "string"
+                  },
+                  "doc_ids": {
+                    "description": "A valid JSON array of document IDs to filter the documents in the response to only the documents specified. To use this option, the `filter` query option must be set to `_doc_ids` and the `feed` parameter must be `normal`.",
+                    "type": "string"
+                  },
+                  "heartbeat": {
+                    "description": "The interval (in milliseconds) to send an empty line (CRLF) in the response. This is to help prevent gateways from deciding the socket is idle and therefore closing it. This is only applicable to `feed=longpoll` or `feed=continuous`. This overrides any timeouts to keep the feed alive indefinitely. Setting to 0 results in no heartbeat. The maximum heartbeat can be set in the replication configuration.",
+                    "type": "string"
+                  },
+                  "timeout": {
+                    "description": "This is the maximum period (in milliseconds) to wait for a change before the response is sent, even if there are no results. This is only applicable for `feed=longpoll` or `feed=continuous` changes feeds. Setting to 0 results in no timeout.",
+                    "type": "string"
+                  },
+                  "feed": {
+                    "description": "The type of changes feed to use. ",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/changes-feed"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Changes"
+        ],
+        "operationId": "post_keyspace-_changes-"
+      }
+    },
+    "/{keyspace}/_query": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        }
+      ],
+      "post": {
+        "summary": "Run an ad-hoc query",
+        "description": "Runs an ad-hoc query.\nOnly possible when the database's `enable_adhoc_queries` property is true.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "description": "SQL++ Query string",
+                    "type": "string"
+                  },
+                  "parameters": {
+                    "description": "Query parameters",
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/query"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Query"
+        ],
+        "operationId": "post_keyspace-_query-"
+      }
+    },
+    "/{keyspace}/_query/{name}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        },
+        {
+          "description": "Name of the query as defined in the database configuration.",
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Run a pre-defined query",
+        "description": "Runs a pre-defined query as named by the database configuration's `query` object. If the query has parameters, they should be passed as query parameters, like `?key=value`.",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/query"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Query"
+        ],
+        "operationId": "get_keyspace-_query-name-"
+      },
+      "post": {
+        "summary": "Run a pre-defined query",
+        "description": "Runs a pre-defined query as named by the database configuration's `query` object. If the query has parameters, they should be passed as JSON object in the request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/query"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Query"
+        ],
+        "operationId": "post_keyspace-_query-name-"
+      }
+    },
+    "/{keyspace}/{docid}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        },
+        {
+          "$ref": "#/components/parameters/docid"
+        }
+      ],
+      "get": {
+        "summary": "Get a document",
+        "description": "Retrieves a document from the database by its document ID.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/rev"
+          },
+          {
+            "$ref": "#/components/parameters/revs_from"
+          },
+          {
+            "$ref": "#/components/parameters/revs_limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Document found and returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Document"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/invalid-doc-id"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          },
+          "501": {
+            "description": "Not Implemented. It is likely this error was caused due to trying to use an Enterprise-only feature on the Community Edition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTP-Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "get_keyspace-docid-"
+      },
+      "put": {
+        "summary": "Upsert a document",
+        "description": "Creates the specified document, if it does not already exist.\nIf the specified document does exist, this request makes a new revision for the existing document.\nA revision ID must be provided if targeting an existing document.\n\nYou must specify a document ID for this endpoint.\nTo let Edge Server generate the ID, use the `POST /{db}/` endpoint.\n\nIf the document already exists, the document content is replaced by the provided request body.\nAny existing fields which are not specified by the request body are removed in the new revision.\n\nThe maximum size for a document is 20MB.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/roundtrip"
+          },
+          {
+            "$ref": "#/components/parameters/rev"
+          },
+          {
+            "$ref": "#/components/parameters/If-Match"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Document"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "Etag": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The revision of the written document."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/New-revision"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "415": {
+            "$ref": "#/components/responses/Invalid-content-type"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "put_keyspace-docid-"
+      },
+      "delete": {
+        "summary": "Delete a document",
+        "description": "Deletes a document from the keyspace.\nA new revision is created so the database can track the deletion in synchronized copies.\n\nA revision ID is required, either in the header or in the query parameters.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/rev"
+          },
+          {
+            "$ref": "#/components/parameters/If-Match"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/New-revision"
+          },
+          "400": {
+            "$ref": "#/components/responses/request-problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "delete_keyspace-docid-"
+      },
+      "head": {
+        "responses": {
+          "200": {
+            "description": "Document exists"
+          },
+          "400": {
+            "$ref": "#/components/responses/invalid-doc-id"
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "summary": "Check if a document exists",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/rev"
+          },
+          {
+            "$ref": "#/components/parameters/revs_from"
+          },
+          {
+            "$ref": "#/components/parameters/revs_limit"
+          }
+        ],
+        "description": "Returns a status code indicating whether the document exists or not.",
+        "tags": [
+          "Document"
+        ],
+        "operationId": "head_keyspace-docid-"
+      }
+    },
+    "/{keyspace}/{docid}/{key}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/keyspace"
+        },
+        {
+          "$ref": "#/components/parameters/docid"
+        },
+        {
+          "name": "key",
+          "in": "path",
+          "description": "The key of the object containing the sub-document.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get a sub-document",
+        "description": "Retrieves a sub-document associated with the document.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/rev"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Found subdocument successfully. Returns the sub-document as JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Sub-document",
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "get_keyspace-docid-key-"
+      },
+      "put": {
+        "summary": "Create or update a sub-document",
+        "description": "Adds or updates a sub-document associated with the document. If the document does not exist, it is created and the sub-document is added to it.\n\nIf the sub-document already exists, the content of the existing sub-document is replaced in the new revision.",
+        "parameters": [
+          {
+            "name": "rev",
+            "in": "query",
+            "description": "The existing document revision ID to modify. Required only when modifying an existing document.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The sub-document to add or modify in the document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sub-document added or modified successfully",
+            "headers": {
+              "Etag": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The ID of the new revision."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/New-revision"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "put_keyspace-docid-key-"
+      },
+      "delete": {
+        "summary": "Delete a sub-document",
+        "description": "Deletes a sub-document associated with the document.\n\nIf the sub-document exists, the sub-document is removed from the document.",
+        "parameters": [
+          {
+            "name": "rev",
+            "in": "query",
+            "description": "The existing document revision ID to modify.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sub-document removed from the document successfully",
+            "headers": {
+              "Etag": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The ID of the new revision."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/New-revision"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Not-found"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "tags": [
+          "Document"
+        ],
+        "operationId": "delete_keyspace-docid-key-"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NodeInfo": {
+        "type": "object",
+        "properties": {
+          "couchdb": {
+            "description": "CouchDB welcome",
+            "type": "string"
+          },
+          "vendor": {
+            "description": "Product vendor",
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Product name",
+                "type": "string"
+              },
+              "version": {
+                "description": "API version.\nOmitted if `api.hide_product_version=true`",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          },
+          "version": {
+            "description": "Product version, including the build number\nOmitted if `api.hide_product_version=true`",
+            "type": "string"
+          }
+        },
+        "required": [
+          "couchdb",
+          "vendor"
+        ],
+        "example": {
+          "couchdb": "Welcome",
+          "vendor": {
+            "name": "Couchbase Edge Server",
+            "version": "1.0.0 (37; )"
+          },
+          "version": "CouchbaseEdgeServer/1.0.0 (37; ) CouchbaseLiteCore/0.0.0-EE (770a516a19d505b7+403e27d509bb1131)"
+        }
+      },
+      "HTTP-Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "The error name.",
+            "type": "string"
+          },
+          "reason": {
+            "description": "The error description.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "error",
+          "reason"
+        ],
+        "title": "HTTP-Error"
+      },
+      "DBList": {
+        "description": "A list of all database names",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "The name of a database"
+        },
+        "example": [
+          "scratch",
+          "travel-sample"
+        ]
+      },
+      "ActiveTaskBase": {
+        "description": "An active replication task",
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "description": "A unique identifier for this replication task",
+            "type": "number"
+          },
+          "age_secs": {
+            "description": "Time since the replication task was started, in seconds",
+            "type": "number"
+          },
+          "type": {
+            "description": "Task type",
+            "type": "string",
+            "enum": [
+              "changes",
+              "sync",
+              "replication"
+            ]
+          },
+          "error": {
+            "description": "Last error",
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "age_secs",
+          "type",
+          "task_id"
+        ]
+      },
+      "ActiveTaskChanges": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ActiveTaskBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "args": {
+                "description": "Changes-feed arguments, in URL query form",
+                "type": "string"
+              },
+              "ks": {
+                "description": "Keyspace, i.e. database/collection name",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ActiveTaskSync": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ActiveTaskBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ks": {
+                "description": "Keyspace, i.e. database/collection name",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ActiveTaskReplication": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ActiveTaskBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "source": {
+                "description": "Source (local DB or remote URL)",
+                "type": "string"
+              },
+              "target": {
+                "description": "Destination (local DB or remote URL)",
+                "type": "string"
+              },
+              "docs_transferred": {
+                "description": "Number of documents pushed / pulled",
+                "type": "number"
+              },
+              "error": {
+                "description": "Error, if any",
+                "type": "object"
+              },
+              "progress": {
+                "description": "Approximate progress percentage",
+                "type": "number"
+              },
+              "status": {
+                "description": "Current status",
+                "type": "string"
+              },
+              "updated_on": {
+                "description": "Timestamp of last change",
+                "type": "number"
+              }
+            },
+            "required": [
+              "source",
+              "target",
+              "status"
+            ],
+            "example": {
+              "task_id": 1,
+              "age_secs": 893,
+              "type": "replication",
+              "source": "wss://myofflineappservice.apps.cloud.couchbase.com:4984/travel-sample",
+              "target": "travel-sample",
+              "updated_on": 1741027601,
+              "status": "Offline",
+              "error": {
+                "error": "Unknown hostname \\\"myofflineappservice.apps.cloud.couchbase.com\\\"",
+                "x-litecore-domain": 5,
+                "x-litecore-code": 2
+              }
+            }
+          }
+        ]
+      },
+      "ActiveTask": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ActiveTaskChanges"
+          },
+          {
+            "$ref": "#/components/schemas/ActiveTaskSync"
+          },
+          {
+            "$ref": "#/components/schemas/ActiveTaskReplication"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "changes": "#/components/schemas/ActiveTaskChanges",
+            "sync": "#/components/schemas/ActiveTaskSync",
+            "replication": "#/components/schemas/ActiveTaskReplication"
+          }
+        }
+      },
+      "ActiveTaskList": {
+        "description": "A list of all active replication tasks.",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ActiveTask"
+        }
+      },
+      "ActiveReplicationList": {
+        "description": "A list of replication statuses",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ActiveTaskReplication"
+        }
+      },
+      "AuthConfig": {
+        "description": "Configuration for authentication to a remote server. Either for replication, or a proxy.",
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "Username for HTTP Basic auth to remote server",
+            "type": "string"
+          },
+          "password": {
+            "description": "Password for HTTP Basic auth to remote server",
+            "type": "string"
+          },
+          "openid_token": {
+            "description": "An OpenID Connect token for authentication",
+            "type": "string"
+          },
+          "tls_client_cert": {
+            "description": "Edge Server's client certificate for mTLS",
+            "type": "string"
+          },
+          "tls_client_cert_key": {
+            "description": "Private key of TLS client certificate",
+            "type": "string"
+          }
+        }
+      },
+      "ProxyConfig": {
+        "description": "Configuration of a proxy to use during replication.",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Proxy type: `HTTP` or `HTTPS` (default: `HTTP`)",
+            "type": "string",
+            "enum": [
+              "HTTP",
+              "HTTPS"
+            ],
+            "default": "HTTP"
+          },
+          "host": {
+            "description": "Hostname of proxy server",
+            "type": "string"
+          },
+          "port": {
+            "description": "Port number of proxy server",
+            "type": "number"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/AuthConfig"
+          }
+        }
+      },
+      "ReplicationConfig": {
+        "description": "Configuration for replication, either of the `_replicate` endpoint, or of the `replications` object in the config file.",
+        "type": "object",
+        "properties": {
+          "source": {
+            "description": "The source database name or URL",
+            "type": "string"
+          },
+          "target": {
+            "description": "The destination database name or URL",
+            "type": "string"
+          },
+          "bidirectional": {
+            "description": "Set to `true` for bidirectional push/pull replication",
+            "type": "boolean",
+            "default": false
+          },
+          "continuous": {
+            "description": "Set to `true` for continuous replication",
+            "type": "boolean",
+            "default": false
+          },
+          "channels": {
+            "description": "Channel filter (incompatible with 'collections')",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "A Sync Gateway channel name"
+            },
+            "uniqueItems": true
+          },
+          "doc_ids": {
+            "description": "Document IDs to replicate (incompatible with 'collections')",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "A document ID"
+            },
+            "uniqueItems": true
+          },
+          "headers": {
+            "description": "Extra HTTP headers; keys are header names, values are header values",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Header value"
+            }
+          },
+          "collections": {
+            "oneOf": [
+              {
+                "description": "Array of collection names to replicate",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "description": "Object keyed by collection names, with values of collection configs.",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "description": "Collection replication config",
+                  "properties": {
+                    "channels": {
+                      "type": "array",
+                      "description": "Channel filter",
+                      "items": {
+                        "type": "string",
+                        "description": "A Sync Gateway channel name"
+                      },
+                      "uniqueItems": true
+                    },
+                    "doc_ids": {
+                      "type": "array",
+                      "description": "Document IDs to replicate",
+                      "items": {
+                        "type": "string",
+                        "description": "A document ID"
+                      },
+                      "uniqueItems": true
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "trusted_root_certs": {
+            "description": "The certificate data of an additional root certificate to be trusted",
+            "type": "string"
+          },
+          "pinned_cert": {
+            "description": "The certificate data of the server certificate",
+            "type": "string"
+          },
+          "auth": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthConfig"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "session_cookie": {
+                    "description": "A Sync Gateway session cookie for authentication",
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "proxy": {
+            "$ref": "#/components/schemas/ProxyConfig"
+          }
+        }
+      },
+      "DatabaseInfo": {
+        "type": "object",
+        "properties": {
+          "db_name": {
+            "description": "Database name",
+            "type": "string"
+          },
+          "db_uuid": {
+            "description": "Unique database identifier.",
+            "type": "string"
+          },
+          "collections": {
+            "type": "object",
+            "description": "The collections available in this database.",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Details of a collection. The name of the object is the name of the collection.",
+              "properties": {
+                "doc_count": {
+                  "description": "The number of documents in the keyspace.\nReturns 0 if the database is offline.",
+                  "type": "integer"
+                },
+                "update_seq": {
+                  "description": "The last sequence number that was committed to the keyspace.\nReturns 0 if the database is offline.",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "db_name": "travel-sample",
+          "db_uuid": "8478be31c9674c499c07edd4e3115de7",
+          "collections": {
+            "inventory.airline": {
+              "doc_count": 1,
+              "update_seq": 1
+            },
+            "inventory.airport": {
+              "doc_count": 1980,
+              "update_seq": 1980
+            },
+            "inventory.landmark": {
+              "doc_count": 0,
+              "update_seq": 0
+            }
+          }
+        }
+      },
+      "KeyspaceInfo": {
+        "type": "object",
+        "properties": {
+          "db_name": {
+            "description": "Database name",
+            "type": "string"
+          },
+          "update_seq": {
+            "description": "The last sequence number that was committed to the database.\nReturns 0 if the database is offline.",
+            "type": "integer"
+          },
+          "committed_update_seq": {
+            "description": "The last sequence number that was committed to the database.\nReturns 0 if the database is offline.",
+            "type": "integer"
+          },
+          "db_uuid": {
+            "description": "Unique database identifier.",
+            "type": "string"
+          },
+          "scope_name": {
+            "description": "The name of the scope.",
+            "type": "string",
+            "example": "_default"
+          },
+          "collection_name": {
+            "description": "The name of the collection.",
+            "type": "string",
+            "example": "_default"
+          },
+          "doc_count": {
+            "description": "The number of documents in the keyspace.\nReturns 0 if the database is offline.",
+            "type": "integer"
+          }
+        },
+        "example": {
+          "db_name": "travel-sample",
+          "db_uuid": "8478be31c9674c499c07edd4e3115de7",
+          "scope_name": "inventory",
+          "collection_name": "airport",
+          "doc_count": 1980,
+          "update_seq": 1980,
+          "committed_update_seq": 1980
+        }
+      },
+      "New-revision": {
+        "description": "Properties returned when a new document revision is created",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the document.",
+            "type": "string"
+          },
+          "ok": {
+            "description": "Whether the request completed successfully.",
+            "type": "boolean"
+          },
+          "rev": {
+            "description": "The revision of the document.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "ok",
+          "rev"
+        ],
+        "title": "New-revision",
+        "example": {
+          "ok": true,
+          "id": "~SCH2oNtKFMBdcO-_sUhBmn",
+          "rev": "1-22855783cf597c31c37ec3815d8027f3706ef6f9"
+        }
+      },
+      "Changes-feed": {
+        "description": "Properties of a changes feed",
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "seq": {
+                  "description": "The change sequence number.",
+                  "type": "number"
+                },
+                "id": {
+                  "description": "The document ID the change happened on.",
+                  "type": "string"
+                },
+                "changes": {
+                  "description": "List of document leafs with each leaf containing only a `rev` field.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "rev": {
+                        "description": "The new revision that was caused by that change.",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "uniqueItems": true
+                }
+              }
+            },
+            "uniqueItems": true
+          },
+          "last_seq": {
+            "description": "The last change sequence number.",
+            "type": "string"
+          }
+        },
+        "example": {
+          "results": [
+            {
+              "seq": 0,
+              "id": "~XEltbV2jxLN04FDFsZED5_",
+              "changes": [
+                {
+                  "rev": "1-22f5be403d75646a0758fab6731d7fa87c197666"
+                }
+              ]
+            },
+            {
+              "seq": 1,
+              "id": "~AxF827yGbOQprwFMNaotw2",
+              "changes": [
+                {
+                  "rev": "1-22855783cf597c31c37ec3815d8027f3706ef6f9"
+                }
+              ]
+            }
+          ],
+          "last_seq": 1
+        }
+      },
+      "Document": {
+        "description": "A document",
+        "type": "object",
+        "properties": {
+          "_id": {
+            "description": "document ID",
+            "type": "string"
+          },
+          "_rev": {
+            "description": "revision ID of the document",
+            "type": "string"
+          }
+        },
+        "additionalProperties": true,
+        "required": [
+          "_id",
+          "_rev"
+        ],
+        "example": {
+          "_id": "~SCH2oNtKFMBdcO-_sUhBmn",
+          "_rev": "1-22855783cf597c31c37ec3815d8027f3706ef6f9",
+          "type": "airport",
+          "country": "United States",
+          "faa": "LAX"
+        }
+      }
+    },
+    "responses": {
+      "request-problem": {
+        "description": "There was a problem with your request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HTTP-Error"
+            }
+          }
+        }
+      },
+      "Not-found": {
+        "description": "Resource could not be found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HTTP-Error"
+            },
+            "example": {
+              "error": "not_found",
+              "reason": "no such database \"invalid-db\""
+            }
+          }
+        }
+      },
+      "New-revision": {
+        "description": "New revision created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/New-revision"
+            }
+          }
+        }
+      },
+      "all-docs": {
+        "description": "Operation ran successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "object",
+                        "properties": {
+                          "rev": {
+                            "type": "string"
+                          },
+                          "cv": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uniqueItems": true
+                },
+                "total_rows": {
+                  "type": "number"
+                },
+                "update_seq": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "rows",
+                "total_rows",
+                "update_seq"
+              ]
+            }
+          }
+        }
+      },
+      "changes-feed": {
+        "description": "Successfully returned the changes feed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Changes-feed"
+            }
+          }
+        }
+      },
+      "query": {
+        "description": "Array of objects returned from query",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "description": "An object containing the properties returned by the query",
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "_": {
+                  "id": 7630,
+                  "type": "airport",
+                  "country": "United States",
+                  "faa": "MPI",
+                  "tz": "America/Los_Angeles"
+                }
+              }
+            }
+          }
+        }
+      },
+      "invalid-doc-id": {
+        "description": "Document ID is not in an allowed format therefore is invalid.\n\nThis could be because it is over 250 characters or is prefixed with an underscore (\"_\").",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HTTP-Error"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Resource already exists under that name",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HTTP-Error"
+            }
+          }
+        }
+      },
+      "Invalid-content-type": {
+        "description": "Invalid content type",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HTTP-Error"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "taskid": {
+        "name": "taskid",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "number"
+        },
+        "example": 1234,
+        "description": "The ID of an active replication task."
+      },
+      "keyspace": {
+        "name": "keyspace",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "examples": {
+          "default": {
+            "summary": "Default scope and collection",
+            "value": "db1",
+            "description": "Default scope and collection"
+          },
+          "namedInDefault": {
+            "summary": "Named collection within the default scope",
+            "value": "db1.collection1",
+            "description": "Named collection within the default scope"
+          },
+          "fullyQualified": {
+            "summary": "Fully-qualified scope and collection",
+            "value": "db1.scope1.collection1",
+            "description": "Fully-qualified scope and collection"
+          }
+        },
+        "description": "The keyspace to run the operation against.\n\nA keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+      },
+      "result-rows-descending": {
+        "name": "descending",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": false
+        },
+        "description": "Reverses sort order (descending document ID)"
+      },
+      "include_docs": {
+        "name": "include_docs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        },
+        "description": "Include the body associated with each document."
+      },
+      "keys": {
+        "name": "keys",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": "An array of document ID strings to filter by."
+      },
+      "limit-result-rows": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "number"
+        },
+        "description": "This limits the number of result rows returned. Using a value of `0` has the same effect as the value `1`."
+      },
+      "skip-result-rows": {
+        "name": "skip",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "number"
+        },
+        "description": "Offset into the result rows returned. Combined with `limit` can be useful for paging."
+      },
+      "startkey": {
+        "name": "startkey",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Return records starting with the specified key."
+      },
+      "endkey": {
+        "name": "endkey",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Stop returning records when this key is reached."
+      },
+      "docid": {
+        "name": "docid",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "doc1",
+        "description": "The document ID to run the operation against."
+      },
+      "rev": {
+        "name": "rev",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "2-5145e1086bb8d1d71a531e9f6b543c58",
+        "description": "The document revision to target."
+      },
+      "revs_from": {
+        "name": "revs_from",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": "Trims the revision history to stop at the first revision in the provided list. If no match is found, the revisions are trimmed to the `revs_limit`."
+      },
+      "revs_limit": {
+        "name": "revs_limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Maximum number of revisions to return for each document."
+      },
+      "roundtrip": {
+        "name": "roundtrip",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        },
+        "description": "Block until document has been received by change cache."
+      },
+      "If-Match": {
+        "name": "If-Match",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The revision ID to target."
+      }
+    }
+  }
+}
