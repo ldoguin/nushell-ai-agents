@@ -1,0 +1,43 @@
+{
+    "cbes_oai" : {
+        "runtime" : "openai",
+        "model":"gpt-4o-mini",
+        "prompt":"prompts/cbes.txt",
+        "model_tools":"openapi-transformer/tools.json",
+        "tool_functions":"openapi-transformer/functions.nu",
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
+    },
+    "qwen_general_local" : {
+        "runtime" : "ollama",
+        "model":"qwen2.5:7b",
+        "prompt":"prompts/toolSystemPrompt.txt",
+        "model_tools":"tools/tools.json",
+        "tool_functions":"tools/tools.nu",
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
+    },
+    "general_oai" : {
+        "runtime" : "openai",
+        "model":"gpt-4o-mini",
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
+    },
+    "qwen_reasoner_local" : {
+        "runtime" : "ollama",
+        "model":"qwen2.5:7b",
+        "prompt":"prompts/reasoner.txt",
+        "model_tools":"tools/tools.json",
+        "tool_functions":"tools/tools.nu",
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
+    }
+}

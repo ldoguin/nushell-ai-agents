@@ -8,120 +8,7 @@ export def cbsh_tool_library [] {
 }
 
 export def tool_library [] {
-    let tools = [
-        {
-            type: 'function',
-            function: {
-                name: 'calculate',
-                description: 'calculate mathematical expressions, can only use numbers directly; cannot call other functions',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        expression: {
-                            type: 'string',
-                            description: 'The mathematical expression to be evaluated, it can only use numbers',
-                        },
-                    },
-                    required: ['expression'],
-                },
-            },
-        },
-    
-        {
-            type: 'function',
-            function: {
-                name: 'get_planet_mass',
-                description: 'return the mass of a given planet',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        planet: {
-                            type: 'string',
-                            description: 'The planet name',
-                        },
-                    },
-                    required: ['planet'],
-                },
-            },
-        },
-        {
-            type: 'function',
-            function: {
-                name: 'import_git_repo',
-                description: 'this function will take a git repository url, clone the repository, extract the commit log, import it with one document per commit in a database, and index all commit in a vector database. If the repository url is not known, it should be search from internet',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        repoPath: {
-                            type: 'string',
-                            description: 'the url to clone the git repository',
-                        },
-                        repoName: {
-                            type: 'string',
-                            description: 'the name of the git repository',
-                        },
-                    },
-                    required: ['repoPath', 'repoName'],
-                },
-            }
-        },
-        {
-            type: 'function',
-            function: {
-                name: 'think_code',
-                description: 'this function will call a helpful coding agent that has the ability to understand code and choose which tools to use for coding tasks. It can break down code related tasks.',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        prompt: {
-                            type: 'string',
-                            description: 'the question to anwser',
-                        },
-                    },
-                    required: ['prompt'],
-                },
-            }
-        },
-        {
-            type: 'function',
-            function: {
-                name: 'ask_repo',
-                description: 'this function will take a git repository that has been already indexed in couchbase, run a vector search and ask a question specialized code agent. The repo must have been imported before this function is used',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        repoName: {
-                            type: 'string',
-                            description: 'the name of the git repository',
-                        },
-                        question: {
-                            type: 'string',
-                            description: 'the question the agent will ask',
-                        },
-                    },
-                    required: ['repoPath', 'repoName'],
-                },
-            },
-        }
-        {
-            type: 'function',
-            function: {
-                name: 'search_internet',
-                description: 'this function will call the duckduck go search engine, retrieve the top 10 links returned by the search in markdown format.',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        search: {
-                            type: 'string',
-                            description: 'the search terms to be queried',
-                        },
-                    },
-                    required: ['search'],
-                },
-            },
-        }
-    
-    ];
+    let tools =  open "tools/tools.json"
     $tools
 }
 
@@ -174,7 +61,7 @@ export def search_internet [query] {
 }
 
 
-export def callTool [$toolCall] {
+export def callTool [$toolCall, tool_functions] {
     $toolCall | log
     let functionName = $toolCall.name
      #mut arguments = parseArg $toolCall.arguments 
@@ -190,15 +77,15 @@ export def callTool [$toolCall] {
             }
             print " $tc.arguments"
             let q = ( $tc.arguments.args | str replace -r '^"' '' | str replace -r '"$' '' ) 
-            let tcResult = ( callTool $tc )
+            let tcResult = ( callTool $tc $tool_functions )
             $responses = ( $responses | append {value : $tcResult} )
             $arguments = ( $arguments |  str replace -r '(?P<fname>\w+)\((?P<arguments>.*?)\)' $tcResult )
         }
         $fInArg = ( $fInArg | merge $responses )
         print $fInArg
     }
-    $" source tools/tools.nu; source openapi-transformer/functions.nu; ($functionName)   ($arguments)  " | log
-    let result_tool = ( cbsh -c ( $" source tools/tools.nu; source openapi-transformer/functions.nu;  ($functionName) ($arguments ) "  )  ) | complete
+    $" source ($tool_functions); ($functionName)   ($arguments)  " | log
+    let result_tool = ( cbsh -c ( $" source ($tool_functions);  ($functionName) ($arguments ) "  )  ) | complete
     if ( $result_tool.exit_code == 0 ) {
         return $result_tool.stdout
     } else {

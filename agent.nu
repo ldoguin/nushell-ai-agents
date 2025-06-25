@@ -1,6 +1,5 @@
 # Agent
-use agent/agents.nu [openai-mini-o_agent, openai-cbes-mini-o_agent, run_agent ]
-use tools/tools.nu [tool_library, cbsh_tool_library]
+use agent/agents.nu [ run_agent, agent ]
 use common/utils.nu *
 
 def think_code [$query] {
@@ -8,8 +7,8 @@ def think_code [$query] {
     "## Calling think_code" | log
     $query | log
 
-    let model_tools = tool_library
-    mut agent = openai-mini-o_agent $model_tools
+    let all_agents = open agents.json
+    mut agent = agent $all_agents.cbes_oai
 
     let answer = ( $agent | run_agent $query )
     $answer
@@ -21,9 +20,8 @@ def run [$query] {
     let s = $in
     init_logger
     "## Calling run" | log
-    let to = open openapi-transformer/tools.json
-    let model_tools = $to
-    mut agent = openai-cbes-mini-o_agent $model_tools
+    let all_agents = open agents.json
+    mut agent = agent $all_agents.cbes_oai
     mut agentPrompt = "";
     if ( $s != null ) {
         $agentPrompt = ( [$query, " ", $s] | str join )

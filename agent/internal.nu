@@ -12,7 +12,7 @@ export def call [ $agent, $message] {
     if ($msg | column_exist "tool_calls" ) {
         $magent.messages = ($magent.messages | append  $result.message )
         for $tc in ( $msg.tool_calls | enumerate) {
-            let toolresponse = callTool $tc.item.function
+            let toolresponse = callTool $tc.item.function $agent.tool_functions
             mut tool_call_back_msg = {"role": "tool", "name" : $tc.item.function.name , "content": $toolresponse};
             if ($tc.item | column_exist "id") {
                 $tool_call_back_msg  = ( $tool_call_back_msg | merge {"id" : $tc.item.id, "tool_call_id" : $tc.item.id } )
@@ -29,7 +29,7 @@ export def call [ $agent, $message] {
                     let tool = ( $s.item.content | parse --regex '^(?P<fname>\w+): (?P<args>.*)$')
                     let functionName = $tool.fname.0
                     let args = ( $tool.args.0  | split row , )
-                    let result_tool = callTool {name: $functionName, arguments:  { "args" : $args } }
+                    let result_tool = callTool {name: $functionName, arguments:  { "args" : $args } } "tools/tools.nu"
                     $magent.messages = ($magent.messages | append  {"role": "user", "content": $"Observation: ($result_tool)"} )
                 }
             }

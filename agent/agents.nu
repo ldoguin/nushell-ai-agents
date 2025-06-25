@@ -2,7 +2,7 @@ use internal.nu *
 use ../common/utils.nu *
 use model.nu *
 
-def build_agent [model_call: closure, prompt? : string] {
+def build_agent [model_call: closure, prompt? : string, tool_functions? : string] {
     mut agent = {
         messages : []
         system : $prompt,
@@ -11,36 +11,35 @@ def build_agent [model_call: closure, prompt? : string] {
     if ($prompt != null) {
         $agent.messages = ($agent.messages | append {"role": "system", "content": $prompt})        
     }
+    if ($tool_functions != null) {
+        $agent.tool_functions = $tool_functions        
+    }
     $agent
 }
 
-export def qwen_general_agent [ $model_tools ] {
-    let system_prompt = open agent/prompts/toolSystemPrompt.txt
-    mut agent = build_agent { |messages| callama "qwen2.5:7b" $messages false "api/chat" $model_tools } $system_prompt
-    $agent
-}
+export def agent [ config ] {
+    let system_prompt = if ($config.prompt? != null) {
+        open $config.prompt
+    } else {
+        ""
+    }
+    let model_tools = if ($config.model_tools? != null) {
+        open $config.model_tools
+    } else {
+        []
+    }
+    mut config = $config
+    $config.options = if ($config.options? != null) {
+        $config.options
+    } else {
+        {}
+    }
+    let config = $config
 
-export def qwen_code_agent [ $model_tools ] {
-    let system_prompt = open agent/prompts/coder.txt
-    mut agent = build_agent { |messages| callama "qwen2.5-coder" $messages false "api/chat" $model_tools } $system_prompt
-    $agent
-}
-
-export def openai-mini-o_agent [ $model_tools ] {
-    mut agent = build_agent { |messages| calloai $messages $model_tools }
-    $agent
-}
-
-export def openai-cbes-mini-o_agent [ $model_tools ] {
-    let system_prompt = open agent/prompts/cbes.txt
-    mut agent = build_agent { |messages| calloai $messages $model_tools } $system_prompt
-    $agent
-}
-
-export def qwen-reasoner_agent [ $model_tools ] {
-    let system_prompt = open agent/prompts/reasoner.txt
-    mut agent = build_agent { |messages| calloai $messages $model_tools } $system_prompt
-    $agent
+    match $config.runtime {
+        "openai" => ( build_agent { |messages| calloai $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
+        "ollama" => ( build_agent { |messages| callama $config.model $messages false "api/chat" $model_tools $config.options } $system_prompt $config.tool_functions? )
+    }
 }
 
 export def run_agent [query] {
