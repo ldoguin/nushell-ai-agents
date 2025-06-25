@@ -31,6 +31,6 @@ export def calloai [$messages, $model_tools] {
         temperature: 0
     };
     let jsonString = ( $json | to json )
-    let response = http post  $url  $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json"
-    $response
+    let response = ( http post  -e -f $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json")
+    $response.body
 }

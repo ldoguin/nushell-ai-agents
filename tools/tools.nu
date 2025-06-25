@@ -177,7 +177,8 @@ export def search_internet [query] {
 export def callTool [$toolCall] {
     $toolCall | log
     let functionName = $toolCall.name
-    mut arguments = parseArg $toolCall.arguments;
+     #mut arguments = parseArg $toolCall.arguments 
+    mut arguments =  $toolCall.arguments 
     $arguments | log
     mut fInArg = ( $arguments | parse --regex '(?P<fname>\w+)\((?P<arguments>.*?)\)' )
     if ( $fInArg != [] ) {
@@ -189,7 +190,6 @@ export def callTool [$toolCall] {
             }
             print " $tc.arguments"
             let q = ( $tc.arguments.args | str replace -r '^"' '' | str replace -r '"$' '' ) 
-            print $q
             let tcResult = ( callTool $tc )
             $responses = ( $responses | append {value : $tcResult} )
             $arguments = ( $arguments |  str replace -r '(?P<fname>\w+)\((?P<arguments>.*?)\)' $tcResult )
@@ -197,8 +197,8 @@ export def callTool [$toolCall] {
         $fInArg = ( $fInArg | merge $responses )
         print $fInArg
     }
-    $" source tools/tools.nu; source couchbase-edge-server/cbes.nu; ($functionName)   ($arguments)  " | log
-    let result_tool = ( cbsh -c ( $" source tools/tools.nu; source couchbase-edge-server/cbes.nu; ($functionName)   ($arguments)  " ) ) | complete
+    $" source tools/tools.nu; source openapi-transformer/functions.nu; ($functionName)   ($arguments)  " | log
+    let result_tool = ( cbsh -c ( $" source tools/tools.nu; source openapi-transformer/functions.nu;  ($functionName) ($arguments ) "  )  ) | complete
     if ( $result_tool.exit_code == 0 ) {
         return $result_tool.stdout
     } else {

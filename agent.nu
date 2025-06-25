@@ -21,7 +21,7 @@ def run [$query] {
     let s = $in
     init_logger
     "## Calling run" | log
-    let to = open couchbase-edge-server/cbes-tool.json
+    let to = open openapi-transformer/tools.json
     let model_tools = $to
     mut agent = openai-cbes-mini-o_agent $model_tools
     mut agentPrompt = "";
@@ -30,7 +30,6 @@ def run [$query] {
     } else {
         $agentPrompt = $query
     }
-    print $agentPrompt
     let answer = $agent | run_agent $agentPrompt
     $answer
 }

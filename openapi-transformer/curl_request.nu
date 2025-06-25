@@ -2,8 +2,8 @@
 def curl_request [           
     method: string,     # HTTP method (GET, POST, etc.)
     url: string,        # The target URL PATH
-    query_params : list<record>,        
-    headers: list<record>,          
+    query_params,        
+    headers,          
     body: any
     --username: string,           # Username for basic auth
     --password: string,           # Password for basic auth
@@ -13,6 +13,34 @@ def curl_request [
 ] {
     let os = $nu.os-info.name
     
+    let $url = ( if ( $env.CBES_BASE_URL? != null) {
+        $env.CBES_BASE_URL + $url
+    } else {
+        $url 
+    }
+    )
+    
+    let $username = ( if ( $env.CBES_USERNAME? != null) {
+        $env.CBES_USERNAME
+    } else {
+        $username 
+    }
+    )
+
+     let $password = ( if ( $env.CBES_PASSWORD? != null) {
+        $env.CBES_PASSWORD
+    } else {
+        $password 
+    }
+    )
+
+     let $cacert = ( if ( $env.CBES_CACERT_PATH? != null) {
+        $env.CBES_CACERT_PATH
+    } else {
+        $cacert 
+    }
+    )
+
     mut query_part = ""
     mut query_parts = []
     if $query_params != null and ( $query_params | length ) > 0 {
@@ -40,7 +68,7 @@ def curl_request [
     }
  
     if $body != null {
-        $args ++= ["--data", $body]
+        $args ++= ["--data", $"($body)"]
     }
 
     if $cacert != null {

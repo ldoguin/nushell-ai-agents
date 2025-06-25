@@ -9,6 +9,13 @@ def sanitize_param_name [text: string] {
   $text | str replace -a "-" "_"
 }
 
+def match-oai-type [param] {
+  if ($param.type? != null) {
+    return ( $param | reject -i name required in )
+  } else {
+    return ( match-oai-type $param.schema )
+  }
+}
 
 def manage_properties [props : any] {
       let key = $props.key
@@ -35,7 +42,7 @@ def manage_properties [props : any] {
         return ( "An object containing the following field:" + ( describe-json-schema $value ) + ". This is the last field of the object." )
       } else {
         let typ = $value.type
-        let desc = $value.description
+        mut desc = $value.description
         return $"($key) ($typ) - ($desc)"
       }
       
@@ -79,68 +86,71 @@ def generate_function [
 
   let $parameters = ( if ($request_body != {} ) {
       let desc = describe-json-schema ( $request_body.content | values | $in.0.schema )
-      $parameters | append  { in : "body", name : "body", required : true, description : $desc , type : "any" } 
+      $parameters | append  { in : "body", name : "body", required : true, description : ( $request_body.content | to text ) , type : "string" } 
     } else {
       $parameters
     }
   )
-
+ let $parameters  = $parameters | sort-by required
 
   let param_builders = ( if ( $parameters | length ) < 1  {
       [] 
   } else {
-       ( $parameters | sort-by -r required | each { |x|
+       ( $parameters | each { |x|
 
         mut queryline = []
         if $x.in == "query" {
-          $queryline = $queryline | append $"  if \( $(( sanitize_param_name $x.name)) != null\) {"
-          $queryline = $queryline | append $"    $query_params = $query_params | append  { ( sanitize_param_name $x.name) : $( sanitize_param_name $x.name) } "
+          $queryline = $queryline | append $"  if \( \( $tool_args | get -i ($x.name) \) != null \) {"
+          $queryline = $queryline | append $"    $query_params = $query_params | append  { ( $x.name) : \( $tool_args | get ($x.name) \) } "
           $queryline = $queryline | append "  }"
         }
         let queryline = $queryline | str join "\n"
 
         mut header_params = []
         if $x.in == "header" {
-          $header_params = $header_params | append $"  if \( $( sanitize_param_name $x.name) != null\) {"
-          $header_params = $header_params | append $"    $header_params = $header_params | append  {  ( sanitize_param_name $x.name) : $( sanitize_param_name $x.name) } "
+          $header_params = $header_params | append $"  if \( \( $tool_args | get -i ($x.name) \) != null \) {"
+          $header_params = $header_params | append $"    $header_params = $header_params | append  { ( $x.name) : \( $tool_args | get ($x.name) \) } "
           $header_params = $header_params | append "  }"
         }
         let header_params = $header_params | str join "\n"
 
-
-
-        mut paramline = ["   "]
-        # add -- for optional param
-        if not ( ( 'required' in  $x ) and ( $x.required == true ) ) {
-          $paramline = $paramline | append "--"
-        } else {
-          #$required_param = $required_param | append $x.name
+        mut path_params = []
+        if $x.in == "path" {
+          $path_params = $path_params | append $"  let  ( $x.name) =  \( $tool_args | get ($x.name) \) "
         }
-        let paramline = $paramline | append ( sanitize_param_name $x.name)
-        # add type
-        let paramline = $paramline | append " : "
+        let path_params = $path_params | str join "\n"
 
-        let paramline = $paramline | append " string "
+        mut required_param = ""
+        mut paramline = ["   "]
+        $paramline = $paramline | append ( sanitize_param_name $x.name)
+        # add ? for optional param
+        if not ( ( 'required' in  $x ) and ( $x.required == true ) ) {
+          $paramline = $paramline | append "?"
+        } else {
+          $required_param =  $x.name
+        }
+        
 
-        let paramline = $paramline | append ",  # "
         # add comment
+        let paramline = $paramline | append ",  # "
         let paramline = $paramline | append ( $x.description | str replace -a "\n" " ") 
         let paramline = $paramline | str join ""
 
+        mut t = match-oai-type $x
+        $t  = $t | merge  { description : ( $x.description | str replace -a "\n" " ") }
 
-        let property = [ {
-           ( sanitize_param_name $x.name) : {
-            type : "any",
-            description : ( $x.description | str replace -a "\n" " ") 
-          }
-        } ]
+        mut property = {
+           ( sanitize_param_name $x.name) : $t
+        } 
+
         
-
-       {queryline : $queryline,  paramline : $paramline, header_params : $header_params, property : $property }
+       {queryline : $queryline,  paramline : $paramline, header_params : $header_params, property :  $property  , required_param : $required_param, path_params : $path_params }
         }  | [ ($in.queryline | filter {|x| $x != "" } | str join "\n"),
             ( $in.paramline | str join "\n ") ,
             ( $in.header_params | filter {|x| $x != "" } | str join "\n ") ,
-            ( $in.property )
+            ( $in.property ),
+            ( $in.required_param ),
+            ( $in.path_params | filter {|x| $x != "" } | str join "\n " )
           ]
         )
     }
@@ -150,6 +160,8 @@ def generate_function [
   mut function_params =  ( if ( $param_builders | length ) < 1  { [] } else { $param_builders.1 | filter {|x| $x != "" }  } )
   mut header_params =  ( if ( $param_builders | length ) < 1  { [] } else { $param_builders.2 | filter {|x| $x != "" } } )
   mut properties =  ( if ( $param_builders | length ) < 1  { [] } else { $param_builders.3 | filter {|x| $x != "" } } )
+  mut required_params =  ( if ( $param_builders | length ) < 1  { [] } else { $param_builders.4 | filter {|x| $x != "" }  } )
+  mut path_params =  ( if ( $param_builders | length ) < 1  { [] } else { $param_builders.5 | filter {|x| $x != "" }  } )
 
   $header_params = $header_params | prepend "  mut header_params = []\n"
   $queryline = $queryline | prepend "  mut query_params = []\n"
@@ -159,32 +171,44 @@ def generate_function [
   mut lines = [
     $"# ($summary)",
     $"# ($description  | str replace -a '\n' '\n# ' )",
-    $"def ($func_name) [\n ($function_params)\n] {",
+    #$"def ($func_name) [\n ($function_params)\n] {",
+    $"def ($func_name) [\n tool_args \n] {",
     $"($header_params | str join )",
     $"($queryline | str join )",
+    $"($path_params | str join )",
   ]
 
   if ($request_body == {} ) {
     $lines = $lines | append $"  curl_request  \"($method | str upcase)\" $\"($path)\"  \$query_params  \$header_params  null"
   } else {
+    $lines = $lines | append $"  $header_params = $header_params | append  { "Content-Type" :  "application/json"} "
+    $lines = $lines | append $"  let \$body = \( $tool_args | get body \)"
     $lines = $lines | append $"  curl_request  \"($method | str upcase)\" $\"($path)\"  \$query_params  \$header_params  \$body"
   }
   $lines = $lines | append "}\n"
 
   let function = $lines | str join "\n"
 
+  mut tool_function =  {
+      "name": $func_name,
+      "description":  $description 
+    }
+
+    if ( ($properties | length) > 0 ) {
+     $tool_function = $tool_function | merge { "parameters": {
+        "type": "object",
+        "properties": ( $properties | reduce --fold {} {|acc, item| $acc | merge $item } ),
+        "required": $required_params
+        }
+      }
+  }
+      
+
   let tool_description = {
     "type": "function",
-    "function": {
-      "name": $func_name,
-      "description":  $description  ,
-      "parameters": {
-        "type": "object",
-        "properties": $properties,
-        #"required": $required_param
-      }
-    }
+    "function": $tool_function
   }
+
   [$function, $tool_description]
 }
 
@@ -220,10 +244,10 @@ def main [
   }
 
   let curl_file_content = open $curl_request_file
-  mut lescript = $functions | str join "\n" | str join
+  mut full_script = $functions | str join "\n" | str join
 
-  $lescript ++= $curl_file_content
+  $full_script ++= $curl_file_content
 
-  $lescript | save -f $output_functions_file
+  $full_script | save -f $output_functions_file
   $tools | save -f $output_tools_file
 }

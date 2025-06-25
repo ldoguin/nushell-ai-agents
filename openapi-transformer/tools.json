@@ -3,44 +3,28 @@
     "type": "function",
     "function": {
       "name": "get_get_server_information",
-      "description": "Returns information about the Edge Server node.",
-      "parameters": {
-        "type": "object",
-        "properties": []
-      }
+      "description": "Returns information about the Edge Server node."
     }
   },
   {
     "type": "function",
     "function": {
       "name": "get_get_list_of_all_database_names",
-      "description": "Returns a list of all database names.",
-      "parameters": {
-        "type": "object",
-        "properties": []
-      }
+      "description": "Returns a list of all database names."
     }
   },
   {
     "type": "function",
     "function": {
       "name": "get_list_active_replications_only",
-      "description": "Get a list of all active tasks",
-      "parameters": {
-        "type": "object",
-        "properties": []
-      }
+      "description": "Get a list of all active tasks"
     }
   },
   {
     "type": "function",
     "function": {
       "name": "get_get_status_of_all_replications",
-      "description": "Gets the status of all replication tasks.",
-      "parameters": {
-        "type": "object",
-        "properties": []
-      }
+      "description": "Gets the status of all replication tasks."
     }
   },
   {
@@ -50,15 +34,14 @@
       "description": "Instructs Edge Server to initiate replication with another server, e.g. Sync Gateway.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": "source string - The source database name or URL. target string - The destination database name or URL. bidirectional boolean - Set to `true` for bidirectional push/pull replication. continuous boolean - Set to `true` for continuous replication. channels string - A Sync Gateway channel name. doc_ids string - A document ID. An object containing the following field:. This is the last field of the object.. .. trusted_root_certs string - The certificate data of an additional root certificate to be trusted. pinned_cert string - The certificate data of the server certificate. user string - Username for HTTP Basic auth to remote server. password string - Password for HTTP Basic auth to remote server. openid_token string - An OpenID Connect token for authentication. tls_client_cert string - Edge Server's client certificate for mTLS. tls_client_cert_key string - Private key of TLS client certificate.session_cookie string - A Sync Gateway session cookie for authentication. An object containing the following field:type string - Proxy type: `HTTP` or `HTTPS` (default: `HTTP`). host string - Hostname of proxy server. port number - Port number of proxy server. An object containing the following field:user string - Username for HTTP Basic auth to remote server. password string - Password for HTTP Basic auth to remote server. openid_token string - An OpenID Connect token for authentication. tls_client_cert string - Edge Server's client certificate for mTLS. tls_client_cert_key string - Private key of TLS client certificate. This is the last field of the object.. This is the last field of the object."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: description: Configuration for replication, either of the `_replicate` endpoint, or of the `replications` object in the config file., type: object, properties: source: description: The source database name or URL, type: string, target: description: The destination database name or URL, type: string, bidirectional: description: Set to `true` for bidirectional push/pull replication, type: boolean, default: false, continuous: description: Set to `true` for continuous replication, type: boolean, default: false, channels: description: Channel filter (incompatible with 'collections'), type: array, items: type: string, description: A Sync Gateway channel name, uniqueItems: true, doc_ids: description: Document IDs to replicate (incompatible with 'collections'), type: array, items: type: string, description: A document ID, uniqueItems: true, headers: description: Extra HTTP headers; keys are header names, values are header values, type: object, additionalProperties: type: string, description: Header value, collections: oneOf: description: Array of collection names to replicate, type: array, items: type: string, description: Object keyed by collection names, with values of collection configs., type: object, additionalProperties: type: object, description: Collection replication config, properties: channels: type: array, description: Channel filter, items: type: string, description: A Sync Gateway channel name, uniqueItems: true, doc_ids: type: array, description: Document IDs to replicate, items: type: string, description: A document ID, uniqueItems: true, trusted_root_certs: description: The certificate data of an additional root certificate to be trusted, type: string, pinned_cert: description: The certificate data of the server certificate, type: string, auth: allOf: description: Configuration for authentication to a remote server. Either for replication, or a proxy., type: object, properties: user: description: Username for HTTP Basic auth to remote server, type: string, password: description: Password for HTTP Basic auth to remote server, type: string, openid_token: description: An OpenID Connect token for authentication, type: string, tls_client_cert: description: Edge Server's client certificate for mTLS, type: string, tls_client_cert_key: description: Private key of TLS client certificate, type: string, type: object, properties: session_cookie: description: A Sync Gateway session cookie for authentication, type: string, proxy: description: Configuration of a proxy to use during replication., type: object, properties: type: description: Proxy type: `HTTP` or `HTTPS` (default: `HTTP`), type: string, enum: HTTP, HTTPS, default: HTTP, host: description: Hostname of proxy server, type: string, port: description: Port number of proxy server, type: number, auth: description: Configuration for authentication to a remote server. Either for replication, or a proxy., type: object, properties: user: description: Username for HTTP Basic auth to remote server, type: string, password: description: Password for HTTP Basic auth to remote server, type: string, openid_token: description: An OpenID Connect token for authentication, type: string, tls_client_cert: description: Edge Server's client certificate for mTLS, type: string, tls_client_cert_key: description: Private key of TLS client certificate, type: string",
+            "type": "string"
+          }
+        },
+        "required": [
+          "body"
         ]
       }
     }
@@ -70,15 +53,14 @@
       "description": "Gets the status of the replication task with the given ID.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "taskid": {
-                "type": "any",
-                "description": "The ID of an active replication task."
-              }
-            }
-          ]
+        "properties": {
+          "taskid": {
+            "type": "number",
+            "description": "The ID of an active replication task."
+          }
+        },
+        "required": [
+          "taskid"
         ]
       }
     }
@@ -90,15 +72,14 @@
       "description": "Stops the replication task with the given ID.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "taskid": {
-                "type": "any",
-                "description": "The ID of an active replication task."
-              }
-            }
-          ]
+        "properties": {
+          "taskid": {
+            "type": "number",
+            "description": "The ID of an active replication task."
+          }
+        },
+        "required": [
+          "taskid"
         ]
       }
     }
@@ -110,15 +91,14 @@
       "description": "Retrieves information about a database or keyspace.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace"
         ]
       }
     }
@@ -130,23 +110,19 @@
       "description": "Creates a document with an automatically-generated document ID.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": ""
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, description: The document to be created, as a JSON object., additionalProperties: true, example: type: airport, country: United Kingdom, icao: EGOV, airportname: Anglesey Airport, city: Valley, faa: VLY, tz: Europe/London",
+            "type": "string"
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "body"
         ]
       }
     }
@@ -158,71 +134,46 @@
       "description": "Returns all documents in the database, based on the specified query parameters.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "endkey": {
-                "type": "any",
-                "description": "Stop returning records when this key is reached."
-              }
-            }
-          ],
-          [
-            {
-              "startkey": {
-                "type": "any",
-                "description": "Return records starting with the specified key."
-              }
-            }
-          ],
-          [
-            {
-              "skip": {
-                "type": "any",
-                "description": "Offset into the result rows returned. Combined with `limit` can be useful for paging."
-              }
-            }
-          ],
-          [
-            {
-              "limit": {
-                "type": "any",
-                "description": "This limits the number of result rows returned. Using a value of `0` has the same effect as the value `1`."
-              }
-            }
-          ],
-          [
-            {
-              "keys": {
-                "type": "any",
-                "description": "An array of document ID strings to filter by."
-              }
-            }
-          ],
-          [
-            {
-              "include_docs": {
-                "type": "any",
-                "description": "Include the body associated with each document."
-              }
-            }
-          ],
-          [
-            {
-              "descending": {
-                "type": "any",
-                "description": "Reverses sort order (descending document ID)"
-              }
-            }
-          ]
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "endkey": {
+            "type": "string",
+            "description": "Stop returning records when this key is reached."
+          },
+          "startkey": {
+            "type": "string",
+            "description": "Return records starting with the specified key."
+          },
+          "skip": {
+            "type": "number",
+            "description": "Offset into the result rows returned. Combined with `limit` can be useful for paging."
+          },
+          "limit": {
+            "type": "number",
+            "description": "This limits the number of result rows returned. Using a value of `0` has the same effect as the value `1`."
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of document ID strings to filter by."
+          },
+          "include_docs": {
+            "type": "boolean",
+            "description": "Include the body associated with each document."
+          },
+          "descending": {
+            "type": "boolean",
+            "default": false,
+            "description": "Reverses sort order (descending document ID)"
+          }
+        },
+        "required": [
+          "keyspace"
         ]
       }
     }
@@ -234,23 +185,19 @@
       "description": "Returns all documents in the database, based on the parameters specified in the request body.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": "descending boolean - Reverses sort order (descending document ID). include_docs boolean - Adds body of each doc. keys string - Limits results to the specified document IDs. limit number - Limits number of results. skip number - Offset into results. startkey string - Document ID to start at. endkey string - Document ID to end at (max value, or min if descending)"
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: descending: type: boolean, description: Reverses sort order (descending document ID), default: false, include_docs: type: boolean, description: Adds body of each doc, default: true, keys: type: array, description: Limits results to the specified document IDs, items: type: string, limit: type: number, description: Limits number of results, skip: type: number, description: Offset into results, startkey: type: string, description: Document ID to start at, endkey: type: string, description: Document ID to end at (max value, or min if descending)",
+            "type": "string"
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "body"
         ]
       }
     }
@@ -262,55 +209,37 @@
       "description": "Returns a status code indicating whether any documents exist.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "limit": {
-                "type": "any",
-                "description": "This limits the number of result rows returned. Using a value of `0` has the same effect as the value `1`."
-              }
-            }
-          ],
-          [
-            {
-              "endkey": {
-                "type": "any",
-                "description": "Stop returning records when this key is reached."
-              }
-            }
-          ],
-          [
-            {
-              "startkey": {
-                "type": "any",
-                "description": "Return records starting with the specified key."
-              }
-            }
-          ],
-          [
-            {
-              "keys": {
-                "type": "any",
-                "description": "An array of document ID strings to filter by."
-              }
-            }
-          ],
-          [
-            {
-              "include_docs": {
-                "type": "any",
-                "description": "Include the body associated with each document."
-              }
-            }
-          ]
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "limit": {
+            "type": "number",
+            "description": "This limits the number of result rows returned. Using a value of `0` has the same effect as the value `1`."
+          },
+          "endkey": {
+            "type": "string",
+            "description": "Stop returning records when this key is reached."
+          },
+          "startkey": {
+            "type": "string",
+            "description": "Return records starting with the specified key."
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of document ID strings to filter by."
+          },
+          "include_docs": {
+            "type": "boolean",
+            "description": "Include the body associated with each document."
+          }
+        },
+        "required": [
+          "keyspace"
         ]
       }
     }
@@ -322,23 +251,19 @@
       "description": "Allows multiple documented to be created, updated or deleted in bulk.\n# \n# To create a new document, add the body as an object in the `docs` array.\n# A document ID is generated by Edge Server unless `_id` is specified.\n# \n# To update an existing document, provide the document ID (`_id`) and revision ID (`_rev`) as well as the new body values.\n# \n# To delete an existing document, provide the document ID (`_id`), revision ID (`_rev`), and set the deletion flag (`_deleted`) to true.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": "new_edits boolean - This controls whether to assign new revision identifiers to new edits (`true`) or use the existing ones (`false`).. An object containing the following field:_id string - document ID. _rev string - revision ID. This is the last field of the object."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: new_edits: description: This controls whether to assign new revision identifiers to new edits (`true`) or use the existing ones (`false`)., type: boolean, default: true, docs: type: array, items: type: object, description: A document, properties: _id: type: string, description: document ID, _rev: type: string, description: revision ID, additionalProperties: true, required: docs, example: new_edits: true, docs: _id: FooBar, foo: bar, _id: AliceSettings, _rev: 5-832a6db48ed130adadede928aee54576, FailedLoginAttempts: 7, _id: BobSettings, _rev: 1-fa76ba41ee5fdfee1b91fc478ed09e59, _deleted: true",
+            "type": "string"
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "body"
         ]
       }
     }
@@ -350,111 +275,86 @@
       "description": "Retrieves a sorted list of changes made to documents in the database, in time order of application. Each document appears at most once, ordered by its most recent change, regardless of how many times it has been changed.\n# \n# This request can be used to listen for update and modifications to the database for post processing or synchronization. A continuously connected changes feed is a reasonable approach for generating a real-time log for most applications.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "feed": {
-                "type": "any",
-                "description": "The type of changes feed to use. "
-              }
-            }
-          ],
-          [
-            {
-              "timeout": {
-                "type": "any",
-                "description": "This is the maximum period (in milliseconds) to wait for a change before the response is sent, even if there are no results. This is only applicable for `feed=longpoll` or `feed=continuous` changes feeds. Setting to 0 results in no timeout."
-              }
-            }
-          ],
-          [
-            {
-              "heartbeat": {
-                "type": "any",
-                "description": "The interval (in milliseconds) to send an empty line (CRLF) in the response. This is to help prevent gateways from deciding the socket is idle and therefore closing it. This is only applicable to `feed=longpoll` or `feed=continuous`. This overrides any timeouts to keep the feed alive indefinitely. Setting to 0 results in no heartbeat. The maximum heartbeat can be set in the replication configuration."
-              }
-            }
-          ],
-          [
-            {
-              "doc_ids": {
-                "type": "any",
-                "description": "A valid JSON array of document IDs to filter the documents in the response to only the documents specified. To use this option, the `filter` query option must be set to `_doc_ids` and the `feed` parameter must be `normal`. Also accepts a comma separated list of document IDs instead."
-              }
-            }
-          ],
-          [
-            {
-              "channels": {
-                "type": "any",
-                "description": "A comma-separated list of channel names to filter the response to only the channels specified. To use this option, the `filter` query option must be set to `sync_gateway/bychannels`."
-              }
-            }
-          ],
-          [
-            {
-              "filter": {
-                "type": "any",
-                "description": "Set a filter to either filter by channels or document IDs."
-              }
-            }
-          ],
-          [
-            {
-              "revocations": {
-                "type": "any",
-                "description": "If true, revocation messages are sent on the changes feed."
-              }
-            }
-          ],
-          [
-            {
-              "include_docs": {
-                "type": "any",
-                "description": "Include the body associated with each document."
-              }
-            }
-          ],
-          [
-            {
-              "active_only": {
-                "type": "any",
-                "description": "Set true to exclude deleted documents and notifications for documents the user no longer has access to from the changes feed."
-              }
-            }
-          ],
-          [
-            {
-              "style": {
-                "type": "any",
-                "description": "Controls whether to return the current winning revision (`main_only`) or all the leaf revision including conflicts and deleted former conflicts (`all_docs`)."
-              }
-            }
-          ],
-          [
-            {
-              "since": {
-                "type": "any",
-                "description": "Starts the results from the change immediately after the given sequence ID. Sequence IDs should be considered opaque; they come from the last_seq property of a prior response."
-              }
-            }
-          ],
-          [
-            {
-              "limit": {
-                "type": "any",
-                "description": "Maximum number of changes to return."
-              }
-            }
-          ]
+        "properties": {
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "feed": {
+            "type": "string",
+            "default": "normal",
+            "enum": [
+              "longpoll",
+              "continuous",
+              "sse"
+            ],
+            "description": "The type of changes feed to use. "
+          },
+          "timeout": {
+            "type": "integer",
+            "default": 300000,
+            "maximum": 900000,
+            "minimum": 0,
+            "description": "This is the maximum period (in milliseconds) to wait for a change before the response is sent, even if there are no results. This is only applicable for `feed=longpoll` or `feed=continuous` changes feeds. Setting to 0 results in no timeout."
+          },
+          "heartbeat": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 25000,
+            "description": "The interval (in milliseconds) to send an empty line (CRLF) in the response. This is to help prevent gateways from deciding the socket is idle and therefore closing it. This is only applicable to `feed=longpoll` or `feed=continuous`. This overrides any timeouts to keep the feed alive indefinitely. Setting to 0 results in no heartbeat. The maximum heartbeat can be set in the replication configuration."
+          },
+          "doc_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A valid JSON array of document IDs to filter the documents in the response to only the documents specified. To use this option, the `filter` query option must be set to `_doc_ids` and the `feed` parameter must be `normal`. Also accepts a comma separated list of document IDs instead."
+          },
+          "channels": {
+            "type": "string",
+            "description": "A comma-separated list of channel names to filter the response to only the channels specified. To use this option, the `filter` query option must be set to `sync_gateway/bychannels`."
+          },
+          "filter": {
+            "type": "string",
+            "enum": [
+              "sync_gateway/bychannel",
+              "_doc_ids"
+            ],
+            "description": "Set a filter to either filter by channels or document IDs."
+          },
+          "revocations": {
+            "type": "boolean",
+            "description": "If true, revocation messages are sent on the changes feed."
+          },
+          "include_docs": {
+            "type": "boolean",
+            "description": "Include the body associated with each document."
+          },
+          "active_only": {
+            "type": "boolean",
+            "default": "false",
+            "description": "Set true to exclude deleted documents and notifications for documents the user no longer has access to from the changes feed."
+          },
+          "style": {
+            "type": "string",
+            "default": "main_only",
+            "enum": [
+              "main_only",
+              "all_docs"
+            ],
+            "description": "Controls whether to return the current winning revision (`main_only`) or all the leaf revision including conflicts and deleted former conflicts (`all_docs`)."
+          },
+          "since": {
+            "type": "string",
+            "description": "Starts the results from the change immediately after the given sequence ID. Sequence IDs should be considered opaque; they come from the last_seq property of a prior response."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of changes to return."
+          }
+        },
+        "required": [
+          "keyspace"
         ]
       }
     }
@@ -466,23 +366,19 @@
       "description": "Retrieves a sorted list of changes made to documents in the database, in time order of application. Each document appears at most once, ordered by its most recent change, regardless of how many times it has been changed.\n# \n# This request can be used to listen for update and modifications to the database for post processing or synchronization. A continuously connected changes feed is a reasonable approach for generating a real-time log for most applications.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": "limit string - Maximum number of changes to return.. style string - Controls whether to return the current winning revision (`main_only`) or all the leaf revision including conflicts and deleted former conflicts (`all_docs`).. active_only string - Set true to exclude deleted documents and notifications for documents the user no longer has access to from the changes feed.. include_docs boolean - Include the body associated with each document.. revocations string - If true, revocation messages are sent on the changes feed.. filter string - Set a filter to either filter by channels or document IDs.. channels string - A comma-separated list of channel names to filter the response to only the channels specified. To use this option, the `filter` query option must be set to `sync_gateway/bychannels`.. doc_ids string - A valid JSON array of document IDs to filter the documents in the response to only the documents specified. To use this option, the `filter` query option must be set to `_doc_ids` and the `feed` parameter must be `normal`.. heartbeat string - The interval (in milliseconds) to send an empty line (CRLF) in the response. This is to help prevent gateways from deciding the socket is idle and therefore closing it. This is only applicable to `feed=longpoll` or `feed=continuous`. This overrides any timeouts to keep the feed alive indefinitely. Setting to 0 results in no heartbeat. The maximum heartbeat can be set in the replication configuration.. timeout string - This is the maximum period (in milliseconds) to wait for a change before the response is sent, even if there are no results. This is only applicable for `feed=longpoll` or `feed=continuous` changes feeds. Setting to 0 results in no timeout.. feed string - The type of changes feed to use. "
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: limit: description: Maximum number of changes to return., type: string, style: description: Controls whether to return the current winning revision (`main_only`) or all the leaf revision including conflicts and deleted former conflicts (`all_docs`)., type: string, active_only: description: Set true to exclude deleted documents and notifications for documents the user no longer has access to from the changes feed., type: string, include_docs: description: Include the body associated with each document., type: boolean, revocations: description: If true, revocation messages are sent on the changes feed., type: string, filter: description: Set a filter to either filter by channels or document IDs., type: string, channels: description: A comma-separated list of channel names to filter the response to only the channels specified. To use this option, the `filter` query option must be set to `sync_gateway/bychannels`., type: string, doc_ids: description: A valid JSON array of document IDs to filter the documents in the response to only the documents specified. To use this option, the `filter` query option must be set to `_doc_ids` and the `feed` parameter must be `normal`., type: string, heartbeat: description: The interval (in milliseconds) to send an empty line (CRLF) in the response. This is to help prevent gateways from deciding the socket is idle and therefore closing it. This is only applicable to `feed=longpoll` or `feed=continuous`. This overrides any timeouts to keep the feed alive indefinitely. Setting to 0 results in no heartbeat. The maximum heartbeat can be set in the replication configuration., type: string, timeout: description: This is the maximum period (in milliseconds) to wait for a change before the response is sent, even if there are no results. This is only applicable for `feed=longpoll` or `feed=continuous` changes feeds. Setting to 0 results in no timeout., type: string, feed: description: The type of changes feed to use. , type: string",
+            "type": "string"
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "body"
         ]
       }
     }
@@ -494,23 +390,19 @@
       "description": "Runs an ad-hoc query.\n# Only possible when the database's `enable_adhoc_queries` property is true.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": "query string - SQL++ Query string. An object containing the following field:. This is the last field of the object."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: query: description: SQL++ Query string, type: string, parameters: description: Query parameters, type: object, additionalProperties: true, required: query",
+            "type": "string"
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "body"
         ]
       }
     }
@@ -522,23 +414,19 @@
       "description": "Runs a pre-defined query as named by the database configuration's `query` object. If the query has parameters, they should be passed as query parameters, like `?key=value`.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "name": {
-                "type": "any",
-                "description": "Name of the query as defined in the database configuration."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the query as defined in the database configuration."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "name"
         ]
       }
     }
@@ -550,31 +438,24 @@
       "description": "Runs a pre-defined query as named by the database configuration's `query` object. If the query has parameters, they should be passed as JSON object in the request body.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": ""
-              }
-            }
-          ],
-          [
-            {
-              "name": {
-                "type": "any",
-                "description": "Name of the query as defined in the database configuration."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, additionalProperties: true",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the query as defined in the database configuration."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          }
+        },
+        "required": [
+          "keyspace",
+          "name",
+          "body"
         ]
       }
     }
@@ -586,47 +467,34 @@
       "description": "Retrieves a document from the database by its document ID.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "revs_limit": {
-                "type": "any",
-                "description": "Maximum number of revisions to return for each document."
-              }
-            }
-          ],
-          [
-            {
-              "revs_from": {
-                "type": "any",
-                "description": "Trims the revision history to stop at the first revision in the provided list. If no match is found, the revisions are trimmed to the `revs_limit`."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The document revision to target."
-              }
-            }
-          ]
+        "properties": {
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "revs_limit": {
+            "type": "integer",
+            "description": "Maximum number of revisions to return for each document."
+          },
+          "revs_from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Trims the revision history to stop at the first revision in the provided list. If no match is found, the revisions are trimmed to the `revs_limit`."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The document revision to target."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid"
         ]
       }
     }
@@ -638,55 +506,36 @@
       "description": "Creates the specified document, if it does not already exist.\n# If the specified document does exist, this request makes a new revision for the existing document.\n# A revision ID must be provided if targeting an existing document.\n# \n# You must specify a document ID for this endpoint.\n# To let Edge Server generate the ID, use the `POST /{db}/` endpoint.\n# \n# If the document already exists, the document content is replaced by the provided request body.\n# Any existing fields which are not specified by the request body are removed in the new revision.\n# \n# The maximum size for a document is 20MB.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": "_id string - document ID. _rev string - revision ID of the document"
-              }
-            }
-          ],
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "If_Match": {
-                "type": "any",
-                "description": "The revision ID to target."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The document revision to target."
-              }
-            }
-          ],
-          [
-            {
-              "roundtrip": {
-                "type": "any",
-                "description": "Block until document has been received by change cache."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: description: A document, type: object, properties: _id: description: document ID, type: string, _rev: description: revision ID of the document, type: string, additionalProperties: true, required: _id, _rev, example: _id: ~SCH2oNtKFMBdcO-_sUhBmn, _rev: 1-22855783cf597c31c37ec3815d8027f3706ef6f9, type: airport, country: United States, faa: LAX",
+            "type": "string"
+          },
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "If_Match": {
+            "type": "string",
+            "description": "The revision ID to target."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The document revision to target."
+          },
+          "roundtrip": {
+            "type": "boolean",
+            "description": "Block until document has been received by change cache."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid",
+          "body"
         ]
       }
     }
@@ -698,39 +547,27 @@
       "description": "Deletes a document from the keyspace.\n# A new revision is created so the database can track the deletion in synchronized copies.\n# \n# A revision ID is required, either in the header or in the query parameters.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "If_Match": {
-                "type": "any",
-                "description": "The revision ID to target."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The document revision to target."
-              }
-            }
-          ]
+        "properties": {
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "If_Match": {
+            "type": "string",
+            "description": "The revision ID to target."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The document revision to target."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid"
         ]
       }
     }
@@ -742,47 +579,34 @@
       "description": "Returns a status code indicating whether the document exists or not.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "revs_limit": {
-                "type": "any",
-                "description": "Maximum number of revisions to return for each document."
-              }
-            }
-          ],
-          [
-            {
-              "revs_from": {
-                "type": "any",
-                "description": "Trims the revision history to stop at the first revision in the provided list. If no match is found, the revisions are trimmed to the `revs_limit`."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The document revision to target."
-              }
-            }
-          ]
+        "properties": {
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "revs_limit": {
+            "type": "integer",
+            "description": "Maximum number of revisions to return for each document."
+          },
+          "revs_from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Trims the revision history to stop at the first revision in the provided list. If no match is found, the revisions are trimmed to the `revs_limit`."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The document revision to target."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid"
         ]
       }
     }
@@ -794,39 +618,28 @@
       "description": "Retrieves a sub-document associated with the document.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "key": {
-                "type": "any",
-                "description": "The key of the object containing the sub-document."
-              }
-            }
-          ],
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The document revision to target."
-              }
-            }
-          ]
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The key of the object containing the sub-document."
+          },
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The document revision to target."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid",
+          "key"
         ]
       }
     }
@@ -838,47 +651,33 @@
       "description": "Adds or updates a sub-document associated with the document. If the document does not exist, it is created and the sub-document is added to it.\n# \n# If the sub-document already exists, the content of the existing sub-document is replaced in the new revision.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "body": {
-                "type": "any",
-                "description": ""
-              }
-            }
-          ],
-          [
-            {
-              "key": {
-                "type": "any",
-                "description": "The key of the object containing the sub-document."
-              }
-            }
-          ],
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The existing document revision ID to modify. Required only when modifying an existing document."
-              }
-            }
-          ]
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, additionalProperties: true",
+            "type": "string"
+          },
+          "key": {
+            "type": "string",
+            "description": "The key of the object containing the sub-document."
+          },
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The existing document revision ID to modify. Required only when modifying an existing document."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid",
+          "key",
+          "body"
         ]
       }
     }
@@ -890,39 +689,28 @@
       "description": "Deletes a sub-document associated with the document.\n# \n# If the sub-document exists, the sub-document is removed from the document.",
       "parameters": {
         "type": "object",
-        "properties": [
-          [
-            {
-              "key": {
-                "type": "any",
-                "description": "The key of the object containing the sub-document."
-              }
-            }
-          ],
-          [
-            {
-              "docid": {
-                "type": "any",
-                "description": "The document ID to run the operation against."
-              }
-            }
-          ],
-          [
-            {
-              "keyspace": {
-                "type": "any",
-                "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
-              }
-            }
-          ],
-          [
-            {
-              "rev": {
-                "type": "any",
-                "description": "The existing document revision ID to modify."
-              }
-            }
-          ]
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The key of the object containing the sub-document."
+          },
+          "docid": {
+            "type": "string",
+            "description": "The document ID to run the operation against."
+          },
+          "keyspace": {
+            "type": "string",
+            "description": "The keyspace to run the operation against.  A keyspace is a dot-separated string, comprised of a database name, and optionally a named scope and collection."
+          },
+          "rev": {
+            "type": "string",
+            "description": "The existing document revision ID to modify."
+          }
+        },
+        "required": [
+          "keyspace",
+          "docid",
+          "key"
         ]
       }
     }
