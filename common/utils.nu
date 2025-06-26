@@ -20,7 +20,10 @@ export def log [] {
     let s = $in
     "\n" | save -a  "logs/history.log"
     if ( (  ($s | (describe ) ) != "nothing" ) and ( $s != "" ) ) {
-        $s | to text|  save -a "logs/history.log"  
+        if ($env.AGENT_LOG? != null and ( $env.AGENT_LOG | into bool ) ) {
+            print ( $s | to text )
+        }
+        $s | to text |  save -a "logs/history.log"  
     }
     
 }
