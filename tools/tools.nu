@@ -84,12 +84,52 @@ export def callTool [$toolCall, tool_functions] {
         $fInArg = ( $fInArg | merge $responses )
         print $fInArg
     }
-    $" source ($tool_functions); ($functionName)   ($arguments)  " | log
-    let result_tool = ( cbsh -c ( $" source ($tool_functions);  ($functionName) ($arguments ) "  )  ) | complete
-    if ( $result_tool.exit_code == 0 ) {
-        return $result_tool.stdout
+    let fcall = $" source ($tool_functions); ($functionName)   ($arguments)  "
+    $fcall | log
+    if ($env.PROMPT_TOOLS? != null and ($env.PROMPT_TOOLS?  | into bool )) {
+        print $fcall
+        let keys = {
+            # [ key.code key.modifiers ]
+            y:      [ 'y' [] ]
+            n:      [ 'n' [] ]
+            ctrl-c: [ 'c' ['keymodifiers(control)'] ]
+        }
+        mut key = {keycode: '', modifiers: ['']}
+        print "Do you want to execute this tool call ? (y/N)"
+
+        loop {
+            $key = (input listen --types [key])
+            match [$key.code $key.modifiers] {
+                $keymatch if $keymatch == $keys.y => {print 'Running';break}
+                $keymatch if $keymatch == $keys.n  => {print 'Stop'; break}
+                $keymatch if $keymatch == $keys.ctrl-c => {print 'Terminated with Ctrl-C'; break}
+                _ => {
+                print "That key wasn't recognized"
+                print "Do you want to execute this tool ? (y/N)"
+                continue
+                }
+            }
+        }
+        # Act on the captured keypress from the mutable variable
+        match [$key.code $key.modifiers] {
+            $k if $k == $keys.y => {
+                let result_tool = ( cbsh -c ( $" source ($tool_functions);  ($functionName) ($arguments ) "  )  ) | complete
+                if ( $result_tool.exit_code == 0 ) {
+                    return $result_tool.stdout
+                } else {
+                    print $result_tool.stderr
+                    return $result_tool
+                }
+            }
+        }
+        "Tool call has been cancelled by user"
     } else {
-        print $result_tool.stderr
-        return $result_tool
+        let result_tool = ( cbsh -c ( $" source ($tool_functions);  ($functionName) ($arguments ) "  )  ) | complete
+        if ( $result_tool.exit_code == 0 ) {
+            return $result_tool.stdout
+        } else {
+            print $result_tool.stderr
+            return $result_tool
+        }
     }
 }
