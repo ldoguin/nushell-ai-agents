@@ -1,5 +1,10 @@
 # Run a vector search for a given repo, ideally the repo has been previously cloned and indexed with import_git_repo
 export def ask_repo [repoName, question] {
+    let repoName = if ( $repoName |str index-of / | $in > 0) {
+        ($repoName | str substring ($repoName | str index-of / | $in + 1).. )
+    } else {
+        $repoName
+    }
     cb-env bucket "cbsh"
     cb-env scope "gitlog"
     cb-env collection $repoName
@@ -9,11 +14,12 @@ export def ask_repo [repoName, question] {
 }
 
 # Clone a repo, extract it's commit history, upsert it and enrich it with it's embedding, create the vector index if it does not exist
-export def import_git_repo [repoPath : string, repoName : string ] {
+export def import_git_repo [repoPath : string, repoFullName : string ] {
     if ( ( ls | where name == "scratchpad" ) == []) {
         mkdir scratchpad
     }
     cd ./scratchpad
+    let repoName = ($repoFullName | str substring ($repoFullName | str index-of / | $in + 1).. )
     if ( ( ls | where name == $repoName ) == []) {
         git clone $repoPath
         cd $repoName

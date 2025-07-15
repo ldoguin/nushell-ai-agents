@@ -41,7 +41,7 @@
     "type": "function",
     "function": {
       "name": "import_git_repo",
-      "description": "this function will take a git repository url, clone the repository, extract the commit log, import it with one document per commit in a database, and index all commit in a vector database. If the repository url is not known, it should be search from internet",
+      "description": "Use to find answer about github or git repo. Should be used before ask_repo. this function will take a git repository url, clone the repository, extract the commit log, import it with one document per commit in a database, and index all commit in a vector database. If the repository url is not known, it should be search from internet",
       "parameters": {
         "type": "object",
         "properties": {
@@ -84,7 +84,7 @@
     "type": "function",
     "function": {
       "name": "ask_repo",
-      "description": "this function will take a git repository that has been already indexed in couchbase, run a vector search and ask a question specialized code agent. The repo must have been imported before this function is used",
+      "description": "this function will take a git repository that has been already indexed in couchbase, run a vector search and ask a question specialized code agent. The repo must have been imported before this function is used. Finds out information like git history, maintainers, commit logs, only if it has been imported.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -99,7 +99,7 @@
         },
         "required": [
           "repoPath",
-          "repoName"
+          "question"
         ]
       }
     }

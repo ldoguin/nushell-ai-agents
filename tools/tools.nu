@@ -12,12 +12,16 @@ export def tool_library [] {
     $tools
 }
 
-export def ask_repo [repoName, question] {
+export def ask_repo [options] {
+    let repoName = $options.repoName
+    let question = $options.question
     let r = cbsh -c $"source tools/cbsh.nu; ask_repo \"($repoName)\" \"($question)\" "
     $r
 }
 
-export def import_git_repo [repoPath : string, repoName : string ] {
+export def import_git_repo [options ] {
+    let repoPath = $options.repoPath
+    let repoName = $options.repoName
     let r =  cbsh -c $"source tools/cbsh.nu; import_git_repo \"($repoPath)\" \"($repoName)\" "
     $r
 }
@@ -42,7 +46,8 @@ export def get_planet_mass [$planet] {
     }
 }
 
-export def search_internet [query] {
+export def search_internet [options] {
+    let query = $options.search
     print $query
     let queryResult = ( ddgr --json -n1 $query |  from json )
     print $queryResult
