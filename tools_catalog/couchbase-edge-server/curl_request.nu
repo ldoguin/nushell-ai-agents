@@ -1,4 +1,3 @@
-#$"  curl_request $\"\($env.CBES_BASE_URL\)($path)?\(\$query_params\)\" --headers \(\$header_params\) --method \"($method | str upcase)\" --username $env.CBES_USERNAME --password $env.CBES_PASSWORD --cacert $env.CBES_CACERT_PATH \($body\)",
 def curl_request [           
     method: string,     # HTTP method (GET, POST, etc.)
     url: string,        # The target URL PATH

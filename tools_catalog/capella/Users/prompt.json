@@ -1,0 +1,3 @@
+To access an organization, your Couchbase Capella user account must be added to it.
+Accounts are added to an organization using email invitations sent from Capella by a user with the Organization Owner organization role.
+All organization users are given one or more organization roles that define what they can view and manage in their organization.

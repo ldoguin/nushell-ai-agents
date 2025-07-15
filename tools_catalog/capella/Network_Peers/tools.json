@@ -1,0 +1,239 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Network Peers"
+    ],
+    "function": {
+      "name": "post_create_network_peering",
+      "description": "Creates a network peering record for Capella. Capella does not support peering of networks between different cloud providers. For example, you cannot peer GCP VPC that hosts Capella cluster with an AWS VPC hosting an application.\n# \n# - Create configures a Couchbase Capella private networking with the cloud provider. Setting up a private network enables your application to interact with Couchbase Capella over a private connection by co-locating them through network peering.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, providerConfig, providerType, properties: name: description: Name of the peering relationship. -  The name of the peering relationship must be at least 2 characters long. -  The name can not exceed 128 characters., type: string, example: VPCPeerTest, providerType: type: string, description: Type of the cloud provider for which the peering connection is created. Which are- 1. aws 2. gcp 3. azure, example: aws, providerConfig: description: The config data for a peering relationship for a cluster on AWS, GCP, or Azure. , oneOf: type: object, required: accountId, vpcId, region, cidr, description: AWS config data required to establish a VPC peering relationship. Refer to the docs for other limitations to AWS VPC Peering - [ref](https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-basics.html#vpc-peering-limitations)., properties: accountId: type: string, description: The numeric AWS Account ID or Owner ID., example: 00000011123, vpcId: type: string, description: The alphanumeric VPC ID which starts with \\\"vpc-\\\". This is also known as the networkId., example: vpc-141f0fffff141aa00, region: type: string, description: The AWS region where your VPC is deployed., example: us-east-1, cidr: type: string, description: The AWS VPC CIDR block of network in which your application runs. This cannot overlap with your Capella CIDR Block., example: 10.0.0.0/16, type: object, required: networkName, cidr, projectId, serviceAccount, description: GCP config data required to establish a VPC peering relationship. Refer to the docs for other limitations to GCP VPC Peering - [ref](https://cloud.google.com/vpc/docs/vpc-peering)., properties: networkName: type: string, description: The name of the network that you want to peer with., example: cc-ffffffff-aaaa-1414-eeee-000000000000, cidr: type: string, description: The GCP VPC CIDR block of network in which your application runs. This cannot overlap with your Capella CIDR Block., example: 10.0.0.0/16, projectId: type: string, description: The unique identifier for your GCP project., example: rock-galaxy-123456, serviceAccount: type: string, description: ServiceAccount created or assigned on the external VPC project. GCP Service Account with below permissions - DNS Admin - Compute.NetworkAdmin It should be in the form of an email that is shown under `gcloud iam service-accounts list` command. [Reference](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating) , example: service-account-name@project-id.iam.gserviceaccount.com, type: object, required: azureTenantId, subscriptionId, resourceGroup, vnetId, cidr, description: Azure config data required to establish a VNet peering relationship. Refer to the docs for other limitations to Azure VNet Peering - [ref](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview#constraints-for-peered-virtual-networks), properties: azureTenantId: type: string, description: The tenant ID. To find your tenant ID, see [How to find your Azure Active Directory tenant ID](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant)., example: ffffffff-aaaa-1414-eeee-000000000000, subscriptionId: type: string, description: The subscription ID. To find your subscription ID, see [Find your Azure subscription](https://learn.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id#find-your-azure-subscription)., example: ffffffff-aaaa-1414-eeee-000000000000, resourceGroup: type: string, description: The resource group name holding the resource you’re connecting with Capella., example: sample-resource-group, vnetId: description: The VNet ID is the name of the virtual network peering in Azure., type: string, example: sample-vnet, cidr: type: string, description: The CIDR block from the virtual network that you created in Azure., example: 10.2.0.0/16, example: accountID: 00000011123, vpcId: vpc-141f0fffff141aa00, region: us-east-1, cidr: 10.0.0.0/16, examples: PostNetworkPeersAWS: value: name: VPCPeerTestAWS, providerType: aws, providerConfig: accountID: 123456789110, vpcId: vpc-00ff00ff00ff0f, region: us-east-1, cidr: 10.1.0.0/23, PostNetworkPeersGCP: value: name: VPCPeerTestGCP, providerType: gcp, providerConfig: networkName: cc-ffffffff-aaaa-1414-eeee-000000000000, projectId: test-00ff00ff00ff0fff, serviceAccount: sa-ffffffff-eee-aa-test@test-00ff00ff00ff0fff.iam.gserviceaccount.com, cidr: 10.1.0.0/23, PostNetworkPeersAzure: value: name: VnetPeerTestAzure, providerType: azure, providerConfig: azureTenantId: ffffffff-aaaa-1414-eeee-000000000000, subscriptionId: ffffffff-aaaa-1414-eeee-000000000000, resourceGroup: sample-resource-group, vnetId: sample-vnet, cidr: 10.1.0.0/23",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Network Peers"
+    ],
+    "function": {
+      "name": "get_list_network_peering_records",
+      "description": "Lists all the network peering records.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **id**, **name**, **status**."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Network Peers"
+    ],
+    "function": {
+      "name": "get_get_network_peering_record",
+      "description": "Fetches the details of the network peering meta data based on the peerID provided.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "peerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The ID of the network peer record."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "peerId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Network Peers"
+    ],
+    "function": {
+      "name": "delete_delete_network_peering",
+      "description": "Deletes the network peering relationship.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "peerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The ID of the network peer record."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "peerId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Network Peers"
+    ],
+    "function": {
+      "name": "post_get_azure_vnet_peering_cli_command",
+      "description": "Retrieves the role assignment command or script to be executed in the Azure CLI to assign a new network contributor role. It scopes only to the specified subscription and the virtual network within that subscription.\n# \n# - Before using this API, please make sure that the *Admin consent granting* process has been completed through the Capella UI.\n# - This process to grant consent to the VNET peering service principal in the external Azure tenant needs to be done only once for the organization i.e. the first time when the VNET peering is created.\n# - Consenting to this permission request creates a service principal that grants Capella access to the Azure tenant to perform VNET peering.\n# - To complete the admin consent granting process, the Organization owner should follow the steps below -\n#     1. Login to the Capella UI.\n#     2. Deploy an Azure Cluster or open an existing one you want to peer with your application.\n#     3. Click the Settings tab, in the navigation pane click VNET Peering.\n#     4. Click Setup VNET Peering.\n#     5. Confirm that you have a user with the Global Administrator Role.\n#     6. Add the Azure configuration details to allow peering access.\n#     7. Click Allow Peering Access - A new browser tab opens. Sign in to Azure if you have not already.\n#     8. In Azure, accept Capella’s permissions request - The Azure permissions request page is open in the new browser tab and consent to the new permissions request.\n#       For more information refer [docs]- https://docs.couchbase.com/cloud/clouds/vpc-peering/peer-azure.html\n# - On accepting the new permission, you automatically return to the Capella VNET peering page. The Capella VNET peering page shows a notice indicating that peering access is successful.\n# \n# - The Organization Owner should set this up once, then for network peering, use the public API -\n#     1. Use this `Get Azure VNET Peering CLI Command` API to fetch the command.\n#     2. Run the role assignment command in the Azure CLI.\n#     3. Use the `Create VPC Peering` API to create the network peering.\n# \n# - In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: tenantId, subscriptionId, resourceGroup, vnetId, vnetPeeringServicePrincipal, properties: tenantId: description: The Azure tenant ID. To find your tenant ID, see [How to find your Azure Active Directory tenant ID](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant)., type: string, example: ffffffff-aaaa-1414-eeee-000000000000, subscriptionId: description: Subscription ID is a GUID that uniquely identifies your subscription to use Azure services. To find your subscription ID, see [Find your Azure subscription](https://learn.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id#find-your-azure-subscription)., type: string, example: ffffffff-aaaa-1414-eeee-000000000000, resourceGroup: description: The resource group name holding the resource you’re connecting with Capella., type: string, example: sample-resource-group, vnetId: description: The VNet ID is the name of the virtual network in Azure., type: string, example: sample-vnet, vnetPeeringServicePrincipal: description: The enterprise application object ID for the Capella service principal. You can find the enterprise application object ID in Azure by selecting Azure Active Directory -> Enterprise applications. Next, select the application name, the object ID is in the Object ID box., type: string, example: ffffffff-aaaa-1414-eeee-000000000000",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,3 @@
+Projects contain and allow access to Couchbase databases.
+Projects are used to organize and manage groups of Couchbase databases within organizations.
+An organization can contain any number of projects, and a project can contain any number of databases.

@@ -1,0 +1,1386 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_list_app_endpoints",
+      "description": "Lists all the App Endpoints under a specific App Service along with their associated configurations such as Access Control function, Import Filter or user defined xattr key.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": " Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **name**, **offline**, **bucket**."
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "post_create_app_endpoint",
+      "description": "Creates an App Endpoint within an App Service with specific configurations such as collection level Access Control function and Import Filter.\n# If the scopes property is not included in the request body, the default scope and collection will be used.\n# The first OpenID Connect provider given will be set as the default provider for the App Endpoint. To change the default, please use the Change App Endpoint OIDC Default Provider endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, bucket, properties: bucket: type: string, example: store_locations, description: The Capella Cluster backing bucket for the App Endpoint., oidc: description: OpenID Connect provider configuration., type: array, items: type: object, required: issuer, clientId, properties: issuer: type: string, example: https://example.auth.com, description: The URL for the OpenID Connect issuer., register: type: boolean, example: true, description: Indicates whether to register a new App Service user account when a user logs in using OpenID Connect., clientId: type: string, example: foo_client, description: The OpenID Connect provider client ID., userPrefix: type: string, example: fooOIDC, description: Username prefix for all users created for this provider, discoveryUrl: type: string, example: https://foo.com/.well-known/openid-configuration, description: The URL for the non-standard discovery endpoint., usernameClaim: type: string, example: fooAlt, description: Allows a different OpenID Connect field to be specified instead of the Subject (sub)., rolesClaim: type: string, example: roles, description: If set, the value(s) of the given OpenID Connect authentication token claim will be added to the user's roles. The value of this claim in the OIDC token must be either a string or an array of strings, any other type will result in an error. , providerId: type: string, readOnly: true, description: UUID of the provider., isDefault: type: boolean, readOnly: true, description: Indicates whether this is the default OpenID Connect provider., example: issuer: foo, register: true, clientId: foo_client, userPrefix: fooOIDC, discoveryUrl: https://foo.com/.well-known/openid-configuration, usernameClaim: fooAlt, cors: description: Cross-Origin Resource Sharing (CORS) configuration, used to enable granular access control to trusted domains for Origin and Login purposes in browser-based and hybrid applications., type: object, required: origin, properties: origin: type: array, description: List of allowed origins, use ['*'] to allow access from everywhere, example: http://example.com, http://staging.example.com, items: type: string, loginOrigin: type: array, description: List of allowed login origins, example: http://example.com, items: type: string, headers: type: array, description: List of allowed headers, example: Content-Type, items: type: string, maxAge: description: Specifies the duration (in seconds) for which the results of a preflight request can be cached., type: integer, default: 5, disabled: description: disable CORS, example: false, type: boolean, example: origin: http://example.com, http://staging.example.com, loginOrigin: http://example.com, headers: Content-Type, maxAge: 600, disabled: false, scopes: type: object, additionalProperties: type: object, description: The scope config, defining Access control and validation functions, and import filters for each collection. The key to the scope config object is the name of the scope. Only one scope is allowed per App Endpoint., required: collections, properties: collections: type: object, description: The collection config, defining Access control and validation functions and import filters for this collection. The key to the collection config object is the name of the collection., additionalProperties: type: object, properties: accessControlFunction: type: string, example: function(doc){channel(\"collection name\");}, description: The Javascript function that is used to specify the access control policies to be applied to documents in this collection. Every document update is processed by this function. The default access control function is 'function(doc){channel(doc.channels);}' for the default collection and 'function(doc){channel(collectionName);}' for named collections. , importFilter: type: string, example: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, description: The Javascript function used to specify the documents in this collection that are to be imported by the App Endpoint. By default, all documents in corresponding collection are imported., example: scope_1: collections: collection_1: accessControlFunction: function(doc){channel(doc.channels);}, importFilter: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, collection_2: accessControlFunction: function(doc){channel(doc.channels);}, importFilter: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, default: _default: collections: _default: accessControlFunction: function(doc){channel(doc.channels);}, importFilter:  function(doc) { if (doc.type != 'mobile') { return false; } return true; }, name: type: string, description: App Endpoint name. Must be less than 228 characters. It can only contain lowercase letters, numbers, or the following characters `-_$+()`, example: appEndpoint1, deltaSyncEnabled: type: boolean, default: false, description: Enable/disable delta sync, userXattrKey: type: string, example: syncFnXattr, description: The key of the user-extended attributes (xattr) that will be accessible from the Access control and validation function. If left empty, the feature will be disabled., examples: CreateAppEndpointRequestDefaultCollection: value: bucket: bucket1, name: defaultAppEndpoint, userXattrKey: key, deltaSyncEnabled: true, scopes: _default: collections: _default: accessControlFunction: function(doc){channel(doc.channels);}, importFilter: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, cors: origin: http://example.com, http://staging.example.com, loginOrigin: http://example.com, headers: Content-Type, disabled: true, oidc: issuer: https://example.auth.com, register: true, clientId: foo_client, userPrefix: fooOIDC, discoveryUrl: https://foo.com/.well-known/openid-configuration, usernameClaim: fooAlt, rolesClaim: roles, issuer: https://example.auth.com, register: true, clientId: bar_client, userPrefix: barOIDC, discoveryUrl: https://bar.com/.well-known/openid-configuration, usernameClaim: barAlt, CreateAppEndpointRequestNamedCollections: value: bucket: bucket1, name: storeAppEndpoint, deltaSyncEnabled: false, userXattrKey: key, scopes: scope_1: collections: collection_1: accessControlFunction: function(doc){channel(doc.channels);}, importFilter: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, collection_2: accessControlFunction: function(doc){channel(doc.channels);}, cors: origin: http://example.com, http://staging.example.com, loginOrigin: http://example.com, headers: Content-Type, disabled: true, oidc: issuer: https://example.auth.com, register: true, clientId: bar_client, userPrefix: barOIDC, discoveryUrl: https://bar.com/.well-known/openid-configuration, usernameClaim: barAlt",
+            "type": "string"
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_get_app_endpoint",
+      "description": "Fetches the details of the given App Endpoint, including operational and resync states and various configurations such as Access Control function and Import Filter.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "put_update_app_endpoint",
+      "description": "Replaces a specified App Endpoint’s configurations such as Access Control function, Import Filter, Delta Sync, or user defined xattr key.\n# The first OpenID Connect provider given will be set as the default provider for the App Endpoint. To change the default, please use the Change App Endpoint OIDC Default Provider endpoint.\n# All fields are required, the App Endpoint and bucket names cannot be changed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, bucket, scopes, deltaSyncEnabled, userXattrKey, oidc, cors, properties: name: type: string, description: App Endpoint name. Cannot be changed., example: appEndpoint1, bucket: type: string, example: store_locations, description: The Capella Cluster backing bucket for the App Endpoint. Cannot be changed., scopes: type: object, additionalProperties: type: object, description: The scope config, defining Access control and validation functions, and import filters for each collection. The key to the scope config object is the name of the scope. Only one scope is allowed per App Endpoint., required: collections, properties: collections: type: object, description: The collection config, defining Access control and validation functions and import filters for this collection. The key to the collection config object is the name of the collection., additionalProperties: type: object, properties: accessControlFunction: type: string, example: function(doc){channel(\"collection name\");}, description: The Javascript function that is used to specify the access control policies to be applied to documents in this collection. Every document update is processed by this function. The default access control function is 'function(doc){channel(doc.channels);}' for the default collection and 'function(doc){channel(collectionName);}' for named collections. , importFilter: type: string, example: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, description: The Javascript function used to specify the documents in this collection that are to be imported by the App Endpoint. By default, all documents in corresponding collection are imported., example: scope_1: collections: collection_1: accessControlFunction: function(doc){channel(doc.channels);}, importFilter: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, collection_2: accessControlFunction: function(doc){channel(doc.channels);}, importFilter: function(doc) { if (doc.type != 'mobile') { return false; } return true; }, default: _default: collections: _default: accessControlFunction: function(doc){channel(doc.channels);}, importFilter:  function(doc) { if (doc.type != 'mobile') { return false; } return true; }, deltaSyncEnabled: type: boolean, description: Enable or disable delta sync, userXattrKey: type: string, example: syncFnXattr, description: Key of user xattr that will be accessible from the Access control and validation function. If empty, the feature will be disabled., oidc: description: OpenID Connect provider configuration., type: array, items: type: object, required: issuer, clientId, properties: issuer: type: string, example: https://example.auth.com, description: The URL for the OpenID Connect issuer., register: type: boolean, example: true, description: Indicates whether to register a new App Service user account when a user logs in using OpenID Connect., clientId: type: string, example: foo_client, description: The OpenID Connect provider client ID., userPrefix: type: string, example: fooOIDC, description: Username prefix for all users created for this provider, discoveryUrl: type: string, example: https://foo.com/.well-known/openid-configuration, description: The URL for the non-standard discovery endpoint., usernameClaim: type: string, example: fooAlt, description: Allows a different OpenID Connect field to be specified instead of the Subject (sub)., rolesClaim: type: string, example: roles, description: If set, the value(s) of the given OpenID Connect authentication token claim will be added to the user's roles. The value of this claim in the OIDC token must be either a string or an array of strings, any other type will result in an error. , providerId: type: string, readOnly: true, description: UUID of the provider., isDefault: type: boolean, readOnly: true, description: Indicates whether this is the default OpenID Connect provider., example: issuer: foo, register: true, clientId: foo_client, userPrefix: fooOIDC, discoveryUrl: https://foo.com/.well-known/openid-configuration, usernameClaim: fooAlt, cors: description: Cross-Origin Resource Sharing (CORS) configuration, used to enable granular access control to trusted domains for Origin and Login purposes in browser-based and hybrid applications., type: object, required: origin, properties: origin: type: array, description: List of allowed origins, use ['*'] to allow access from everywhere, example: http://example.com, http://staging.example.com, items: type: string, loginOrigin: type: array, description: List of allowed login origins, example: http://example.com, items: type: string, headers: type: array, description: List of allowed headers, example: Content-Type, items: type: string, maxAge: description: Specifies the duration (in seconds) for which the results of a preflight request can be cached., type: integer, default: 5, disabled: description: disable CORS, example: false, type: boolean, example: origin: http://example.com, http://staging.example.com, loginOrigin: http://example.com, headers: Content-Type, maxAge: 600, disabled: false",
+            "type": "string"
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "delete_delete_app_endpoint",
+      "description": "Deletes an existing App Endpoint given its name.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_list_app_endpoint_collections",
+      "description": "Lists all the collections under a specific App Endpoint along with their associated configurations such as Access Control function, Import Filter or user defined xattr key.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "post_resume_or_bring_an_app_endpoint_online",
+      "description": "Brings an App Endpoint online to close and reopen the connection to the backing Cluster bucket,\n# re-establish access from the Public REST API and accept all incoming Admin API requests.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "delete_pause_or_take_an_app_endpoint_offline",
+      "description": "Take the database offline to run resync or to make changes without disrupting current App Endpoint operations.\n# Clients currently connected to the App Endpoint will not be able to sync data with the Cluster while the App Endpoint is paused.\n# This will not take the backing Cluster bucket offline.\n# Pausing an App Endpoint that is in the progress of coming online will pause the App Endpoint after it comes online.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_get_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration.",
+      "description": "Fetch the App Endpoint Cross-Origin Resource Sharing (CORS) Configuration.\n# CORS is disabled by default. For more information\n# See [Cross-Origin Resource Sharing (CORS) on App Endpoints.](https://docs.couchbase.com/cloud/app-services/deployment/cors-configuration-for-app-services.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "put_upsert_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration.",
+      "description": "Upsert the App Endpoint Cross-Origin Resource Sharing (CORS) Configuration.\n# CORS is disabled by default. For more information\n# See [Cross-Origin Resource Sharing (CORS) on App Endpoints.](https://docs.couchbase.com/cloud/app-services/deployment/cors-configuration-for-app-services.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: origin, properties: origin: type: array, description: List of allowed origins, use ['*'] to allow access from everywhere, example: http://example.com, http://staging.example.com, items: type: string, loginOrigin: type: array, description: List of allowed login origins, example: http://example.com, items: type: string, headers: type: array, description: List of allowed headers, example: Content-Type, items: type: string, maxAge: description: Specifies the duration (in seconds) for which the results of a preflight request can be cached., type: integer, default: 5, disabled: description: disable CORS, example: false, type: boolean, example: origin: http://example.com, http://staging.example.com, loginOrigin: http://example.com, headers: Content-Type, maxAge: 600, disabled: false",
+            "type": "string"
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_get_access_control_and_validation_function",
+      "description": "Retrieves the Access Control and Validation function for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointKeyspace": {
+            "type": "string",
+            "example": "endpoint1.scope1.collection1",
+            "description": "A specific collection denoted by the App Endpoint name, the scope name and collection name separated by a period, for example \"endpoint1.scope1.collection1\". If only an App Endpoint name is provided this will be interpreted as \"endpoint1._default._default\". If only an App Endpoint name and collection name are provided these will interpreted as a named collection within the default scope, for example \"endpoint1.collection1\" will be interpreted as \"endpoint1._default.collection1\". "
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointKeyspace"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "put_upsert_custom_access_control_and_validation_function",
+      "description": "Used to upsert a custom Access Control and Validation function for the given keyspace.\n# This is a Javascript function specified at a keyspace, where a user’s read/write access is defined for documents in that particular keyspace.\n# Every document mutation is processed by this function. If an Access Control function is not explicitly defined, a default is applied.\n# [Read more.](https://docs.couchbase.com/cloud/app-services/deployment/access-control-data-validation.html?)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/javascript: schema: type: string, description: All mutations in this collection are processed by this Javascript function, example: function(doc,oldDoc,meta){channel('collection name');}",
+            "type": "string"
+          },
+          "appEndpointKeyspace": {
+            "type": "string",
+            "example": "endpoint1.scope1.collection1",
+            "description": "A specific collection denoted by the App Endpoint name, the scope name and collection name separated by a period, for example \"endpoint1.scope1.collection1\". If only an App Endpoint name is provided this will be interpreted as \"endpoint1._default._default\". If only an App Endpoint name and collection name are provided these will interpreted as a named collection within the default scope, for example \"endpoint1.collection1\" will be interpreted as \"endpoint1._default.collection1\". "
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointKeyspace",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "delete_delete_access_control_and_validation_function",
+      "description": "Deletes the Access Control and Validation function for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointKeyspace": {
+            "type": "string",
+            "example": "endpoint1.scope1.collection1",
+            "description": "A specific collection denoted by the App Endpoint name, the scope name and collection name separated by a period, for example \"endpoint1.scope1.collection1\". If only an App Endpoint name is provided this will be interpreted as \"endpoint1._default._default\". If only an App Endpoint name and collection name are provided these will interpreted as a named collection within the default scope, for example \"endpoint1.collection1\" will be interpreted as \"endpoint1._default.collection1\". "
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointKeyspace"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_get_import_filter",
+      "description": "Retrieves the Import Filter for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointKeyspace": {
+            "type": "string",
+            "example": "endpoint1.scope1.collection1",
+            "description": "A specific collection denoted by the App Endpoint name, the scope name and collection name separated by a period, for example \"endpoint1.scope1.collection1\". If only an App Endpoint name is provided this will be interpreted as \"endpoint1._default._default\". If only an App Endpoint name and collection name are provided these will interpreted as a named collection within the default scope, for example \"endpoint1.collection1\" will be interpreted as \"endpoint1._default.collection1\". "
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointKeyspace"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "put_upsert_import_filter",
+      "description": "Upserts the Import Filter for the given keyspace. By default, there is no import filter and all documents are imported.\n# Import Filters identify the subset of documents eligible to be replicated by App services based on user-defined requirements.\n# This subset is applied to all future mutations.\n# Once the document has been imported and processed by the App Endpoint, changing the Import Filter will not remove it,\n# even if the updated import filters would prevent newer mutations or iterations of the document from getting imported.\n# [Read more.](https://docs.couchbase.com/cloud/app-services/deployment/import-filters.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/javascript: schema: type: string, description: The Javascript function used to specify the documents in this collection that are to be imported by the App Endpoint. By default, all documents in corresponding collection are imported., example:  function(doc) { if (doc.type == 'mobile') { return true; } }",
+            "type": "string"
+          },
+          "appEndpointKeyspace": {
+            "type": "string",
+            "example": "endpoint1.scope1.collection1",
+            "description": "A specific collection denoted by the App Endpoint name, the scope name and collection name separated by a period, for example \"endpoint1.scope1.collection1\". If only an App Endpoint name is provided this will be interpreted as \"endpoint1._default._default\". If only an App Endpoint name and collection name are provided these will interpreted as a named collection within the default scope, for example \"endpoint1.collection1\" will be interpreted as \"endpoint1._default.collection1\". "
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointKeyspace",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "delete_delete_import_filter",
+      "description": "Deletes the Import Filter for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointKeyspace": {
+            "type": "string",
+            "example": "endpoint1.scope1.collection1",
+            "description": "A specific collection denoted by the App Endpoint name, the scope name and collection name separated by a period, for example \"endpoint1.scope1.collection1\". If only an App Endpoint name is provided this will be interpreted as \"endpoint1._default._default\". If only an App Endpoint name and collection name are provided these will interpreted as a named collection within the default scope, for example \"endpoint1.collection1\" will be interpreted as \"endpoint1._default.collection1\". "
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointKeyspace"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "post_create_app_endpoint_openid_connect_oidc)_provider",
+      "description": "Creates an OIDC provider for the specified App Endpoint.\n# The first OIDC provider will automatically be set as the default OIDC provider.\n# All client requests will use the default OIDC provider, unless the OIDC provider for the request is explicitly specified on authentication.\n# See more [here](https://docs.couchbase.com/cloud/app-services/user-management/set-up-authentication-provider.html#oidc-authorization-step-by-step).\n# \n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: issuer, clientId, properties: issuer: type: string, example: https://example.auth.com, description: The URL for the OpenID Connect issuer., register: type: boolean, example: true, description: Indicates whether to register a new App Service user account when a user logs in using OpenID Connect., clientId: type: string, example: foo_client, description: The OpenID Connect provider client ID., userPrefix: type: string, example: fooOIDC, description: Username prefix for all users created for this provider, discoveryUrl: type: string, example: https://foo.com/.well-known/openid-configuration, description: The URL for the non-standard discovery endpoint., usernameClaim: type: string, example: fooAlt, description: Allows a different OpenID Connect field to be specified instead of the Subject (sub)., rolesClaim: type: string, example: roles, description: If set, the value(s) of the given OpenID Connect authentication token claim will be added to the user's roles. The value of this claim in the OIDC token must be either a string or an array of strings, any other type will result in an error. , example: issuer: foo, register: true, clientId: foo_client, userPrefix: fooOIDC, discoveryUrl: https://foo.com/.well-known/openid-configuration, usernameClaim: fooAlt",
+            "type": "string"
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_list_app_endpoint_openid_connect_oidc)_providers",
+      "description": "List OpenID Connect (OIDC) Providers configured on an App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_get_app_endpoint_openid_connect_oidc)_provider",
+      "description": "Fetches an OIDC provider by ID for the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "OIDCProviderId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the OpenID Connect Provider."
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "OIDCProviderId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "put_update_app_endpoint_openid_connect_oidc)_provider",
+      "description": "Updates an OIDC provider for the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: issuer, clientId, properties: issuer: type: string, example: https://example.auth.com, description: The URL for the OpenID Connect issuer., register: type: boolean, example: true, description: Indicates whether to register a new App Service user account when a user logs in using OpenID Connect., clientId: type: string, example: foo_client, description: The OpenID Connect provider client ID., userPrefix: type: string, example: fooOIDC, description: Username prefix for all users created for this provider, discoveryUrl: type: string, example: https://foo.com/.well-known/openid-configuration, description: The URL for the non-standard discovery endpoint., usernameClaim: type: string, example: fooAlt, description: Allows a different OpenID Connect field to be specified instead of the Subject (sub)., rolesClaim: type: string, example: roles, description: If set, the value(s) of the given OpenID Connect authentication token claim will be added to the user's roles. The value of this claim in the OIDC token must be either a string or an array of strings, any other type will result in an error. , example: issuer: foo, register: true, clientId: foo_client, userPrefix: fooOIDC, discoveryUrl: https://foo.com/.well-known/openid-configuration, usernameClaim: fooAlt",
+            "type": "string"
+          },
+          "OIDCProviderId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the OpenID Connect Provider."
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "OIDCProviderId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "delete_delete_app_endpoint_openid_connect_oidc)_provider",
+      "description": "Deletes an OIDC provider for the specified App Endpoint. Deleting the default provider will error unless it is the only provider.\n# Before deleting the default provider, you must set a new provider as default or have no other providers.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "OIDCProviderId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the OpenID Connect Provider."
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "OIDCProviderId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "put_update_app_endpoint_default_oidc_provider",
+      "description": "Updates the default OIDC provider for the specified App Endpoint.\n# All client requests will use the default OIDC provider, unless the OIDC provider for the request is explicitly specified.\n# See more [here](https://docs.couchbase.com/cloud/app-services/user-management/set-up-authentication-provider.html#oidc-authorization-step-by-step).\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: required: providerId, description: The UUID of the OpenID Connect provider., properties: providerId: type: string, example: ffffffff-aaaa-1414-eeee-000000000000",
+            "type": "string"
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "get_get_resync_status",
+      "description": "Fetches the Resync status of the given App Endpoint. If no resync operation was triggered, the response will say the status is completed\n# with 0 values for other properties.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "post_start_resync",
+      "description": "Initialises the Resync operation for the given collections.\n# By default, all collections that require resync will be resynced unless they are specified in the scopes property, in which case only\n# the specified collections that require resync will be resynced.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: scopes: type: object, additionalProperties: description: Scope name with one or more collection names for which resync is triggered., type: array, items: type: string, example: scope1: collection_1, collection_2, example: scopes: scope1: collection1, collection2",
+            "type": "string"
+          },
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "App Endpoints"
+    ],
+    "function": {
+      "name": "delete_stop_resync",
+      "description": "Stops the Resync operation. When stopping resync, it will be stopped for all collections being processed.\n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appEndpointName": {
+            "type": "string",
+            "example": "endpoint1",
+            "description": "The name of the App Endpoint."
+          },
+          "appServiceId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the appService."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "appServiceId",
+          "appEndpointName"
+        ]
+      }
+    }
+  }
+]

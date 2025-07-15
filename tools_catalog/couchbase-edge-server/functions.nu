@@ -116,7 +116,7 @@ def put_create_a_document [
   let  keyspace =  ( $tool_args | get keyspace ) 
   $header_params = $header_params | append  { "Content-Type" :  "application/json"} 
   let $body = ( $tool_args | get body )
-  curl_request  "POST" $"/($keyspace)"  $query_params  $header_params  $body
+  curl_request  "PUT" $"/($keyspace)"  $query_params  $header_params  $body
 }
 
 # Get all documents in the keyspace
@@ -483,7 +483,6 @@ def delete_delete_a_subdocument [
    let  key =  ( $tool_args | get key ) 
   curl_request  "DELETE" $"/($keyspace)/($docid)/($key)"  $query_params  $header_params  null
 }
-#$"  curl_request $\"\($env.CBES_BASE_URL\)($path)?\(\$query_params\)\" --headers \(\$header_params\) --method \"($method | str upcase)\" --username $env.CBES_USERNAME --password $env.CBES_PASSWORD --cacert $env.CBES_CACERT_PATH \($body\)",
 def curl_request [           
     method: string,     # HTTP method (GET, POST, etc.)
     url: string,        # The target URL PATH

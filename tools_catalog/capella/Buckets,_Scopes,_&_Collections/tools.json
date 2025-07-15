@@ -1,0 +1,735 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "post_create_bucket",
+      "description": "Creates a new bucket configuration under a cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, properties: name: type: string, description: Name of the bucket. This field cannot be changed later. The name should adhere to the following rules:  1. Characters used for the name should be in the ranges of A-Z, a-z, and 0-9; plus the underscore, period, dash, and percent characters.  2. The name can be a maximum of 100 characters in length.  3. The name cannot have 0 characters or empty. Minimum length of name is 1.  4. The name cannot start with a `.` (period). , maxLength: 100, example: My-First-Bucket, type: type: string, description: Type of the bucket.  - If selected Ephemeral, it is not eligible for imports or App Endpoints creation. This field cannot be changed later.  - The options may also be referred to as Memory and Disk (Couchbase), Memory Only (Ephemeral) in the Couchbase documentation.  To learn more, see [Create a Bucket](https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html#add-bucket). , enum: couchbase, ephemeral, default: couchbase, storageBackend: type: string, description: The storage engine to be assigned to and used by the bucket.  - Ephemeral buckets do not support StorageBackend, hence not applicable for Ephemeral buckets and throws an error if this field is added.  - This field is only applicable for a Couchbase bucket. The default value mentioned (Couchstore) is for Couchbase bucket.  - This field cannot be changed later.    To learn more, see [Storage Engines](https://docs.couchbase.com/cloud/clusters/data-service/storage-engines.html). , enum: couchstore, magma, example: couchstore, default: couchstore, memoryAllocationInMb: type: integer, description: The amount of memory to allocate for the bucket memory in MiB. This is the maximum limit is dependent on the allocation of the KV service. For example, 80% of the allocation.  - The default value (100MiB) mentioned is for Couchbase type buckets with Couchstore as the Storage Backend.  - For Couchbase buckets, the default and minimum memory allocation changes according to the Storage Backend type as follows:    1. For Couchstore, the default and minimum memory allocation is 100 MiB.    2. For Magma, the default and minimum memory allocation is 1024 MiB.  - For Ephemeral buckets, the default and minimum memory allocation is 100 MiB. , example: 100, default: 100, bucketConflictResolution: type: string, description: The means by which conflicts are resolved during replication.  - This field may be referred to as \"conflict resolution\" in the Couchbase documentation, and `seqno` and `lww` may be referred to as \"sequence number\" and \"timestamp\" respectively.  - This field cannot be changed later.   To learn more, see [Conflict Resolution](https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html#conflict-resolution). , enum: seqno, lww, default: seqno, durabilityLevel: type: string, description: This is the minimum level at which all writes to the bucket must occur.   The options for Durability level are as follows, according to the bucket type.   - For a Couchbase bucket:     1. None     2. Replicate to Majority     3. Majority and Persist to Active     4. Persist to Majority   - For an Ephemeral bucket:     1. None     2. Replicate to Majority   To learn more, see [Create a Bucket](https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html#add-bucket). , enum: none, majority, majorityAndPersistActive, persistToMajority, default: none, replicas: type: integer, description: The number of replicas for the bucket. To learn more, see [Create a Bucket](https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html#add-bucket)., enum: 1, 2, 3, default: 1, flush: type: boolean, description: Replaced by flushEnabled. This property is deprecated and will be removed in a future release.  Determines whether flushing is enabled on the bucket. Enable Flush to delete all items in this bucket at the earliest opportunity. Disable Flush to avoid inadvertent data loss. , default: false, example: false, deprecated: true, flushEnabled: type: boolean, description: Determines whether bucket flush is enabled. Set flushEnabled to true to be able to delete all items in this bucket using the /flush endpoint. Disable flushEnabled to avoid inadvertent data loss by calling the /flush endpoint ., default: false, example: false, timeToLiveInSeconds: type: integer, description: Specify the time to live (TTL) value in seconds. This is the maximum time to live for items in the bucket. Default is 0, that means TTL is disabled. This is a non-negative value., default: 0, example: 0, evictionPolicy: type: string, description: The policy which Capella adopts to prevent data loss due to memory exhaustion. This may be also known as Ejection Policy in the Couchbase documentation.   - For Couchbase bucket, Eviction Policy is `fullEviction` by default.  - For Ephemeral buckets, Eviction Policy is a required field, and should be one of the following:     1. noEviction     2. nruEviction    To learn more, see [Ejection Policy](https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html#evictionpolicy). , enum: fullEviction, noEviction, nruEviction, example: fullEviction, default: fullEviction, priority: type: integer, description: Priority of the bucket.  - Specify relative bucket priority so that buckets will be recovered in the order specified during failover.  - Bucket ranking/priority is only available in Couchbase Server 7.6 and above  - Default bucket priority is 0 and can be set to a value between 0 and 1000. 1000 is the highest priority and 0 is the lowest. , default: 0, examples: PostBucketTypeCouchbase: value: name: CBExample1, type: couchbase, storageBackend: couchstore, memoryAllocationInMb: 105, bucketConflictResolution: seqno, durabilityLevel: majorityAndPersistActive, replicas: 2, flush: true, timeToLiveInSeconds: 100, PostBucketTypeEphemeral: value: name: EPExample2, type: ephemeral, memoryAllocationInMb: 105, bucketConflictResolution: seqno, durabilityLevel: majority, replicas: 2, flush: true, timeToLiveInSeconds: 100, evictionPolicy: nruEviction, PostBucketWithDefaults: value: name: test-default-bucket, PostBucketWithEphemeralDefaults: value: name: ephemeral-default, type: ephemeral, PostBucketWithPersistToMajority: value: name: test-cb2, memoryAllocationInMb: 120, bucketConflictResolution: seqno, durabilityLevel: persistToMajority, PostBucketWithEphemeralNoEviction: value: name: testEph, type: ephemeral, evictionPolicy: nruEviction, durabilityLevel: majority, replicas: 2, flush: true, timeToLiveInSeconds: 100, PostBucketWithCouchbaseMagma: value: name: testCbMagmadefault, type: couchbase, storageBackend: magma, PostBucketWithBucketPriority: value: name: testCbBucketPriority, priority: 100",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "get_list_buckets",
+      "description": "Lists all the buckets under the cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "get_get_bucket",
+      "description": "Fetches the configuration of the given bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "put_update_bucket",
+      "description": "Updates an existing bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: memoryAllocationInMb, durabilityLevel, replicas, timeToLiveInSeconds, properties: memoryAllocationInMb: type: integer, description: The new amount of memory to allocate for the bucket memory in MiB. The maximum limit is dependent on the allocation of the KV service; for example, 80% of the allocation.  - For Couchbase buckets, the default and minimum memory allocation changes according to the Storage Backend type, as follows:    1. For Couchstore, the default and minimum memory allocation is 100 MiB.    2. For Magma, the default and minimum memory allocation is 1024 MiB.  - For Ephemeral buckets, the default and minimum memory allocation is 100 MiB. , example: 100, durabilityLevel: type: string, description: This is the minimum level at which all writes to the bucket must occur.  The options for Durability level are as follows, according to the bucket type.  - For a Couchbase bucket:    1. None    2. Replicate to Majority    3. Majority and Persist to Active    4. Persist to Majority  - For an Ephemeral bucket:    1. None    2. Replicate to Majority    To learn more, see [Create a Bucket](https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html#add-bucket). , enum: none, majority, majorityAndPersistActive, persistToMajority, replicas: type: integer, description: The number of replicas for the bucket. To learn more, see [Create a Bucket](https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html#add-bucket)., enum: 1, 2, 3, flush: type: boolean, description: Replaced by flushEnabled. This property is deprecated and will be removed in a future release.  The new value of flush property. This determines whether bucket flush is enabled. Enable Flush to be able to delete all items in this bucket at the earliest opportunity using /flush endpoint. Disable Flush to avoid inadvertent data loss by calling the /flush endpoint , default: false, deprecated: true, flushEnabled: type: boolean, description: This determines whether bucket flush is enabled. Enable flushEnabled to delete all items in this bucket at the earliest opportunity by calling the /flush endpoint. Disable flushEnabled to avoid inadvertent data loss by calling the /flush endpoint., default: false, timeToLiveInSeconds: type: integer, description: Specify the new time to live (TTL) value in seconds. This is the maximum time to live for items in the bucket. If specified as 0, TTL is disabled. This is a non-negative value., example: 100, priority: type: integer, description: Priority of the bucket.  - Specify relative bucket priority so that buckets will be recovered in the order specified during failover.  - Bucket ranking/priority is only available in Couchbase Server 7.6 and above  - Default bucket priority is 0 and can be set to a value between 0 and 1000. 1000 is the highest priority and 0 is the lowest. , default: 0",
+            "type": "string"
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "delete_delete_bucket",
+      "description": "Deletes an existing bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "put_flush_bucket_data",
+      "description": "Flushing of the bucket occurs, causing all items in the bucket to be deleted by the system at the earliest opportunity.\n# This operation can only be performed if the bucket has been configured with flushEnabled to true. If it is disabled, \n# it will throw an error.\n# \n# It is recommended not to run with the flushEnabled configuration set to true in production; \n# due to the danger of all a bucket's data being inadvertently lost. \n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "post_create_scope",
+      "description": "Creates a new scope in a bucket.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n#  In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, properties: name: type: string, description: The name of the scope. The name should adhere to the following rules:  1. The name must be between 1 and 251 characters in length.  2. The name can contain only the characters A-Z, a-z, 0-9, and the symbols _, -, and %.  3. The name cannot start with _ or %.  Note that scope and collection names are case-sensitive. , example: my-scope",
+            "type": "string"
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "get_list_scopes",
+      "description": "Lists all the scopes in the bucket.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "get_get_scope",
+      "description": "Fetches the details of the given scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "delete_delete_scope",
+      "description": "Deletes an existing scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "post_create_collection",
+      "description": "Creates a new collection in a scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, properties: name: type: string, description: The name of the collection. The name should adhere to the following rules:  1. The name must be between 1 and 251 characters in length.  2. The name can contain only the characters A-Z, a-z, 0-9, and the symbols _, -, and %.  3. The name cannot start with _ or %.  Note that scope and collection names are case-sensitive. , example: my-collection, maxTTL: type: integer, description: Specify the time to live (TTL) value in seconds. Defines the duration (Seconds) for which the documents in a collection are kept before automatic removal from the database. -  For server versions < 7.6.0, this is a non-negative value. Set to 0 to use the bucket's maxTTL value. -  For server versions >= 7.6.0, this value should be >= -1. Set to -1 to disable expiry for that collection. Set to 0 to use the bucket's maxTTL value. -  The maximum value that can be set for maxTTL is 2147483647., example: 100",
+            "type": "string"
+          },
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "get_list_collections",
+      "description": "Lists all the collections in a scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "get_get_collection",
+      "description": "Fetches the details of the given collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "example": "airline",
+            "description": "The name of the collection."
+          },
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName",
+          "collectionName"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "put_update_collection",
+      "description": "Updates an existing collection.\n# \n# This operation is only allowed for a cluster with server version >= 7.6.0. A collection cannot be updated for the server versions lower than this.\n# \n# This allows to update the maxTTL of the given collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: maxTTL, properties: maxTTL: type: integer, description: Specify the new time to live (TTL) value in seconds.  -  This value should be >= -1. Set to -1 to disable expiry for that collection.  -  Set to 0 to use the bucket's maxTTL value.  -  The maximum value that can be set for maxTTL is 2147483647. , example: 100",
+            "type": "string"
+          },
+          "collectionName": {
+            "type": "string",
+            "example": "airline",
+            "description": "The name of the collection."
+          },
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName",
+          "collectionName",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Buckets, Scopes, & Collections"
+    ],
+    "function": {
+      "name": "delete_delete_collection",
+      "description": "Deletes an existing collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "collectionName": {
+            "type": "string",
+            "example": "airline",
+            "description": "The name of the collection."
+          },
+          "scopeName": {
+            "type": "string",
+            "example": "inventory",
+            "description": "The name of the scope."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "scopeName",
+          "collectionName"
+        ]
+      }
+    }
+  }
+]

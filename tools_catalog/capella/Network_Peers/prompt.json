@@ -1,0 +1,2 @@
+Network Peering enables you to configure a secure private network connection between the Virtual Private Cloud (VPC) hosting your applications and the VPC of your Couchbase Capella database.
+You can set a network peering connection from a Couchbase Capella database hosted with Amazon Web Services (AWS), Google Cloud (GCP) or Azure.

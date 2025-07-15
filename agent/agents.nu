@@ -18,6 +18,13 @@ def build_agent [model_call: closure, prompt? : string, tool_functions? : string
 }
 
 export def agent [ config ] {
+    let config = if ($config.folder? != null) {
+        let config_folder = load_folder $config.folder
+        ( $config | merge $config_folder)
+    } else {
+        $config
+    }
+
     let system_prompt = if ($config.prompt? != null) {
         open $config.prompt
     } else {
@@ -29,10 +36,11 @@ export def agent [ config ] {
         []
     }
     mut config = $config
-    $config.options = if ($config.options? != null) {
-        $config.options
+    $config = if ($config.options? != null) {
+        $config
     } else {
-        {}
+        $config = $config | merge { options : {} }
+        $config
     }
     let config = $config
 
@@ -77,4 +85,13 @@ export def run_agent [query] {
     }
     # sound play drop.mp3 -d 0.2sec
     $answer
+}
+
+def load_folder [folder : string] {
+    let folder =  {
+        "prompt":$"($folder)/prompt.txt",
+        "model_tools":$"($folder)/tools.json",
+        "tool_functions": $"($folder)/functions.nu"
+    }
+    $folder
 }

@@ -1,0 +1,121 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Cloud Snapshot Backups Schedule"
+    ],
+    "function": {
+      "name": "put_upsert_backup_schedule",
+      "description": "Creates or updates a cloud snapshot backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: interval: type: integer, description: Represents the time interval., example: 1, retention: type: integer, description: Represents interval in hours to retain the backup., example: 24, startTime: type: string, format: date-time, description: Represents the start time in ISO 8601 format., example: 2024-01-05T16:00:00+00:00",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Cloud Snapshot Backups Schedule"
+    ],
+    "function": {
+      "name": "get_get_backup_schedule",
+      "description": "Retrieves the cloud snapshot backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Cloud Snapshot Backups Schedule"
+    ],
+    "function": {
+      "name": "delete_delete_backup_schedule",
+      "description": "Deletes the backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  }
+]

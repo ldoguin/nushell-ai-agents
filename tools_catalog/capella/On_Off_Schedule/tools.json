@@ -1,0 +1,164 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "On/Off Schedule"
+    ],
+    "function": {
+      "name": "post_create_cluster_onoff_schedule",
+      "description": "This provides the means to add a new cluster on/off schedule.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: description: Cluster schedule on/off ., type: object, required: timezone, days, properties: timezone: type: string, description: Timezone for the schedule, enum: Pacific/Midway, US/Hawaii, US/Alaska, US/Pacific, US/Mountain, US/Central, US/Eastern, America/Puerto_Rico, Canada/Newfoundland, America/Argentina/Buenos_Aires, Atlantic/Cape_Verde, Europe/London, Europe/Amsterdam, Europe/Athens, Africa/Nairobi, Asia/Tehran, Indian/Mauritius, Asia/Karachi, Asia/Calcutta, Asia/Dhaka, Asia/Bangkok, Asia/Hong_Kong, Asia/Tokyo, Australia/North, Australia/Sydney, Pacific/Ponape, Antarctica/South_Pole, example: US/Pacific, days: type: array, items: type: object, required: state, day, properties: state: type: string, enum: on, off, custom, description: Cluster state (on, off, or custom). - On state turns the cluster on (healthy state) for the whole day. - Off state turns the cluster off for the whole day. - Custom state should be used for the days when a cluster needs to be in the turned on (healthy) state during the specified time window instead of all day. , day: type: string, description: Day of the week for scheduling on/off. - The days of the week should be in proper sequence starting from Monday and ending with Sunday. - The On/Off schedule requires 7 days for the schedule, one for each day of the week. There cannot be more or less than 7 days in the schedule. - Clusters cannot be scheduled to be off for the entire day for every day of the week. , enum: monday, tuesday, wednesday, thursday, friday, saturday, sunday, from: description: OnTimeBoundary corresponds to \"from\" and \"to\" time boundaries for when the cluster needs to be in the turned on (healthy) state on a day with \"custom\" scheduling timings. The time boundary should be according to the following rules:   - If the schedule is a non-custom day - with state `on` or `off`, it cannot contain a time boundary.   - If the schedule is a `custom` day -       - It should contain the `from` time boundary. If the `to` time boundary is not specified then the default value of 0 hour 0 minute is set and the cluster will be turned on for the entire day from the time set in `from` time boundary.       - Time boundary should have a valid `hour` value. The valid hour values are from 0 to 23 inclusive.       - Time boundary should have a valid `minute` value. The valid minute values are 0 and 30.       - The `from` time boundary should not be later than the `to` time boundary.       - If the `hour` and `minute` values are not provided for the time boundaries, it is set to a default value of 0 for both. (0 hour 0 minute) , type: object, properties: hour: type: integer, description: Hour of the time boundary., example: 21, default: 0, minute: type: integer, description: Minute of the time boundary., example: 30, default: 0, to: description: OnTimeBoundary corresponds to \"from\" and \"to\" time boundaries for when the cluster needs to be in the turned on (healthy) state on a day with \"custom\" scheduling timings. The time boundary should be according to the following rules:   - If the schedule is a non-custom day - with state `on` or `off`, it cannot contain a time boundary.   - If the schedule is a `custom` day -       - It should contain the `from` time boundary. If the `to` time boundary is not specified then the default value of 0 hour 0 minute is set and the cluster will be turned on for the entire day from the time set in `from` time boundary.       - Time boundary should have a valid `hour` value. The valid hour values are from 0 to 23 inclusive.       - Time boundary should have a valid `minute` value. The valid minute values are 0 and 30.       - The `from` time boundary should not be later than the `to` time boundary.       - If the `hour` and `minute` values are not provided for the time boundaries, it is set to a default value of 0 for both. (0 hour 0 minute) , type: object, properties: hour: type: integer, description: Hour of the time boundary., example: 21, default: 0, minute: type: integer, description: Minute of the time boundary., example: 30, default: 0, example: day: monday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: tuesday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: saturday, state: off, day: sunday, state: off, examples: PostClusterOnOffSchedule: value: timezone: US/Pacific, days: day: monday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: tuesday, state: custom, from: hour: 21, minute: 30, to: hour: 23, minute: 30, day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 12, minute: 30, to: hour: 15, minute: 30, day: saturday, state: off, day: sunday, state: off, PostClusterOnOffScheduleDefaultBoundaryWithoutToBody: value: timezone: US/Pacific, days: day: monday, state: custom, from: hour: 14, minute: 30, day: tuesday, state: custom, from: hour: 22, minute: 30, day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 12, minute: 30, day: saturday, state: off, day: sunday, state: off, PostClusterOnOffScheduleDefaultsBoundaryWithoutHourMinute: value: timezone: US/Pacific, days: day: monday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: tuesday, state: custom, from: hour: , minute: , to: hour: 14, minute: , day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 15, minute: , day: saturday, state: off, day: sunday, state: off, PostClusterOnOffScheduleDefaultsBoundary: value: timezone: US/Pacific, days: day: monday, state: custom, from: hour: , minute: 30, to: hour: 5, minute: 30, day: tuesday, state: custom, from: hour: 21, minute: , to: , day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: , day: saturday, state: off, day: sunday, state: off, PostClusterOnOffScheduleDefaultsBoundaryWithoutHourMinuteBody: value: timezone: US/Pacific, days: day: monday, state: custom, from: minute: 30, to: hour: 14, minute: 30, day: tuesday, state: custom, from: hour: 21, to: hour: 23, day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 12, to: hour: 15, minute: 30, day: saturday, state: off, day: sunday, state: off",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "On/Off Schedule"
+    ],
+    "function": {
+      "name": "get_get_cluster_onoff_schedule",
+      "description": "Fetches the details of the cluster on/off schedule for the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "On/Off Schedule"
+    ],
+    "function": {
+      "name": "put_update_cluster_onoff_schedule",
+      "description": "This provides the means to update an existing cluster on/off schedule.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: description: Cluster schedule on/off ., type: object, required: timezone, days, properties: timezone: type: string, description: Timezone for the schedule, enum: Pacific/Midway, US/Hawaii, US/Alaska, US/Pacific, US/Mountain, US/Central, US/Eastern, America/Puerto_Rico, Canada/Newfoundland, America/Argentina/Buenos_Aires, Atlantic/Cape_Verde, Europe/London, Europe/Amsterdam, Europe/Athens, Africa/Nairobi, Asia/Tehran, Indian/Mauritius, Asia/Karachi, Asia/Calcutta, Asia/Dhaka, Asia/Bangkok, Asia/Hong_Kong, Asia/Tokyo, Australia/North, Australia/Sydney, Pacific/Ponape, Antarctica/South_Pole, example: US/Pacific, days: type: array, items: type: object, required: state, day, properties: state: type: string, enum: on, off, custom, description: Cluster state (on, off, or custom). - On state turns the cluster on (healthy state) for the whole day. - Off state turns the cluster off for the whole day. - Custom state should be used for the days when a cluster needs to be in the turned on (healthy) state during the specified time window instead of all day. , day: type: string, description: Day of the week for scheduling on/off. - The days of the week should be in proper sequence starting from Monday and ending with Sunday. - The On/Off schedule requires 7 days for the schedule, one for each day of the week. There cannot be more or less than 7 days in the schedule. - Clusters cannot be scheduled to be off for the entire day for every day of the week. , enum: monday, tuesday, wednesday, thursday, friday, saturday, sunday, from: description: OnTimeBoundary corresponds to \"from\" and \"to\" time boundaries for when the cluster needs to be in the turned on (healthy) state on a day with \"custom\" scheduling timings. The time boundary should be according to the following rules:   - If the schedule is a non-custom day - with state `on` or `off`, it cannot contain a time boundary.   - If the schedule is a `custom` day -       - It should contain the `from` time boundary. If the `to` time boundary is not specified then the default value of 0 hour 0 minute is set and the cluster will be turned on for the entire day from the time set in `from` time boundary.       - Time boundary should have a valid `hour` value. The valid hour values are from 0 to 23 inclusive.       - Time boundary should have a valid `minute` value. The valid minute values are 0 and 30.       - The `from` time boundary should not be later than the `to` time boundary.       - If the `hour` and `minute` values are not provided for the time boundaries, it is set to a default value of 0 for both. (0 hour 0 minute) , type: object, properties: hour: type: integer, description: Hour of the time boundary., example: 21, default: 0, minute: type: integer, description: Minute of the time boundary., example: 30, default: 0, to: description: OnTimeBoundary corresponds to \"from\" and \"to\" time boundaries for when the cluster needs to be in the turned on (healthy) state on a day with \"custom\" scheduling timings. The time boundary should be according to the following rules:   - If the schedule is a non-custom day - with state `on` or `off`, it cannot contain a time boundary.   - If the schedule is a `custom` day -       - It should contain the `from` time boundary. If the `to` time boundary is not specified then the default value of 0 hour 0 minute is set and the cluster will be turned on for the entire day from the time set in `from` time boundary.       - Time boundary should have a valid `hour` value. The valid hour values are from 0 to 23 inclusive.       - Time boundary should have a valid `minute` value. The valid minute values are 0 and 30.       - The `from` time boundary should not be later than the `to` time boundary.       - If the `hour` and `minute` values are not provided for the time boundaries, it is set to a default value of 0 for both. (0 hour 0 minute) , type: object, properties: hour: type: integer, description: Hour of the time boundary., example: 21, default: 0, minute: type: integer, description: Minute of the time boundary., example: 30, default: 0, example: day: monday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: tuesday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: wednesday, state: on, day: thursday, state: on, day: friday, state: custom, from: hour: 12, minute: 30, to: hour: 14, minute: 30, day: saturday, state: off, day: sunday, state: off",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "On/Off Schedule"
+    ],
+    "function": {
+      "name": "delete_delete_cluster_onoff_schedule",
+      "description": "Deletes the cluster on/off schedule for the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  }
+]

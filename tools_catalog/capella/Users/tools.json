@@ -1,0 +1,182 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Users"
+    ],
+    "function": {
+      "name": "post_create_user",
+      "description": "Invites a new user under the organization.\n# \n# After making a REST API request, an invitation email is triggered and sent to the user.\n# Upon receiving the invitation email, the user is required to click on a provided URL, which will redirect them to a page with a user interface (UI) where they can set their username and password.\n# \n# The modification of any personal information related to a user can only be performed by the user through the UI.\n# Similarly, the user can solely conduct password updates through the UI.\n# \n# The \"caller\" possessing Organization Owner access rights retains the exclusive user creation capability.\n# They hold the authority to assign roles at the organization and project levels.\n# \n# At present, our support is limited to the resourceType of \"project\" exclusively.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: email, organizationRoles, properties: name: type: string, description: The name of the user., example: John, maxLength: 128, email: type: string, description: Email of the user., example: john.doe@example.com, organizationRoles: type: array, items: type: string, enum: organizationOwner, organizationMember, projectCreator, example: projectCreator, description: Organization roles assigned to the User.  To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html). , example: organizationOwner, resources: type: array, items: type: object, required: id, roles, properties: type: type: string, enum: project, default: project, example: project, description: Type of the resource. , id: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, description: Id of the project. , roles: type: array, items: type: string, enum: projectOwner, projectManager, projectViewer, projectDataReaderWriter, projectDataReader, example: projectManager, description: Project Roles associated with the User.  To learn more about Project Roles, see [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html). , default: , example: , examples: CreateOrganizationMember: value: name: John, email: john.doe@example.com, organizationRoles: organizationMember, resources: id: 550e8400-e29b-41d4-a716-446655440000, type: project, roles: projectViewer, id: 550e8400-e29b-41d4-a716-446655440000, type: project, roles: projectDataReaderWriter, description: At present, our support is limited to the resourceType of \"project\" exclusively. Furthermore, the role designation is solely related to roles at the project level., CreateOrganizationOwner: value: name: John, email: john.doe@example.com, organizationRoles: organizationOwner, description: We don't need to explicitly add the resources field if the user is an organizationOwner",
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Users"
+    ],
+    "function": {
+      "name": "get_list_users",
+      "description": "Lists all the users in the organization and filter on the basis of projectId.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Creator\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# When retrieving a list of users through a GET request, if a user holds the organization owner role, the response will exclude project-level permissions for those users. This is because organization owners have full access to all resources within the organization, making project-level permissions irrelevant for them.\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **id**, **name**, **email**, **status**, **inactive**."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Users"
+    ],
+    "function": {
+      "name": "get_get_user",
+      "description": "Fetches the details of the given user.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Creator\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# When performing a GET request for a user with an organization owner role, the response will exclude project-level permissions for that user. This is because organization owners have access to all resources at the organization level, rendering project-level permissions unnecessary for them.\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the control plane user."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "userId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Users"
+    ],
+    "function": {
+      "name": "patch_update_user",
+      "description": "Updates organizationRole and resources of the user.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# An Organization Owner API key can be utilized to update organizational-level roles and project-level roles for all projects within the organization.\n# \n# The Project Owner API key allows for updating project-level roles, solely within the projects where the API key holds the Project Owner role.\n# \n# The modification of any personal information related to a user, such as password updates, can only be performed by the respective user through the user interface (UI).\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: array, items: type: object, required: op, path, properties: op: type: string, description: Type of operation., enum: add, remove, path: type: string, example: /organizationRoles, description: Path of resource that needs to be updated.  Organization Roles: `/organizationRoles`  Resources: `/resources/{resourceId}`  Resource Roles: `/resources/{resourceId}/roles` , value: oneOf: type: array, items: type: string, enum: organizationOwner, organizationMember, projectCreator, example: projectCreator, description: Organization roles assigned to the User.  To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html). , type: array, items: type: string, enum: projectOwner, projectManager, projectViewer, projectDataReaderWriter, projectDataReader, example: projectManager, description: Project Roles associated with the User.  To learn more about Project Roles, see [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html). , type: object, required: id, roles, properties: type: type: string, enum: project, default: project, example: project, description: Type of the resource. , id: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, description: Id of the project. , roles: type: array, items: type: string, enum: projectOwner, projectManager, projectViewer, projectDataReaderWriter, projectDataReader, example: projectManager, description: Project Roles associated with the User.  To learn more about Project Roles, see [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html). , examples: addOrganizationRole: value: op: add, path: /organizationRoles, value: projectCreator, removeOrganizationRole: value: op: remove, path: /organizationRoles, value: projectCreator, addResource: value: op: add, path: /resources/{resourceId}, value: id: ffffffff-aaaa-1414-eeee-111111111111, type: project, roles: projectDataReaderWriter, removeResourceRole: value: op: remove, path: /resources/{resourceId}/roles, value: projectViewer, addResourceRole: value: op: add, path: /resources/{resourceId}/roles, value: projectManager, removeResource: value: op: remove, path: /resources/{resourceId}, performMultipleOperations: value: op: add, path: /organizationRoles, value: projectCreator, op: remove, path: /resources/{resourceId}",
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the control plane user."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "userId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Users"
+    ],
+    "function": {
+      "name": "delete_delete_user",
+      "description": "Removes user from the organization.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the control plane user."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "userId"
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,4 @@
+Couchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.
+Couchbase Capella supports scheduled and on-demand backups of cloud snapshot data.
+A backup can be restored to the same database where it was created or another database in the same organization.
+On setting up a backup schedule, the bucket automatically backs up the bucket based on the chosen schedule.

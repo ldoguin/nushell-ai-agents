@@ -1,0 +1,285 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "get_get_private_endpoint_service_status",
+      "description": "Private endpoint service allows you to access your Capella cluster from your private network, using private endpoints.\n# \n# This endpoint determines if the endpoint service is enabled or disabled on your cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "post_enable_private_endpoint_service",
+      "description": "Enable private endpoint service on your cluster.\n# \n# Supporting infrastructure is deployed and it may take a few minutes for private endpoints to be available.\n# After it's enabled, you can create private endpoint in your network.  You can do this using the cloud provider's CLI.  For an example, use\n# the POST privateEndpointService/endpointCommand endpoint to get the command.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Manager\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "delete_disable_private_endpoint_service",
+      "description": "Disable private endpoint service on your cluster.\n# \n# Supporting infrastructure is removed and it may take a few minutes before private endpoints is disabled.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "get_list_private_endpoints",
+      "description": "Returns a list of private endpoints associated with the endpoint service for your Capella cluster, along\n# with the endpoint state.  Each private endpoint connects a private network to the Capella cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Creator\n#   - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "post_get_private_endpoint_cli_command_required_to_setup_private_endpoint_for_specific_csp",
+      "description": "Retrieve the command or script to be executed in order to create the private endpoint which will provides a private connection between the specified VPC and the specified Capella private endpoint service.  An example for AWS:\n# \n# ```\n# aws ec2 create-vpc-endpoint \\\n#   --vpc-id vpc-1234 \\\n#   --region us-east-1 \\\n#   --service-name com.amazonaws.vpce.us-east-1.vpce-svc-1234 \\\n#   --vpc-endpoint-type Interface \\\n#   --subnet-ids subnet-1234\n# ```\n# \n# An example for Azure:\n# \n# ```\n# az network private-endpoint create \\\n#   --connection-name connection-1 \\\n#   --name private-endpoint \\\n#   --private-connection-resource-id svc-1 \\\n#   --resource-group test-rg \\\n#   --subnet subnet-1 \\\n#   --group-id sites \\\n#   --vnet-name vnet-1\n# ```\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n# \n#   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: oneOf: type: object, required: vpcID, subnetIDs, properties: vpcID: type: string, minLength: 12, maxLength: 21, description: The ID of your virtual network, example: vpc-1234, subnetIDs: type: array, items: type: string, example: subnet-1234, type: object, required: resourceGroupName, virtualNetwork, properties: resourceGroupName: type: string, minLength: 1, maxLength: 90, description: The name of your resource group, example: test-rg, virtualNetwork: type: string, minLength: 2, maxLength: 64, description: The virtual network and subnet name, example: vnet-1/subnet-1, examples: PostAWSCommandRequest: value: vpcID: vpc-1234, subnetIDs: subnet-1234, PostAzureCommandRequest: value: resourceGroupName: test-rg, virtualNetwork: vnet-1/subnet-1",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "post_accept_private_endpoint_request",
+      "description": "Accept a new private endpoint connection request so that it is associated with the endpoint service.  This means the private endpoint is available for use.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n# \n#   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "endpointId": {
+            "type": "string",
+            "example": "vpce-1234",
+            "description": "The VPC endpoint ID."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "endpointId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Private Endpoint Service"
+    ],
+    "function": {
+      "name": "post_reject_or_disassociate_private_endpoint",
+      "description": "Removes the private endpoint associated with the endpoint service.  This means the private endpoint is no\n# longer able to connect to the private endpoint service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "endpointId": {
+            "type": "string",
+            "example": "vpce-1234",
+            "description": "The VPC endpoint ID."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "endpointId"
+        ]
+      }
+    }
+  }
+]

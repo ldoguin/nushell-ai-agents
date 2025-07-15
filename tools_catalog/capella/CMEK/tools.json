@@ -1,0 +1,347 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "get_get_cloud_accounts",
+      "description": "Fetches the cloud account ID associated with the organization. Use this account ID when adding CMEK to other AWS databases in your organization.\n# \n# To learn more, see [CMEK at Rest](https://docs.couchbase.com/cloud/security/cmek.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Creator\n#   - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "post_create_key_metadata",
+      "description": "Initializes the metadata record for a customer-managed encryption key stored in AWS or GCP, linking it to the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, config, properties: name: type: string, description: Name of the key (up to 256 characters)., example: Test Key, maxLength: 128, description: type: string, description: Description of the key (up to 1024 characters)., example: Description of the Key, maxLength: 512, config: oneOf: type: object, required: arn, properties: arn: type: string, description: The Amazon Resource Name (ARN) that uniquely identifies the AWS KMS key., example: arn:aws:kms:us-west-2:123456789012:key/abcd1234-a123-456a-a12b-a123b4cd56ef, type: object, required: resourceName, properties: resourceName: type: string, description: The unique identifier for a GCP resource, specifying the project, location, key ring, and the key within Cloud KMS., example: projects/my-project/locations/global/keyRings/my-key-ring/cryptoKeys/my-key, example: arn: arn:aws:kms:us-west-2:123456789012:key/abcd1234-a123-456a-a12b-a123b4cd56ef",
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "get_list_key_metadata",
+      "description": "Retrieves detailed metadata for all customer-managed encryption keys associated with the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Sets the order of how you would like to sort the results and the key you would like to order by."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "get_list_key_rotation_history",
+      "description": "Retrieves the full history of rotations for a specific customer-managed encryption key within the organization.\n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Organization Member\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cmekId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the KMS Key metadata."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "string",
+            "enum": [
+              "active",
+              "associatedAt",
+              "associatedBy",
+              "key"
+            ],
+            "description": "Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **active**, **associatedAt**, **associatedBy**, **key** "
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "cmekId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "get_get_key_metadata",
+      "description": "Retrieves the full metadata details for a specific customer-managed encryption key within the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cmekId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the KMS Key metadata."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "cmekId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "put_rotate_key",
+      "description": "Initiates the process to rotate a customer-managed encryption key and update its associated metadata within the system.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: config, properties: config: oneOf: type: object, required: arn, properties: arn: type: string, description: The Amazon Resource Name (ARN) that uniquely identifies the AWS KMS key., example: arn:aws:kms:us-west-2:123456789012:key/abcd1234-a123-456a-a12b-a123b4cd56ef, type: object, required: resourceName, properties: resourceName: type: string, description: The unique identifier for a GCP resource, specifying the project, location, key ring, and the key within Cloud KMS., example: projects/my-project/locations/global/keyRings/my-key-ring/cryptoKeys/my-key, example: arn: arn:aws:kms:us-west-2:123456789012:key/abcd1234-a123-456a-a12b-a123b4cd56ef",
+            "type": "string"
+          },
+          "cmekId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the KMS Key metadata."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "cmekId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "delete_delete_key_metadata",
+      "description": "Permanently removes the specified customer-managed encryption key's metadata from the organization's account.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cmekId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the KMS Key metadata."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "cmekId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "post_associate_key_with_cluster",
+      "description": "Redeploys the cluster and encrypts the disks with the newly associated customer-managed encryption key.\n# Throws an error before redeploying the cluster if the customer-managed encryption key is inaccessible.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cmekId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the KMS Key metadata."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "cmekId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "CMEK"
+    ],
+    "function": {
+      "name": "post_unassociate_key_from_cluster",
+      "description": "Removes the customer-managed encryption key associated with the cluster, which redeploys the cluster and removes any encryption on the disks.\n# This does not delete the customer-managed encryption key itself since the same key could be used across clusters.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cmekId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the KMS Key metadata."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "cmekId"
+        ]
+      }
+    }
+  }
+]

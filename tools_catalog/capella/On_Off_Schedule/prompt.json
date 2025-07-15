@@ -1,0 +1,5 @@
+The On/Off Schedule endpoint enables you to schedule when your provisioned database should turn on or off to save costs.
+Turning off your database only turns off the compute;
+all of your data, schema (buckets, scopes, and collections), and indexes remain, as well as your cluster configuration, including users and allow lists.
+When you turn your provisioned database off, you will be charged the OFF amount for the database.
+You can turn the cluster and any linked app services on or off on demand using the [cluster API](https://docs.couchbase.com/cloud/management-api-reference/index.html#tag/clusters).

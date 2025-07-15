@@ -1,0 +1,1 @@
+Couchbase Capella Management API uses a Bearer token mechanism for authentication; each call to the Management API has to be authenticated by API key.

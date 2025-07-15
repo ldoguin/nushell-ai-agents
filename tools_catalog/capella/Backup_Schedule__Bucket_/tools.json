@@ -1,0 +1,295 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Backup Schedule (Bucket)"
+    ],
+    "function": {
+      "name": "post_create_backup_schedule",
+      "description": "Creates a scheduled backup for a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: description: Backup schedule type., type: object, properties: type: type: string, enum: weekly, example: weekly, weeklySchedule: type: object, description: Schedule a full backup once a week with regular incrementals., required: dayOfWeek, startAt, incrementalEvery, retentionTime, costOptimizedRetention, properties: dayOfWeek: type: string, description: Day of the week for the backup., enum: sunday, monday, tuesday, wednesday, thursday, friday, saturday, example: sunday, startAt: type: integer, description: Start at hour (in 24-Hour format)., enum: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, incrementalEvery: type: integer, description: Interval in hours for incremental backup., enum: 1, 2, 4, 6, 8, 12, 24, example: 4, retentionTime: type: string, description: Retention time in days., enum: 30days, 60days, 90days, 180days, 1year, 2years, 3years, 4years, 5years, example: 90days, costOptimizedRetention: type: boolean, description: Optimize backup retention to reduce total cost of ownership (TCO). This gives the option to keep all but the last backup cycle of the month for thirty days; the last cycle will be kept for the defined retention period. To learn more, see [Cost Optimized Retention Policy](https://docs.couchbase.com/cloud/clusters/backup-restore.html#cost-optimized-retention-policy)., example: false, examples: CreateScheduledBackup: value: type: weekly, weeklySchedule: dayOfWeek: sunday, startAt: 10, incrementalEvery: 4, retentionTime: 90days, costOptimizedRetention: false",
+            "type": "string"
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Backup Schedule (Bucket)"
+    ],
+    "function": {
+      "name": "get_get_backup_schedule",
+      "description": "Fetched the backup schedule for a bucket in a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Backup Schedule (Bucket)"
+    ],
+    "function": {
+      "name": "put_update_backup_schedule",
+      "description": "Updates an existing backup schedule.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: description: Backup schedule type., type: object, properties: type: type: string, enum: weekly, example: weekly, weeklySchedule: type: object, description: Schedule a full backup once a week with regular incrementals., required: dayOfWeek, startAt, incrementalEvery, retentionTime, costOptimizedRetention, properties: dayOfWeek: type: string, description: Day of the week for the backup., enum: sunday, monday, tuesday, wednesday, thursday, friday, saturday, example: sunday, startAt: type: integer, description: Start at hour (in 24-Hour format)., enum: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, incrementalEvery: type: integer, description: Interval in hours for incremental backup., enum: 1, 2, 4, 6, 8, 12, 24, example: 4, retentionTime: type: string, description: Retention time in days., enum: 30days, 60days, 90days, 180days, 1year, 2years, 3years, 4years, 5years, example: 90days, costOptimizedRetention: type: boolean, description: Optimize backup retention to reduce total cost of ownership (TCO). This gives the option to keep all but the last backup cycle of the month for thirty days; the last cycle will be kept for the defined retention period. To learn more, see [Cost Optimized Retention Policy](https://docs.couchbase.com/cloud/clusters/backup-restore.html#cost-optimized-retention-policy)., example: false",
+            "type": "string"
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Backup Schedule (Bucket)"
+    ],
+    "function": {
+      "name": "delete_delete_backup_schedule",
+      "description": "Deletes an existing backup schedule\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Backup Schedule (Bucket)"
+    ],
+    "function": {
+      "name": "get_list_cycles",
+      "description": "Lists the cycles for a bucket in a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Filters bucket backups till the end date. Specify the end date to retrieve relevant bucket backups till end date. ",
+            "example": "2023-07-21"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Filters bucket backups beginning from the start date. Specify the start date to retrieve relevant bucket backups from start date. ",
+            "example": "2023-07-19"
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Backup Schedule (Bucket)"
+    ],
+    "function": {
+      "name": "get_list_backups",
+      "description": "Lists the backups for a cycle in a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cycleId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cycle."
+          },
+          "bucketId": {
+            "type": "string",
+            "example": "dGVzdA",
+            "description": "The ID of the bucket. It is the URL-compatible base64 encoding of the bucket name."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "bucketId",
+          "cycleId"
+        ]
+      }
+    }
+  }
+]

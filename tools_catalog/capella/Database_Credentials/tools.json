@@ -1,0 +1,251 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Database Credentials"
+    ],
+    "function": {
+      "name": "get_list_database_credentials",
+      "description": "Lists all the database credential information under a cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": " Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **name**, **id**."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Database Credentials"
+    ],
+    "function": {
+      "name": "post_create_database_credentials",
+      "description": "Creates a new database credential under a cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# Valid fields to sort the results are: \"id\", \"name\".\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, access, properties: name: type: string, description: Username for the database credential. The name should adhere to the following rules:  1. The name must be between 2 & 128 characters.  2. The name cannot contain spaces.  3. The name cannot contain the following characters - `) ( > < , ; : \" \\ / ] [ ? = } {`  4. The name cannot begin with `@` character. , example: RW, maxLength: 128, minLength: 2, password: type: string, description: A password associated with the database credential. If this field is left empty, a password will be auto-generated.  - The password should adhere to the following rules:    1. The password should have at least 8 characters.    2. Characters used for the password should contain at least one uppercase (A-Z), one lowercase (a-z), one numerical (0-9), and one special character.    3. The password must not contain any of the following characters: `< > ; . * & | £` , example: Passw0rd!, minLength: 8, access: type: array, description: Describes the access information of the database credential., items: type: object, required: privileges, properties: privileges: type: array, items: type: string, description: The `privileges` field in this API represents the privilege level for users. It accepts one of the following values:  - `data_reader` - `data_writer` - `read`: Equivalent to `data_reader`. - `write`: Equivalent to `data_writer`. , example: data_reader, data_writer, read, write, resources: type: object, description: The resources for which access will be granted on. Leaving this empty will grant access to all buckets., properties: buckets: type: array, items: type: object, required: name, properties: name: type: string, description: The name of the bucket., example: travel-sample, scopes: type: array, description: The scopes under a bucket., items: type: object, required: name, properties: name: type: string, example: inventory, description: The name of the scope., collections: type: array, description: The collections under a scope., items: type: string, example: airlines, airport, tickets, examples: ReadWriteOnSomeCollections: value: name: ReadWriteOnSpecificCollections, access: privileges: data_reader, data_writer, resources: buckets: name: travel-sample, scopes: name: inventory, collections: airport, airline, ReadAndWriteOnAllCollectionsInABucketAndScope: value: name: ReadWriteOnAllCollectionsInAScopeAndBucket, access: privileges: read, write, resources: buckets: name: travel-sample, scopes: name: inventory, ReadAccessOnAllBuckets: value: name: ReadAccessForAllBuckets, access: privileges: data_reader, SeparateAccessForDifferentScopes: value: name: SeparateAccessForDifferentScopes, access: privileges: data_reader, resources: buckets: name: travel-sample, scopes: name: inventory, privileges: data_writer, resources: buckets: name: travel-sample, scopes: name: sales, WriteAccessForAllBuckets: value: name: WriteAccessForAllBuckets, access: privileges: data_writer, MultipleLevelOfAccess: value: name: MultipleLevelOfAccess, access: privileges: data_reader, resources: buckets: name: travel-sample, scopes: name: inventory, collections: airport, airline, privileges: data_writer, resources: buckets: name: travel-sample, scopes: name: inventory, collections: sales",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Database Credentials"
+    ],
+    "function": {
+      "name": "get_get_database_credentials",
+      "description": "Fetches the details of a given cluster's database credential information.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the database credential."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "userId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Database Credentials"
+    ],
+    "function": {
+      "name": "put_update_database_credentials",
+      "description": "Updates an existing database credential.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: access: type: array, description: Describes the access information of the database credential., items: type: object, required: privileges, properties: privileges: type: array, items: type: string, description: The `privileges` field in this API represents the privilege level for users. It accepts one of the following values:  - `data_reader` - `data_writer` - `read`: Equivalent to `data_reader`. - `write`: Equivalent to `data_writer`. , example: data_reader, data_writer, read, write, resources: type: object, description: The resources for which access will be granted on. Leaving this empty will grant access to all buckets., properties: buckets: type: array, items: type: object, required: name, properties: name: type: string, description: The name of the bucket., example: travel-sample, scopes: type: array, description: The scopes under a bucket., items: type: object, required: name, properties: name: type: string, example: inventory, description: The name of the scope., collections: type: array, description: The collections under a scope., items: type: string, example: airlines, airport, tickets, password: type: string, example: Pa$$w0rd, description: The updated password of the database credential., examples: UpdateDatabaseCredentials: value: access: privileges: data_reader, data_writer, resources: buckets: name: travel-sample, scopes: name: inventory, collections: airport, airline, tickets",
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the database credential."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "If_Match": {
+            "type": "string",
+            "example": "12",
+            "description": "A precondition header that specifies the entity tag of a resource."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "userId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Database Credentials"
+    ],
+    "function": {
+      "name": "delete_delete_database_credentials",
+      "description": "Deletes an existing cluster's database credential.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the database credential."
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "userId"
+        ]
+      }
+    }
+  }
+]

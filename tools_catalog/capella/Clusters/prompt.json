@@ -1,0 +1,3 @@
+A Couchbase cluster consists of one or more instances of Couchbase Capella, each running on an independent node.
+Data and services are shared across the cluster.
+A cluster may be referred to as a "database" in the documentation and in the Couchbase Capella user interface.

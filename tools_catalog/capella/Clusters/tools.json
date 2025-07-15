@@ -1,0 +1,345 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "post_create_cluster",
+      "description": "Creates a new Couchbase Capella provisioned cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, cloudProvider, serviceGroups, availability, support, properties: name: type: string, description: Name of the cluster (up to 256 characters)., example: Test Cluster, maxLength: 256, description: type: string, description: Description of the cluster (up to 1024 characters)., example: Description of the cluster, maxLength: 1024, configurationType: deprecated: true, type: string, description: - Multi-node databases are best for deployments that require high availability. If your app requires high performance and high availability, choose the Multi-node option. - Single-node databases have resource limitations that make them a good choice for learning, prototyping, and non-production uses. They have limited availability. - Single-node databases should contain only 1 node and 1 Service Group. Adding number of nodes or service groups > 1 is not allowed for such databases. - By default the configurationType is multiNode. , enum: singleNode, multiNode, default: multiNode, example: multiNode, cloudProvider: type: object, description: The cloud provider where the cluster will be hosted. For information about providers and supported regions, see:  - [Amazon Web Services](https://docs.couchbase.com/cloud/reference/aws.html)  - [Google Cloud Platform](https://docs.couchbase.com/cloud/reference/gcp.html)  - [Microsoft Azure](https://docs.couchbase.com/cloud/reference/azure.html) , required: type, region, properties: type: type: string, description: Cloud provider type. Note: For singleNode cluster, only AWS type cloud provider is allowed.  1. `aws`: Amazon Web Services  2. `gcp`: Google Cloud Platform  3. `azure`: Microsoft Azure , enum: aws, gcp, azure, example: aws, region: type: string, description: Cloud provider region, for example `us-west-2`., example: us-east-1, cidr: type: string, pattern: ^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\/\\d{1,2}$, description: CIDR block for Cloud Provider., example: 10.1.30.0/23, couchbaseServer: type: object, properties: version: type: string, description: Version of the Couchbase Server to be installed in the cluster. Refer to documentation [here](https://docs.couchbase.com/cloud/clusters/upgrade-database.html#server-version-maintenance-support) for list of supported versions. The latest Couchbase Server version will be deployed by default., example: 7.1, serviceGroups: type: array, description: The couchbase service groups to be run. - The set of nodes that share the same disk, number of nodes and services. - At least one service group must contain the data service., minItems: 1, items: type: object, properties: node: type: object, required: compute, disk, properties: compute: type: object, description: Following are the supported compute combinations for CPU and RAM for different cloud providers. To learn more, see [Amazon Web Services](https://docs.couchbase.com/cloud/reference/aws.html)., required: cpu, ram, properties: cpu: type: integer, description: CPU units (cores)., example: 4, ram: type: integer, description: RAM units (GB)., example: 16, disk: oneOf: type: object, required: type, storage, iops, properties: type: type: string, description: Type of disk. Please choose from the given list for AWS cloud provider., enum: gp3, io2, example: gp3, storage: type: integer, description: Storage in GB. See documentation for supported storage., example: 50, minimum: 50, iops: type: integer, description: Please refer to documentation for supported IOPS., example: 3000, type: object, required: type, properties: type: type: string, description: Type of disk. Please choose from the given list for Azure cloud provider., enum: P6, P10, P15, P20, P30, P40, P50, P60, Ultra, storage: type: integer, description: Storage in GB. Only required for Ultra Disk types. Not used in other storage types., enum: 64, 128, 256, 512, 1024, 2048, 3072, 4096, 5120, 6144, 7168, 8192, 9216, 10240, 11264, 12288, 13312, 14336, 15360, example: 64, minimum: 64, iops: type: integer, description: Only required for Ultra Disk types. Not used in other storage types. See [IOPS Defaults](https://docs.couchbase.com/cloud/clusters/scale-database.html#IOPS-Defaults) for a list of supported IOPS values., example: 3000, autoExpansion: type: boolean, description: Determine if disk storage should automatically expand. Defaults to \"false\" if not specified., example: false, type: object, required: type, storage, properties: type: type: string, description: Type of disk. Please choose from the given list for GCP cloud provider., enum: pd-ssd, storage: type: integer, description: Storage in GB. Please refer to documentation for supported storage., example: 50, minimum: 50, example: type: gp3, storage: 50, iops: 3000, numOfNodes: type: integer, description: Number of nodes. The minimum number of nodes for the cluster can be 3 and maximum can be 27 nodes. - Additional service groups can have 2 nodes minimum and 24 nodes maximum. - SingleNode cluster can have only 1 node., example: 3, services: type: array, description: The couchbase service to run on the node. The allowed services for singleNode cluster are one or all of - data, index, query and search., minItems: 1, uniqueItems: true, items: type: string, enum: data, query, index, search, analytics, eventing, example: data, availability: type: object, required: type, properties: type: type: string, description: Availability zone type, either 'single' or 'multi'. Availability zone type allowed for singleNode cluster is only 'single'., example: single, enum: single, multi, support: type: object, required: plan, properties: plan: type: string, description: Plan type, either 'Basic', 'Developer Pro', or 'Enterprise'.  Plan type allowed for singleNode cluster is either 'Basic', or 'Developer Pro'.  In case of 'Basic' plan timezone field value is ignored.  Free tier plan is automatically assigned to free tier clusters. , enum: free, basic, developer pro, enterprise, example: basic, timezone: type: string, description: The standard timezone for the cluster. Should be the TZ identifier., example: ET, enum: ET, GMT, IST, PT, zones: description: Zones is the cloud services provider availability zones for the cluster. Currently Supported only for single AZ clusters so only 1 zone is allowed in list., type: array, example: use1-az1, items: type: string, cmekId: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, description: The ID of the CMEK Key., enablePrivateDNSResolution: type: boolean, description: EnablePrivateDNSResolution signals that the cluster should have hostnames that are hosted in a public DNS zone that resolve to a private DNS address. This exists to support the use case of customers connecting from their own data centers where it is not possible to make use of a cloud service provider DNS zone., example: true, examples: PostClusterAWSMultipleServiceGroups: value: name: Test-Cluster-1, description: My first test AWS cluster for multiple services., cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: gp3, iops: 3000, numOfNodes: 3, services: data, query, index, search, node: compute: cpu: 4, ram: 32, disk: storage: 50, type: io2, iops: 3005, numOfNodes: 2, services: analytics, availability: type: multi, support: plan: developer pro, timezone: PT, PostClusterAWSSingleAvailabilityBasicPlan: value: name: Test-Cluster-2, description: My test AWS cluster for single availability and basic plan., cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: io2, iops: 3000, numOfNodes: 3, services: data, query, index, search, availability: type: single, support: plan: basic, timezone: PT, PostClusterAWSWithoutServerVersion: value: name: Test-Cluster-6, description: My test AWS cluster without Couchbase Server version., cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: gp3, iops: 3000, numOfNodes: 3, services: data, query, index, search, node: compute: cpu: 4, ram: 32, disk: storage: 50, type: io2, iops: 3005, numOfNodes: 2, services: analytics, availability: type: multi, support: plan: developer pro, timezone: PT, PostClusterAWSWithServerVersionAndMaxNodes: value: name: Test-Cluster-7, description: My test AWS cluster for Couchbase Server version 7.1.0., cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: gp3, iops: 3000, numOfNodes: 27, services: data, query, index, search, availability: type: multi, support: plan: developer pro, timezone: PT, PostClusterAWSWithServerWithMaxNodes: value: name: Test-Cluster-8, description: My test AWS cluster with max nodes., cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: gp3, iops: 3000, numOfNodes: 3, services: data, query, index, search, node: compute: cpu: 4, ram: 32, disk: storage: 50, type: io2, iops: 3005, numOfNodes: 24, services: analytics, availability: type: single, support: plan: developer pro, timezone: PT, PostClusterAzurePremiumDisk: value: name: Test-Cluster-3, description: My first test Azure cluster., cloudProvider: type: azure, region: eastus, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: type: P6, numOfNodes: 3, services: data, query, index, search, node: compute: cpu: 4, ram: 32, disk: type: P10, numOfNodes: 4, services: analytics, availability: type: single, support: plan: developer pro, timezone: ET, PostClusterAzureUltraDisk: value: name: Test-Cluster-4, description: My second test Azure cluster with Ultra., cloudProvider: type: azure, region: eastus, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 1024, type: Ultra, iops: 2000, numOfNodes: 3, services: data, query, index, search, analytics, availability: type: multi, support: plan: developer pro, timezone: PT, PostClusterAzureWithAutoExpansion: value: name: Test-Cluster-5, description: My third test Azure cluster., cloudProvider: type: azure, region: eastus, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: type: P6, autoExpansion: true, numOfNodes: 3, services: data, index, node: compute: cpu: 4, ram: 32, disk: type: P6, autoExpansion: false, numOfNodes: 3, services: query, availability: type: single, support: plan: developer pro, timezone: ET, PostClusterGCP: value: name: Test-Cluster-5, description: My first test GCP cluster., cloudProvider: type: gcp, region: us-east1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 64, type: pd-ssd, numOfNodes: 3, services: data, query, index, search, availability: type: single, support: plan: basic, timezone: ET, PostCMEKCluster: value: name: CMEKCluster, description: My first test AWS cluster for multiple services., cmekId: ffffffff-aaaa-1414-eeee-000000000000, cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.2, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: gp3, iops: 3000, numOfNodes: 3, services: data, query, index, search, node: compute: cpu: 4, ram: 32, disk: storage: 50, type: io2, iops: 3005, numOfNodes: 2, services: analytics, availability: type: multi, support: plan: enterprise, timezone: PT, PostClusterEnabledPrivateDNSResolution: value: name: Test-Cluster-1, description: My test AWS cluster with Private DNS Resolution enabled., enablePrivateDNSResolution: true, cloudProvider: type: aws, region: us-east-1, cidr: 10.1.30.0/23, couchbaseServer: version: 7.6, serviceGroups: node: compute: cpu: 4, ram: 16, disk: storage: 50, type: gp3, iops: 3000, numOfNodes: 3, services: data, query, index, search, node: compute: cpu: 4, ram: 32, disk: storage: 50, type: io2, iops: 3005, numOfNodes: 2, services: analytics, availability: type: multi, support: plan: developer pro, timezone: PT",
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "get_list_clusters",
+      "description": "Lists all the clusters under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# Returned set of clusters is reduced to what the caller has access to view.\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **id**, **availability**, **cloudProvider**, **couchbaseServer**, **currentState**, **name**."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "get_get_cluster",
+      "description": "Fetches the details of the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "put_update_cluster",
+      "description": "Updates an existing cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: name, description, serviceGroups, support, properties: name: type: string, maxLength: 256, description: The new name of the cluster (up to 256 characters)., example: My-New-Cluster, description: type: string, maxLength: 1024, description: The new cluster description (up to 1024 characters)., example: The extended description of my new cluster., support: type: object, required: plan, properties: plan: type: string, description: Plan type, either 'Basic', 'Developer Pro', or 'Enterprise'.  Plan type allowed for singleNode cluster is either 'Basic', or 'Developer Pro'.  In case of 'Basic' plan timezone field value is ignored.  Free tier plan is automatically assigned to free tier clusters. , enum: free, basic, developer pro, enterprise, example: basic, timezone: type: string, description: The standard timezone for the cluster. Should be the TZ identifier., example: ET, enum: ET, GMT, IST, PT, serviceGroups: type: array, items: type: object, properties: node: type: object, required: compute, disk, properties: compute: type: object, description: Following are the supported compute combinations for CPU and RAM for different cloud providers. To learn more, see [Amazon Web Services](https://docs.couchbase.com/cloud/reference/aws.html)., required: cpu, ram, properties: cpu: type: integer, description: CPU units (cores)., example: 4, ram: type: integer, description: RAM units (GB)., example: 16, disk: oneOf: type: object, required: type, storage, iops, properties: type: type: string, description: Type of disk. Please choose from the given list for AWS cloud provider., enum: gp3, io2, example: gp3, storage: type: integer, description: Storage in GB. See documentation for supported storage., example: 50, minimum: 50, iops: type: integer, description: Please refer to documentation for supported IOPS., example: 3000, type: object, required: type, properties: type: type: string, description: Type of disk. Please choose from the given list for Azure cloud provider., enum: P6, P10, P15, P20, P30, P40, P50, P60, Ultra, storage: type: integer, description: Storage in GB. Only required for Ultra Disk types. Not used in other storage types., enum: 64, 128, 256, 512, 1024, 2048, 3072, 4096, 5120, 6144, 7168, 8192, 9216, 10240, 11264, 12288, 13312, 14336, 15360, example: 64, minimum: 64, iops: type: integer, description: Only required for Ultra Disk types. Not used in other storage types. See [IOPS Defaults](https://docs.couchbase.com/cloud/clusters/scale-database.html#IOPS-Defaults) for a list of supported IOPS values., example: 3000, autoExpansion: type: boolean, description: Determine if disk storage should automatically expand. Defaults to \"false\" if not specified., example: false, type: object, required: type, storage, properties: type: type: string, description: Type of disk. Please choose from the given list for GCP cloud provider., enum: pd-ssd, storage: type: integer, description: Storage in GB. Please refer to documentation for supported storage., example: 50, minimum: 50, example: type: gp3, storage: 50, iops: 3000, numOfNodes: type: integer, description: Number of nodes. The minimum number of nodes for the cluster can be 3 and maximum can be 27 nodes. - Additional service groups can have 2 nodes minimum and 24 nodes maximum. - SingleNode cluster can have only 1 node., example: 3, services: type: array, description: The couchbase service to run on the node. The allowed services for singleNode cluster are one or all of - data, index, query and search., minItems: 1, uniqueItems: true, items: type: string, enum: data, query, index, search, analytics, eventing, example: data",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "If_Match": {
+            "type": "string",
+            "example": "12",
+            "description": "A precondition header that specifies the entity tag of a resource."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "delete_delete_cluster",
+      "description": "Deletes an existing cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "retainsnapshotbackups": {
+            "type": "boolean",
+            "example": true,
+            "description": "Retain snapshot backups parameter specifies whether to retain snapshot backups after cluster deletion."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "post_turn_on_cluster",
+      "description": "Turn cluster on.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, properties: turnOnLinkedAppService: type: boolean, description: Set this value to true if you want to turn on the app service linked with the cluster, false if not. If set to true, the app service, if present, will turn on with the cluster. Default value for this is false, which means the linked app service will be kept off. , default: false, examples: ClusterOnAppServiceOn: value: turnOnLinkedAppService: true, ClusterOnAppServiceOff: value: turnOnLinkedAppService: false",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "delete_turn_off_cluster",
+      "description": "Turn cluster off.\n# \n# - Turning off your cluster turns off the compute for your cluster but the storage remains.\n# All of the data, schema (buckets, scopes, and collections), and indexes remain, as well as cluster configuration, including users and allow lists.\n# \n# - Turning off cluster will also turn off any linked app services.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Clusters"
+    ],
+    "function": {
+      "name": "put_migrate_buckets",
+      "description": "Updates the storage backend of an existing bucket from Couchstore to Magma.\n# \n# The following should be noted while doing this operation -\n# \n# 1. The outcome of this migration is that all data service nodes in the cluster will be replaced.\n# - During the migration all buckets will remain operational and still be able to perform read and writes. Hence applications will not incur any downtime during this migration and can continue to read/write to the cluster.\n# - The re-balances that occur from the node replacements will result in the bucket(s) being migrated to Magma.\n# - The status of the cluster can be monitored via the [GET cluster API](https://docs.couchbase.com/cloud/management-api-reference/index.html#tag/clusters/operation/getCluster). The cluster will transition to healthy state after migration is completed for all listed buckets.\n# \n# 2. This operation is only allowed for clusters with server version >= 7.6.0. The storage backend cannot be updated for the cluster with server versions lower than this. All the nodes must be upgraded to 7.6.0 before the bucket migration can be performed.\n# \n# 3. Before migrating from Couchstore to Magma, the bucket memory allocation should be upgraded to at least the minimum amount required for a Magma bucket that is 1024 MiB.\n# \n# 4. Cluster must be in a healthy state to perform this operation.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: buckets, properties: buckets: type: array, description: Names of the buckets which need to be migrated from Couchstore to Magma., items: type: string, example: sample-bucket, my-bucket, maxItems: 30",
+            "type": "string"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the cluster."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "clusterId",
+          "body"
+        ]
+      }
+    }
+  }
+]

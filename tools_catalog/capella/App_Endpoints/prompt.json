@@ -1,0 +1,2 @@
+App Endpoints represent instances of mobile applications on App Services. Each App Endpoint is linked to one bucket and synchronizes data to a set of
+linked collections. Users can configure App Endpoints, including setting the Access Control function, Import Filter and OpenID Connect (OIDC) authentication configuration.

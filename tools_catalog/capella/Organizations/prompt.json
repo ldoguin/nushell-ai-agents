@@ -1,0 +1,3 @@
+Couchbase Capella uses an ordered hierarchy to help you keep all of your data organized and securely accessible.
+The entity at the top of the hierarchy is called an organization.
+Everything you do in Capella, whether it's creating a cluster or managing billing, happens within the scope of an organization.

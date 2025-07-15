@@ -1,0 +1,247 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Alert Integration"
+    ],
+    "function": {
+      "name": "post_create_alert_integration",
+      "description": "Creates a new alert integration for a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: kind, name, config, properties: kind: type: string, description: Type of alert integration, currently supports only 'webhook'., example: webhook, enum: webhook, name: type: string, description: Name of the alert integration (up to 1024 characters)., example: test alert 1, maxLength: 1024, config: type: object, required: webhook, properties: webhook: type: object, required: method, url, properties: method: type: string, description: Type of API method to be sent when alert is triggered, either 'POST' or 'PUT'., example: POST, enum: POST, PUT, url: type: string, format: uri, description: The base URL of the webhook integration., example: https://company.servicenow.com, token: type: string, example: QktxVUtFU1dKV1FlJBYXdnTVlRemFZdlRDZTg6eFh4dzU4JUYjqdUwwYkJoTjZSTmlzRWFIRHF0b1h4a08yazBpQjJ1bms1OW4yTUhdsfRib3IhVQ==, description: The bearer authentication token is a third-party token that you set for the alert notifications sent through the webhook integration. , basicAuth: type: object, required: user, password, properties: user: type: string, description: Authentication username of the alert API (up to 1024 characters)., example: username80085, maxLength: 1024, password: type: string, description: Authentication password of the alert API (up to 1024 characters)., example: yed69khj420_i, maxLength: 1024, headers: type: object, additionalProperties: type: string, exclude: type: object, properties: clusters: type: array, items: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, ..., description: The list of cluster IDs of the clusters to be excluded from the alert integration., appServices: type: array, items: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, ..., description: The list of app service IDs of the app services to be excluded from the alert integration.",
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Alert Integration"
+    ],
+    "function": {
+      "name": "get_list_alert_integrations",
+      "description": "Lists all the alert integrations under the project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "The order in which the items will be sorted."
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Sets the order of how you would like to sort the results and the key you would like to order by. Valid fields to sort the results are: **id**, **name**."
+          },
+          "perPage": {
+            "type": "integer",
+            "description": "Sets the number of results you would like to have on each page."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Sets the page you would like to view."
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Alert Integration"
+    ],
+    "function": {
+      "name": "get_get_alert_integration",
+      "description": "Fetches the details of the given alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "alertIntegrationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the alert integration."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "alertIntegrationId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Alert Integration"
+    ],
+    "function": {
+      "name": "put_update_alert_integration",
+      "description": "Update the details of the given alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: config, properties: name: type: string, description: Name of the alert integration (up to 1024 characters)., example: test alert 1, maxLength: 1024, config: type: object, required: webhook, properties: webhook: type: object, required: method, url, properties: method: type: string, description: Type of API method to be sent when alert is triggered, either 'POST' or 'PUT'., example: POST, enum: POST, PUT, url: type: string, format: uri, description: The base URL of the webhook integration., example: https://company.servicenow.com, token: type: string, example: QktxVUtFU1dKV1FlJBYXdnTVlRemFZdlRDZTg6eFh4dzU4JUYjqdUwwYkJoTjZSTmlzRWFIRHF0b1h4a08yazBpQjJ1bms1OW4yTUhdsfRib3IhVQ==, description: The bearer authentication token is a third-party token that you set for the alert notifications sent through the webhook integration. , basicAuth: type: object, required: user, password, properties: user: type: string, description: Authentication username of the alert API (up to 1024 characters)., example: username80085, maxLength: 1024, password: type: string, description: Authentication password of the alert API (up to 1024 characters)., example: yed69khj420_i, maxLength: 1024, headers: type: object, additionalProperties: type: string, exclude: type: object, properties: clusters: type: array, items: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, ..., description: The list of cluster IDs of the clusters to be excluded from the alert integration., appServices: type: array, items: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, ..., description: The list of app service IDs of the app services to be excluded from the alert integration.",
+            "type": "string"
+          },
+          "alertIntegrationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the alert integration."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "alertIntegrationId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Alert Integration"
+    ],
+    "function": {
+      "name": "delete_delete_alert_integration",
+      "description": "Deletes an existing alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "alertIntegrationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the alert integration."
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "alertIntegrationId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Alert Integration"
+    ],
+    "function": {
+      "name": "post_test_alert_integration",
+      "description": "Tests a new alert integration for a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: kind, config, properties: kind: type: string, description: Type of alert integration, currently supports only 'webhook'., example: webhook, enum: webhook, config: type: object, required: webhook, properties: webhook: type: object, required: method, url, properties: method: type: string, description: Type of API method to be sent when alert is triggered, either 'POST' or 'PUT'., example: POST, enum: POST, PUT, url: type: string, format: uri, description: The base URL of the webhook integration., example: https://company.servicenow.com, token: type: string, example: QktxVUtFU1dKV1FlJBYXdnTVlRemFZdlRDZTg6eFh4dzU4JUYjqdUwwYkJoTjZSTmlzRWFIRHF0b1h4a08yazBpQjJ1bms1OW4yTUhdsfRib3IhVQ==, description: The bearer authentication token is a third-party token that you set for the alert notifications sent through the webhook integration. , basicAuth: type: object, required: user, password, properties: user: type: string, description: Authentication username of the alert API (up to 1024 characters)., example: username80085, maxLength: 1024, password: type: string, description: Authentication password of the alert API (up to 1024 characters)., example: yed69khj420_i, maxLength: 1024, headers: type: object, additionalProperties: type: string, exclude: type: object, properties: clusters: type: array, items: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, ..., description: The list of cluster IDs of the clusters to be excluded from the alert integration., appServices: type: array, items: type: string, format: uuid, example: ffffffff-aaaa-1414-eeee-000000000000, ..., description: The list of app service IDs of the app services to be excluded from the alert integration.",
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the project."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId",
+          "projectId",
+          "body"
+        ]
+      }
+    }
+  }
+]

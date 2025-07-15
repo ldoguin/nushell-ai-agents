@@ -1,0 +1,3 @@
+Used to manage primary and secondary indexes on your Capella cluster.  You can CREATE/ALTER/DROP/BUILD indexes.
+
+It is recommended to use deferred index builds, especially for larger indexes. When creating indexes in bulk, we do not recommend sending requests to create all of them at once. Instead, we strongly recommend creating indexes in batches of 100 or less.

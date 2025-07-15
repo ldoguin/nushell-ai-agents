@@ -1,0 +1,3 @@
+The CMEK (Customer Managed Encryption Keys) endpoints facilitate the management of encryption keys used by clusters for data encryption.
+They allow organizations to register, list, retrieve, rotate, and delete the metadata associated with their own encryption keys within Capella.
+This suite of endpoints ensures that organizations have full control over the lifecycle of their keys, enhancing security and compliance by allowing encryption keys that are managed in external key management services like AWS KMS or GCP KMS to be used within the organization's clusters.

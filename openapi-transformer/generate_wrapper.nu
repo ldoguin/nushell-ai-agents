@@ -33,7 +33,8 @@ def manage_properties [props : any] {
 
       } else if ( $value.type == 'array' ) {
         if ($value.items.description? == null ) {
-          let items = $value.items | merge { description : $value.description }
+          let desc = $value.description?
+          let items = $value.items | merge { description : $desc }
           return ( manage_properties {key : $key, value : $items}   )
         } else {
           return ( manage_properties   {key : $key, value : $value.items} )
@@ -42,7 +43,7 @@ def manage_properties [props : any] {
         return ( "An object containing the following field:" + ( describe-json-schema $value ) + ". This is the last field of the object." )
       } else {
         let typ = $value.type
-        mut desc = $value.description
+        mut desc = $value.description?
         return $"($key) ($typ) - ($desc)"
       }
       
@@ -68,6 +69,7 @@ def generate_function [
     description: string
     parameters: list
     request_body: record
+    tags: list
 ] {
   
   let path = $path | str replace -a -r '\{' "($"
@@ -206,6 +208,7 @@ def generate_function [
 
   let tool_description = {
     "type": "function",
+    "tags": $tags,
     "function": $tool_function
   }
 
@@ -229,7 +232,7 @@ def main [
     $methods | transpose key value | each { |m|
         let method = $m.key
         let op = $m.value
-        let tuple = generate_function $path $method $op.summary ( $op.description | str replace -a "\n" "\n# ") (  (  $op.parameters? | default [] ) | append $path_params ) ($op.requestBody? | default {} )
+        let tuple = generate_function $path $method $op.summary ( $op.description | str replace -a "\n" "\n# ") (  (  $op.parameters? | default [] ) | append $path_params ) ($op.requestBody? | default {} ) ($op.tags? | default [] )
         $tuple
      }
     }

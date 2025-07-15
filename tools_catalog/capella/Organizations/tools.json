@@ -1,0 +1,70 @@
+[
+  {
+    "type": "function",
+    "tags": [
+      "Organizations"
+    ],
+    "function": {
+      "name": "get_get_organization",
+      "description": "Fetches the details of an organization by ID.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# - Organization Member\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Organizations"
+    ],
+    "function": {
+      "name": "put_update_organization_configuration",
+      "description": "Updates an existing organization configuration. Use this endpoint to add, update, and delete network subdomains.\n# \n# Subdomains:\n# - Can have a maximum of 30 alphanumeric characters.\n# - Must be a unique string and not already in use in another tenant or organization. Empty strings are allowed.\n# - Only affect new clusters. You cannot update existing clusters to include a new subdomain.\n# - Currently only supported for AWS clusters.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# Subdomains are not automatically available. You must contact Couchbase support to enable this feature.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "description": "application/json: schema: type: object, required: subdomain, properties: subdomain: type: string, description: The new name of the subdomain for the organization., example: abc, maxLength: 30, examples: UpdateSubdomain: value: subdomain: abc, DeleteSubdomain: value: subdomain: ",
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ffffffff-aaaa-1414-eeee-000000000000",
+            "description": "The GUID4 ID of the organization. "
+          },
+          "If_Match": {
+            "type": "string",
+            "example": "12",
+            "description": "A precondition header that specifies the entity tag of a resource."
+          }
+        },
+        "required": [
+          "organizationId",
+          "body"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "tags": [
+      "Organizations"
+    ],
+    "function": {
+      "name": "get_list_organizations",
+      "description": "Returns a list of all organizations the user has access to.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# - Organization Member\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# "
+    }
+  }
+]

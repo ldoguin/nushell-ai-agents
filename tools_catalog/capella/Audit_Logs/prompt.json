@@ -1,0 +1,1 @@
+Users can configure audit log support on Capella database and can export audit logs from cloud blob storage to an AWS S3 bucket. Users can retrieve audit logs from a pre-signed download URL. Logs are retained for 30 days.

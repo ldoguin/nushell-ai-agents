@@ -1,0 +1,4 @@
+Couchbase Capella supports the use of x.509 certificates, for clients and servers.
+This ensures that only approved users, applications, machines, and endpoints have access to system resources.
+Consequently, the mechanism can be used by Couchbase SDK clients to access Couchbase Services, and by source clusters that use XDCR to replicate data to target clusters.
+Clients can verify the identity of Couchbase Capella, thereby ensuring that they are not exchanging data with a rogue entity.

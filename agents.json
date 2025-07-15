@@ -1,10 +1,31 @@
-{
+{   
+    "test" : {
+        "runtime" : "openai",
+        "model":"gpt-4o-mini",
+        "folder" : "tools_catalog/test",
+        "description":"This is a general test ai agent",
+        "options" : {
+            "stream": false,
+            "temperature": 0    
+            }
+    },
     "cbes_oai" : {
         "runtime" : "openai",
         "model":"gpt-4o-mini",
-        "prompt":"prompts/cbes.txt",
-        "model_tools":"openapi-transformer/tools.json",
-        "tool_functions":"openapi-transformer/functions.nu",
+        "folder":"tools_catalog/couchbase-edge-server",
+        "description":"This agent can answer couchbase edge server related question",
+        "options" : {
+            "stream": false,
+            "temperature": 0    
+            }
+    },
+    "capella_oai" : {
+        "runtime" : "openai",
+        "model":"gpt-4o-mini",
+        "prompt":"prompts/capella.txt",
+        "model_tools":"tools_catalog/capella/tools.json",
+        "tool_functions":"tools_catalog/capella/functions.nu",
+        "description":"This agent can answer couchbase Capella related question",
         "options" : {
             "stream": false,
             "temperature": 0
@@ -16,6 +37,7 @@
         "prompt":"prompts/toolSystemPrompt.txt",
         "model_tools":"tools/tools.json",
         "tool_functions":"tools/tools.nu",
+        "description":"This agent uses qwen model to answer general question",
         "options" : {
             "stream": false,
             "temperature": 0
@@ -24,6 +46,9 @@
     "general_oai" : {
         "runtime" : "openai",
         "model":"gpt-4o-mini",
+        "description":"This is a general agent, can be used to answer questin aboout git github gitlab",
+        "model_tools":"tools/tools.json",
+        "tool_functions":"tools/tools.nu",
         "options" : {
             "stream": false,
             "temperature": 0
@@ -35,6 +60,27 @@
         "prompt":"prompts/reasoner.txt",
         "model_tools":"tools/tools.json",
         "tool_functions":"tools/tools.nu",
+        "description":"This is a general qwen2.5 reasoning agent",
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
+    },
+    "reviewer" : {
+        "runtime" : "openai",
+        "model":"gpt-4.1-2025-04-14",
+        "prompt":"prompts/reviewer.txt",
+        "description":"A reviewer agent, this agent can review text and makes suggestion about grammar, ortograph, content, document strcutre, anything to make the doc better.",
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
+    },
+    "writer" : {
+        "runtime" : "openai",
+        "model":"gpt-4.1-2025-04-14",
+        "prompt":"prompts/writer.txt",
+        "description":"A writer agent, use it whenever you need to write articles, documentation, stories etc... Or modify an existing text and incorporate a reviewer feedback.",
         "options" : {
             "stream": false,
             "temperature": 0

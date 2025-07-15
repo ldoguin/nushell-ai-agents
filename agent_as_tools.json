@@ -1,0 +1,154 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "test",
+      "description": "This is a general test ai agent",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "cbes_oai",
+      "description": "This agent can answer couchbase edge server related question",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "capella_oai",
+      "description": "This agent can answer couchbase Capella related question",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "qwen_general_local",
+      "description": "This agent uses qwen model to answer general question",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "general_oai",
+      "description": "This is a general agent, can be used to answer questin aboout git github gitlab",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "qwen_reasoner_local",
+      "description": "This is a general qwen2.5 reasoning agent",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "reviewer",
+      "description": "A reviewer agent, this agent can review text and makes suggestion about grammar, ortograph, content, document strcutre, anything to make the doc better.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "writer",
+      "description": "A writer agent, use it whenever you need to write articles, documentation, stories etc... Or modify an existing text and incorporate a reviewer feedback.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "the question you want to ask the agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  }
+]

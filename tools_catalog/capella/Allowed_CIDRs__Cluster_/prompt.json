@@ -1,0 +1,5 @@
+Couchbase Capella only allows trusted IP addresses to connect to databases.
+Each database has a configurable Allowed IP list that can include up to 75 entries.
+Each entry can be a single IP address or an IP address space.
+Any IP address you add to this list can have a user-specified expiration time for temporary access, or be permanent.
+Capella automatically denies any connection attempts to and from an IP not in the allowed IP list.
