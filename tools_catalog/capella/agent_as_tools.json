@@ -173,7 +173,7 @@
   {
     "type": "function",
     "function": {
-      "name": "Backups_&_Restore__Bucket_",
+      "name": "Backups___Restore__Bucket_",
       "description": "This function calls an ai agent able to do the following :\nCouchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.\nCouchbase Capella supports scheduled and on-demand backups of bucket data.\nA backup can be restored to the same database where it was created or another database in the same organization.\nAn on-demand backup of a bucket is always a Full backup.\nCapella schedules on-demand backup to start immediately.\n",
       "parameters": {
         "type": "object",
@@ -192,7 +192,7 @@
   {
     "type": "function",
     "function": {
-      "name": "Buckets,_Scopes,_&_Collections",
+      "name": "Buckets__Scopes____Collections",
       "description": "This function calls an ai agent able to do the following :\nA bucket is the fundamental space for storing data in Couchbase Capella.\nScopes and Collections are logical containers within a bucket and a way for organizing data within buckets.\nA scope is a mechanism for the grouping of multiple collections. A collection is a data container for related documents.\n",
       "parameters": {
         "type": "object",
@@ -249,7 +249,7 @@
   {
     "type": "function",
     "function": {
-      "name": "Cloud_Snapshot_Backups_&_Restore",
+      "name": "Cloud_Snapshot_Backups___Restore",
       "description": "This function calls an ai agent able to do the following :\nCouchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.\nCouchbase Capella supports scheduled and on-demand backups of cloud snapshot data.\nA backup can be restored to the same database where it was created or another database in the same organization.\nA backup can also be cloned to create a new database with the same specifications as the backed up cluster in the same organization.\nAn on-demand backup of a bucket is always a Full backup.\nCapella schedules on-demand backup to start immediately.\n",
       "parameters": {
         "type": "object",

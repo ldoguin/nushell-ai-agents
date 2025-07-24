@@ -5,7 +5,7 @@
       "Api Keys"
     ],
     "function": {
-      "name": "post_create_api_key",
+      "name": "post_postorganizationapikeys",
       "description": "Creates a new API key under an organization.\n# \n# Organization Owners can create Organization and Project scoped API keys.\n# \n# Project Owner and Project Creator can create project scoped keys.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -34,7 +34,7 @@
       "Api Keys"
     ],
     "function": {
-      "name": "get_list_api_keys",
+      "name": "get_listorganizationapikeys",
       "description": "Lists all the API keys under an organization.\n# \n# Organization Owners can list all the API keys inside the Organization.\n# \n# Organization Members and Project Creators can list all the Project scoped API key for which they are Project Owner.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -81,7 +81,7 @@
       "Api Keys"
     ],
     "function": {
-      "name": "get_get_api_key",
+      "name": "get_getorganizationapikeybyaccesskey",
       "description": "Fetches the details of the given API key under an organization.\n# \n# Organization Owners can get any API key inside the Organization.\n# \n# Organization Members and Project Creator can get any Project scoped API key for which they are Project Owner.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -111,7 +111,7 @@
       "Api Keys"
     ],
     "function": {
-      "name": "delete_delete_api_key",
+      "name": "delete_deleteorganizationapikey",
       "description": "Deletes the given API key under an organization.\n# \n# Organization Owners can delete any API key inside the Organization.\n# \n# Organization Members and Project Creator can delete any Project scoped API key for which they are Project Owner.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -141,7 +141,7 @@
       "Api Keys"
     ],
     "function": {
-      "name": "post_rotate_api_key",
+      "name": "post_postorganizationapikeyrotate",
       "description": "Rotate the secret of a given API key under an organization.\n# \n# Organization Owners can rotate any API key inside the Organization.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

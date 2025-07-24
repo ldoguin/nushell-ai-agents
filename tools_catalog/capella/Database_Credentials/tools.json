@@ -5,7 +5,7 @@
       "Database Credentials"
     ],
     "function": {
-      "name": "get_list_database_credentials",
+      "name": "get_listdatabasecredentials",
       "description": "Lists all the database credential information under a cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -66,7 +66,7 @@
       "Database Credentials"
     ],
     "function": {
-      "name": "post_create_database_credentials",
+      "name": "post_postdatabasecredential",
       "description": "Creates a new database credential under a cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# Valid fields to sort the results are: \"id\", \"name\".\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -109,7 +109,7 @@
       "Database Credentials"
     ],
     "function": {
-      "name": "get_get_database_credentials",
+      "name": "get_getdatabasecredential",
       "description": "Fetches the details of a given cluster's database credential information.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -154,7 +154,7 @@
       "Database Credentials"
     ],
     "function": {
-      "name": "put_update_database_credentials",
+      "name": "put_putdatabasecredential",
       "description": "Updates an existing database credential.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -209,7 +209,7 @@
       "Database Credentials"
     ],
     "function": {
-      "name": "delete_delete_database_credentials",
+      "name": "delete_deletedatabasecredential",
       "description": "Deletes an existing cluster's database credential.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

@@ -5,7 +5,7 @@
       "Backup Schedule (Bucket)"
     ],
     "function": {
-      "name": "post_create_backup_schedule",
+      "name": "post_postbackupschedule",
       "description": "Creates a scheduled backup for a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -54,7 +54,7 @@
       "Backup Schedule (Bucket)"
     ],
     "function": {
-      "name": "get_get_backup_schedule",
+      "name": "get_getbackupschedule",
       "description": "Fetched the backup schedule for a bucket in a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -98,7 +98,7 @@
       "Backup Schedule (Bucket)"
     ],
     "function": {
-      "name": "put_update_backup_schedule",
+      "name": "put_putbackupschedule",
       "description": "Updates an existing backup schedule.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -147,7 +147,7 @@
       "Backup Schedule (Bucket)"
     ],
     "function": {
-      "name": "delete_delete_backup_schedule",
+      "name": "delete_deletebackupschedule",
       "description": "Deletes an existing backup schedule\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -191,7 +191,7 @@
       "Backup Schedule (Bucket)"
     ],
     "function": {
-      "name": "get_list_cycles",
+      "name": "get_listcycles",
       "description": "Lists the cycles for a bucket in a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -247,7 +247,7 @@
       "Backup Schedule (Bucket)"
     ],
     "function": {
-      "name": "get_list_backups",
+      "name": "get_listbackups",
       "description": "Lists the backups for a cycle in a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

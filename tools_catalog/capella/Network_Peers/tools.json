@@ -5,7 +5,7 @@
       "Network Peers"
     ],
     "function": {
-      "name": "post_create_network_peering",
+      "name": "post_postnetworkpeering",
       "description": "Creates a network peering record for Capella. Capella does not support peering of networks between different cloud providers. For example, you cannot peer GCP VPC that hosts Capella cluster with an AWS VPC hosting an application.\n# \n# - Create configures a Couchbase Capella private networking with the cloud provider. Setting up a private network enables your application to interact with Couchbase Capella over a private connection by co-locating them through network peering.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "Network Peers"
     ],
     "function": {
-      "name": "get_list_network_peering_records",
+      "name": "get_listnetworkpeeringrecords",
       "description": "Lists all the network peering records.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -109,7 +109,7 @@
       "Network Peers"
     ],
     "function": {
-      "name": "get_get_network_peering_record",
+      "name": "get_getnetworkpeeringrecord",
       "description": "Fetches the details of the network peering meta data based on the peerID provided.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -154,7 +154,7 @@
       "Network Peers"
     ],
     "function": {
-      "name": "delete_delete_network_peering",
+      "name": "delete_deletenetworkpeering",
       "description": "Deletes the network peering relationship.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -199,7 +199,7 @@
       "Network Peers"
     ],
     "function": {
-      "name": "post_get_azure_vnet_peering_cli_command",
+      "name": "post_getazurevnetpeeringcommand",
       "description": "Retrieves the role assignment command or script to be executed in the Azure CLI to assign a new network contributor role. It scopes only to the specified subscription and the virtual network within that subscription.\n# \n# - Before using this API, please make sure that the *Admin consent granting* process has been completed through the Capella UI.\n# - This process to grant consent to the VNET peering service principal in the external Azure tenant needs to be done only once for the organization i.e. the first time when the VNET peering is created.\n# - Consenting to this permission request creates a service principal that grants Capella access to the Azure tenant to perform VNET peering.\n# - To complete the admin consent granting process, the Organization owner should follow the steps below -\n#     1. Login to the Capella UI.\n#     2. Deploy an Azure Cluster or open an existing one you want to peer with your application.\n#     3. Click the Settings tab, in the navigation pane click VNET Peering.\n#     4. Click Setup VNET Peering.\n#     5. Confirm that you have a user with the Global Administrator Role.\n#     6. Add the Azure configuration details to allow peering access.\n#     7. Click Allow Peering Access - A new browser tab opens. Sign in to Azure if you have not already.\n#     8. In Azure, accept Capella’s permissions request - The Azure permissions request page is open in the new browser tab and consent to the new permissions request.\n#       For more information refer [docs]- https://docs.couchbase.com/cloud/clouds/vpc-peering/peer-azure.html\n# - On accepting the new permission, you automatically return to the Capella VNET peering page. The Capella VNET peering page shows a notice indicating that peering access is successful.\n# \n# - The Organization Owner should set this up once, then for network peering, use the public API -\n#     1. Use this `Get Azure VNET Peering CLI Command` API to fetch the command.\n#     2. Run the role assignment command in the Azure CLI.\n#     3. Use the `Create VPC Peering` API to create the network peering.\n# \n# - In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n# ",
       "parameters": {
         "type": "object",

@@ -5,7 +5,7 @@
       "Allowed CIDRs (App Services)"
     ],
     "function": {
-      "name": "delete_delete_app_service_allowed_cidr",
+      "name": "delete_deleteappserviceallowedcidr",
       "description": "Deletes an Allowed CIDR by ID on the specified App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -57,7 +57,7 @@
       "Allowed CIDRs (App Services)"
     ],
     "function": {
-      "name": "get_list_allowed_cidrs_for_an_app_service",
+      "name": "get_listappserviceallowedcidrs",
       "description": "Lists the Allowed CIDRs for the specified App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -125,7 +125,7 @@
       "Allowed CIDRs (App Services)"
     ],
     "function": {
-      "name": "post_create_allowed_cidr",
+      "name": "post_postappserviceallowedcidr",
       "description": "Adds a trusted CIDR to the specified App Service's list of allowed CIDRs.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

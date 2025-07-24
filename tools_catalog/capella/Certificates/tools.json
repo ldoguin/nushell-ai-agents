@@ -5,7 +5,7 @@
       "Certificates"
     ],
     "function": {
-      "name": "get_get_certificate",
+      "name": "get_getcertificate",
       "description": "In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

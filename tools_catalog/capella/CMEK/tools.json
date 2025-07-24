@@ -5,7 +5,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "get_get_cloud_accounts",
+      "name": "get_getcloudaccounts",
       "description": "Fetches the cloud account ID associated with the organization. Use this account ID when adding CMEK to other AWS databases in your organization.\n# \n# To learn more, see [CMEK at Rest](https://docs.couchbase.com/cloud/security/cmek.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Creator\n#   - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -29,7 +29,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "post_create_key_metadata",
+      "name": "post_postcmekmetadata",
       "description": "Initializes the metadata record for a customer-managed encryption key stored in AWS or GCP, linking it to the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -58,7 +58,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "get_list_key_metadata",
+      "name": "get_getkeymetadatalist",
       "description": "Retrieves detailed metadata for all customer-managed encryption keys associated with the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -105,7 +105,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "get_list_key_rotation_history",
+      "name": "get_listcmekhistory",
       "description": "Retrieves the full history of rotations for a specific customer-managed encryption key within the organization.\n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Organization Member\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -162,7 +162,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "get_get_key_metadata",
+      "name": "get_getkeymetadata",
       "description": "Retrieves the full metadata details for a specific customer-managed encryption key within the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -193,7 +193,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "put_rotate_key",
+      "name": "put_rotatecmekkey",
       "description": "Initiates the process to rotate a customer-managed encryption key and update its associated metadata within the system.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -229,7 +229,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "delete_delete_key_metadata",
+      "name": "delete_deletekeymetadata",
       "description": "Permanently removes the specified customer-managed encryption key's metadata from the organization's account.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -260,7 +260,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "post_associate_key_with_cluster",
+      "name": "post_associatecmek",
       "description": "Redeploys the cluster and encrypts the disks with the newly associated customer-managed encryption key.\n# Throws an error before redeploying the cluster if the customer-managed encryption key is inaccessible.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -305,7 +305,7 @@
       "CMEK"
     ],
     "function": {
-      "name": "post_unassociate_key_from_cluster",
+      "name": "post_unassociatecmek",
       "description": "Removes the customer-managed encryption key associated with the cluster, which redeploys the cluster and removes any encryption on the disks.\n# This does not delete the customer-managed encryption key itself since the same key could be used across clusters.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

@@ -5,7 +5,7 @@
       "Cloud Snapshot Backups Schedule"
     ],
     "function": {
-      "name": "put_upsert_backup_schedule",
+      "name": "put_upsertcloudsnapshotbackupschedule",
       "description": "Creates or updates a cloud snapshot backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "Cloud Snapshot Backups Schedule"
     ],
     "function": {
-      "name": "get_get_backup_schedule",
+      "name": "get_getcloudsnapshotbackupschedule",
       "description": "Retrieves the cloud snapshot backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -86,7 +86,7 @@
       "Cloud Snapshot Backups Schedule"
     ],
     "function": {
-      "name": "delete_delete_backup_schedule",
+      "name": "delete_deletecloudsnapshotbackupschedule",
       "description": "Deletes the backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

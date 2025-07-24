@@ -5,7 +5,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "post_create_cloud_snapshot_backup",
+      "name": "post_createcloudsnapshotbackup",
       "description": "Creates a cloud snapshot backup for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "get_list_cloud_snapshot_backups",
+      "name": "get_listcloudsnapshotbackups",
       "description": "List the backups belonging to a cluster.\n# \n# Note: This endpoint doesn’t return queued backups and only returns ones that are actively being processed or are completed/failed.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -109,7 +109,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "get_list_cloud_snapshot_restores",
+      "name": "get_listcloudsnapshotrestores",
       "description": "Lists the restores that have taken place for a given cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -170,7 +170,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "put_edit_backup_retention",
+      "name": "put_editcloudsnapshotbackupretention",
       "description": "Edits the retention time for a backup.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -220,7 +220,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "delete_delete_backup",
+      "name": "delete_deletecloudsnapshotbackup",
       "description": "Deletes the backup.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -265,7 +265,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "post_restore_backup",
+      "name": "post_restore",
       "description": "Creates a restore job for a backup immediately.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -310,7 +310,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "get_list_cloud_snapshot_backups_at_the_project_level",
+      "name": "get_listprojectlevelcloudsnapshotbackups",
       "description": "Lists cloud snapshot backups associated with operational clusters within a specific project.\n# \n# The \"most recent\" and \"oldest\" backup fields do not include backups that are in a queued state. Only backups that are actively being processed, successfully completed, or marked as failed are returned.\n# \n# For detailed guidance on backup and restore functionality, please refer to [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# The provided API key must have at least one of the following roles.\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# For more information about roles and access, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -371,7 +371,7 @@
       "Cloud Snapshot Backups & Restore"
     ],
     "function": {
-      "name": "post_clone_cluster_backup",
+      "name": "post_clone",
       "description": "Clones the cluster backup into a new cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

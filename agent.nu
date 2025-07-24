@@ -7,7 +7,7 @@ def think_code [$query] {
     "## Calling think_code" | log
     $query | log
 
-    let all_agents = open agents.json
+    let all_agents =  ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
     mut agent = agent $all_agents.cbes_oai
 
     let answer = ( $agent | run_agent $query )
@@ -20,7 +20,7 @@ def run [$query] {
     let s = $in
     init_logger
     "## Calling run" | log
-    let all_agents = open agents.json
+    let all_agents =  ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
     mut agent = agent $all_agents.cbes_oai
     mut agentPrompt = "";
     if ( $s != null ) {
@@ -37,7 +37,8 @@ def agent_run [agent_name, query] {
     let s = $in
     init_logger
     "## Calling run" | log
-    let all_agents = open agents.json
+    echo ( ls agents.json )
+    let all_agents = ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
     mut agent = agent ( $all_agents | get $agent_name )
     mut agentPrompt = "";
     if ( $s != null ) {

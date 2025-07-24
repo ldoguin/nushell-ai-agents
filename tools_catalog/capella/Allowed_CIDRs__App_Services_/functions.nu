@@ -10,7 +10,7 @@
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_cloud_accounts [
+def get_getcloudaccounts [
  tool_args 
 ] {
   mut header_params = []
@@ -30,7 +30,7 @@ def get_get_cloud_accounts [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_api_key [
+def post_postorganizationapikeys [
  tool_args 
 ] {
   mut header_params = []
@@ -52,7 +52,7 @@ def post_create_api_key [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_api_keys [
+def get_listorganizationapikeys [
  tool_args 
 ] {
   mut header_params = []
@@ -83,7 +83,7 @@ def get_list_api_keys [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_api_key [
+def get_getorganizationapikeybyaccesskey [
  tool_args 
 ] {
   mut header_params = []
@@ -104,7 +104,7 @@ def get_get_api_key [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_api_key [
+def delete_deleteorganizationapikey [
  tool_args 
 ] {
   mut header_params = []
@@ -123,7 +123,7 @@ def delete_delete_api_key [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_rotate_api_key [
+def post_postorganizationapikeyrotate [
  tool_args 
 ] {
   mut header_params = []
@@ -146,7 +146,7 @@ def post_rotate_api_key [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_project [
+def post_postproject [
  tool_args 
 ] {
   mut header_params = []
@@ -172,7 +172,7 @@ def post_create_project [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_project [
+def get_listprojects [
  tool_args 
 ] {
   mut header_params = []
@@ -207,7 +207,7 @@ def get_list_project [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_project [
+def get_getprojectbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -228,7 +228,7 @@ def get_get_project [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_project [
+def put_putproject [
  tool_args 
 ] {
   mut header_params = []
@@ -253,7 +253,7 @@ def put_update_project [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_project [
+def delete_deleteprojectbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -293,7 +293,7 @@ def delete_delete_project [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_free_tier_cluster [
+def post_createfreetiercluster [
  tool_args 
 ] {
   mut header_params = []
@@ -317,7 +317,7 @@ def post_create_free_tier_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_cluster [
+def post_postcluster [
  tool_args 
 ] {
   mut header_params = []
@@ -345,7 +345,7 @@ def post_create_cluster [
 # Returned set of clusters is reduced to what the caller has access to view.
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_clusters [
+def get_listclusters [
  tool_args 
 ] {
   mut header_params = []
@@ -383,7 +383,7 @@ def get_list_clusters [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_free_tier_cluster [
+def get_getfreetiercluster [
  tool_args 
 ] {
   mut header_params = []
@@ -406,7 +406,7 @@ def get_get_free_tier_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_free_tier_cluster [
+def put_updatefreetiercluster [
  tool_args 
 ] {
   mut header_params = []
@@ -433,7 +433,7 @@ def put_update_free_tier_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_free_tier_cluster [
+def delete_deletefreetiercluster [
  tool_args 
 ] {
   mut header_params = []
@@ -459,7 +459,7 @@ def delete_delete_free_tier_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_cluster [
+def get_getcluster [
  tool_args 
 ] {
   mut header_params = []
@@ -482,7 +482,7 @@ def get_get_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_cluster [
+def put_putcluster [
  tool_args 
 ] {
   mut header_params = []
@@ -509,7 +509,7 @@ def put_update_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_cluster [
+def delete_deletecluster [
  tool_args 
 ] {
   mut header_params = []
@@ -533,7 +533,7 @@ def delete_delete_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_turn_on_free_tier_cluster [
+def post_freetierclusteron [
  tool_args 
 ] {
   mut header_params = []
@@ -560,7 +560,7 @@ def post_turn_on_free_tier_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_turn_off_free_tier_cluster [
+def delete_freetierclusteroff [
  tool_args 
 ] {
   mut header_params = []
@@ -582,7 +582,7 @@ def delete_turn_off_free_tier_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_turn_on_cluster [
+def post_clusteron [
  tool_args 
 ] {
   mut header_params = []
@@ -611,7 +611,7 @@ def post_turn_on_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_turn_off_cluster [
+def delete_clusteroff [
  tool_args 
 ] {
   mut header_params = []
@@ -633,7 +633,7 @@ def delete_turn_off_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_cluster_onoff_schedule [
+def post_postonoffschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -657,7 +657,7 @@ def post_create_cluster_onoff_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_cluster_onoff_schedule [
+def get_getonoffschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -679,7 +679,7 @@ def get_get_cluster_onoff_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_cluster_onoff_schedule [
+def put_putonoffschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -703,7 +703,7 @@ def put_update_cluster_onoff_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_cluster_onoff_schedule [
+def delete_deleteonoffschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -726,7 +726,7 @@ def delete_delete_cluster_onoff_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_cluster_audit_log_configuration [
+def put_putclusterauditsettings [
  tool_args 
 ] {
   mut header_params = []
@@ -756,7 +756,7 @@ def put_update_cluster_audit_log_configuration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_cluster_audit_log_configuration [
+def get_getclusterauditsettings [
  tool_args 
 ] {
   mut header_params = []
@@ -782,7 +782,7 @@ def get_get_cluster_audit_log_configuration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_filterable_audit_log_events [
+def get_getauditlogeventids [
  tool_args 
 ] {
   mut header_params = []
@@ -810,7 +810,7 @@ def get_list_filterable_audit_log_events [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_cluster_audit_log_export_job [
+def post_postauditlogexport [
  tool_args 
 ] {
   mut header_params = []
@@ -840,7 +840,7 @@ def post_create_cluster_audit_log_export_job [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_cluster_audit_log_export_jobs [
+def get_listauditlogexports [
  tool_args 
 ] {
   mut header_params = []
@@ -873,7 +873,7 @@ def get_list_cluster_audit_log_export_jobs [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_cluster_audit_log_export [
+def get_getauditlogexport [
  tool_args 
 ] {
   mut header_params = []
@@ -895,7 +895,7 @@ def get_get_cluster_audit_log_export [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_key_metadata [
+def post_postcmekmetadata [
  tool_args 
 ] {
   mut header_params = []
@@ -917,7 +917,7 @@ def post_create_key_metadata [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_key_metadata [
+def get_getkeymetadatalist [
  tool_args 
 ] {
   mut header_params = []
@@ -946,7 +946,7 @@ def get_list_key_metadata [
 #  - Organization Member
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_key_rotation_history [
+def get_listcmekhistory [
  tool_args 
 ] {
   mut header_params = []
@@ -978,7 +978,7 @@ def get_list_key_rotation_history [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_key_metadata [
+def get_getkeymetadata [
  tool_args 
 ] {
   mut header_params = []
@@ -998,7 +998,7 @@ def get_get_key_metadata [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_rotate_key [
+def put_rotatecmekkey [
  tool_args 
 ] {
   mut header_params = []
@@ -1020,7 +1020,7 @@ def put_rotate_key [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_key_metadata [
+def delete_deletekeymetadata [
  tool_args 
 ] {
   mut header_params = []
@@ -1043,7 +1043,7 @@ def delete_delete_key_metadata [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_associate_key_with_cluster [
+def post_associatecmek [
  tool_args 
 ] {
   mut header_params = []
@@ -1068,7 +1068,7 @@ def post_associate_key_with_cluster [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_unassociate_key_from_cluster [
+def post_unassociatecmek [
  tool_args 
 ] {
   mut header_params = []
@@ -1101,7 +1101,7 @@ def post_unassociate_key_from_cluster [
 # 
 # To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def post_create_user [
+def post_postuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1128,7 +1128,7 @@ def post_create_user [
 # 
 # To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).
 # 
-def get_list_users [
+def get_listusers [
  tool_args 
 ] {
   mut header_params = []
@@ -1167,7 +1167,7 @@ def get_list_users [
 # 
 # To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).
 # 
-def get_get_user [
+def get_getuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1195,7 +1195,7 @@ def get_get_user [
 # The results are always limited by the role and scope of the caller's privileges.
 # To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).
 # 
-def patch_update_user [
+def patch_patchuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1217,7 +1217,7 @@ def patch_update_user [
 # 
 # To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def delete_delete_user [
+def delete_deleteuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1241,7 +1241,7 @@ def delete_delete_user [
 # 
 # Note that updating this resource is not supported; you must delete and recreate allowed CIDRs instead. As a result, ETags are also not supported for this resource.
 # 
-def post_create_allowed_cidr [
+def post_postallowedcidrs [
  tool_args 
 ] {
   mut header_params = []
@@ -1269,7 +1269,7 @@ def post_create_allowed_cidr [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_allowed_cidrs [
+def get_listallowedcidrs [
  tool_args 
 ] {
   mut header_params = []
@@ -1306,7 +1306,7 @@ def get_list_allowed_cidrs [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_allowed_cidr [
+def get_getallowedcidrbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -1330,7 +1330,7 @@ def get_get_allowed_cidr [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_allowed_cidr [
+def delete_deleteallowedcidrbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -1354,7 +1354,7 @@ def delete_delete_allowed_cidr [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_database_credentials [
+def get_listdatabasecredentials [
  tool_args 
 ] {
   mut header_params = []
@@ -1389,7 +1389,7 @@ def get_list_database_credentials [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_database_credentials [
+def post_postdatabasecredential [
  tool_args 
 ] {
   mut header_params = []
@@ -1422,7 +1422,7 @@ def post_create_database_credentials [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_free_tier_app_service [
+def post_createfreetierappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1447,7 +1447,7 @@ def post_create_free_tier_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_app_service [
+def post_postappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1476,7 +1476,7 @@ def post_create_app_service [
 # Returned set of clusters is reduced to what the caller has access to view.
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_appservices [
+def get_listappservices [
  tool_args 
 ] {
   mut header_params = []
@@ -1516,7 +1516,7 @@ def get_list_appservices [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_free_tier_app_service [
+def get_getfreetierappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1540,7 +1540,7 @@ def get_get_free_tier_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_free_tier_app_service [
+def put_updatefreetierappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1568,7 +1568,7 @@ def put_update_free_tier_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_free_tier_app_service [
+def delete_deletefreetierappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1595,7 +1595,7 @@ def delete_delete_free_tier_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_service [
+def get_getappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1619,7 +1619,7 @@ def get_get_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_app_service [
+def put_putappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1647,7 +1647,7 @@ def put_update_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_app_service [
+def delete_deleteappservice [
  tool_args 
 ] {
   mut header_params = []
@@ -1671,7 +1671,7 @@ def delete_delete_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_turn_on_app_service [
+def post_appserviceon [
  tool_args 
 ] {
   mut header_params = []
@@ -1700,7 +1700,7 @@ def post_turn_on_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_turn_off_app_service [
+def delete_appserviceoff [
  tool_args 
 ] {
   mut header_params = []
@@ -1724,7 +1724,7 @@ def delete_turn_off_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_app_service_allowed_cidr [
+def delete_deleteappserviceallowedcidr [
  tool_args 
 ] {
   mut header_params = []
@@ -1749,7 +1749,7 @@ def delete_delete_app_service_allowed_cidr [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_allowed_cidrs_for_an_app_service [
+def get_listappserviceallowedcidrs [
  tool_args 
 ] {
   mut header_params = []
@@ -1784,7 +1784,7 @@ def get_list_allowed_cidrs_for_an_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_allowed_cidr [
+def post_postappserviceallowedcidr [
  tool_args 
 ] {
   mut header_params = []
@@ -1814,7 +1814,7 @@ def post_create_allowed_cidr [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_app_service_admin_user [
+def post_addappserviceadminuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1843,7 +1843,7 @@ def post_create_app_service_admin_user [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_app_service_admin_users [
+def get_listappserviceadminusers [
  tool_args 
 ] {
   mut header_params = []
@@ -1876,7 +1876,7 @@ def get_list_app_service_admin_users [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_app_service_admin_user [
+def put_updateappserviceadminuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1903,7 +1903,7 @@ def put_update_app_service_admin_user [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_app_service_admin_user [
+def delete_deleteappserviceadminuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1928,7 +1928,7 @@ def delete_delete_app_service_admin_user [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_service_admin_user [
+def get_getappserviceadminuser [
  tool_args 
 ] {
   mut header_params = []
@@ -1953,7 +1953,7 @@ def get_get_app_service_admin_user [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_enable_or_disable_app_service_audit_logging [
+def put_putappserviceauditlogstate [
  tool_args 
 ] {
   mut header_params = []
@@ -1980,7 +1980,7 @@ def put_enable_or_disable_app_service_audit_logging [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_service_audit_log_state [
+def get_getappserviceauditlogstate [
  tool_args 
 ] {
   mut header_params = []
@@ -2010,7 +2010,7 @@ def get_get_app_service_audit_log_state [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_public_certificate_for_app_service [
+def get_getappservicecertificate [
  tool_args 
 ] {
   mut header_params = []
@@ -2037,7 +2037,7 @@ def get_get_public_certificate_for_app_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_app_endpoints [
+def get_listappendpoints [
  tool_args 
 ] {
   mut header_params = []
@@ -2074,7 +2074,7 @@ def get_list_app_endpoints [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_app_endpoint [
+def post_postappendpoint [
  tool_args 
 ] {
   mut header_params = []
@@ -2103,7 +2103,7 @@ def post_create_app_endpoint [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_endpoint [
+def get_getappendpoint [
  tool_args 
 ] {
   mut header_params = []
@@ -2130,7 +2130,7 @@ def get_get_app_endpoint [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_app_endpoint [
+def put_putappendpoint [
  tool_args 
 ] {
   mut header_params = []
@@ -2157,7 +2157,7 @@ def put_update_app_endpoint [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_app_endpoint [
+def delete_deleteappendpoint [
  tool_args 
 ] {
   mut header_params = []
@@ -2185,7 +2185,7 @@ def delete_delete_app_endpoint [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_app_endpoint_collections [
+def get_listappendpointcollections [
  tool_args 
 ] {
   mut header_params = []
@@ -2219,7 +2219,7 @@ def get_list_app_endpoint_collections [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_resume_or_bring_an_app_endpoint_online [
+def post_postappendpointactivationstatus [
  tool_args 
 ] {
   mut header_params = []
@@ -2247,7 +2247,7 @@ def post_resume_or_bring_an_app_endpoint_online [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_pause_or_take_an_app_endpoint_offline [
+def delete_deleteappendpointactivationstatus [
  tool_args 
 ] {
   mut header_params = []
@@ -2277,7 +2277,7 @@ def delete_pause_or_take_an_app_endpoint_offline [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration. [
+def get_getappendpointcors [
  tool_args 
 ] {
   mut header_params = []
@@ -2307,7 +2307,7 @@ def get_get_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration. 
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_upsert_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration. [
+def put_putappendpointcors [
  tool_args 
 ] {
   mut header_params = []
@@ -2337,7 +2337,7 @@ def put_upsert_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuratio
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_app_endpoint_admin_users [
+def get_listappendpointadminusers [
  tool_args 
 ] {
   mut header_params = []
@@ -2372,7 +2372,7 @@ def get_list_app_endpoint_admin_users [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_app_endpoint_audit_log_event_ids [
+def get_getappserviceauditlogevents [
  tool_args 
 ] {
   mut header_params = []
@@ -2398,7 +2398,7 @@ def get_list_app_endpoint_audit_log_event_ids [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_app_endpoint_audit_logging_config [
+def put_putappendpointauditlogconfig [
  tool_args 
 ] {
   mut header_params = []
@@ -2426,7 +2426,7 @@ def put_update_app_endpoint_audit_logging_config [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_endpoint_audit_logging_config [
+def get_getappendpointauditlogconfig [
  tool_args 
 ] {
   mut header_params = []
@@ -2454,7 +2454,7 @@ def get_get_app_endpoint_audit_logging_config [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_access_control_and_validation_function [
+def get_getaccessfunction [
  tool_args 
 ] {
   mut header_params = []
@@ -2482,7 +2482,7 @@ def get_get_access_control_and_validation_function [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_upsert_custom_access_control_and_validation_function [
+def put_putaccessfunction [
  tool_args 
 ] {
   mut header_params = []
@@ -2509,7 +2509,7 @@ def put_upsert_custom_access_control_and_validation_function [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_access_control_and_validation_function [
+def delete_deleteaccessfunction [
  tool_args 
 ] {
   mut header_params = []
@@ -2537,7 +2537,7 @@ def delete_delete_access_control_and_validation_function [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_import_filter [
+def get_getimportfilter [
  tool_args 
 ] {
   mut header_params = []
@@ -2567,7 +2567,7 @@ def get_get_import_filter [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_upsert_import_filter [
+def put_putimportfilter [
  tool_args 
 ] {
   mut header_params = []
@@ -2594,7 +2594,7 @@ def put_upsert_import_filter [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_import_filter [
+def delete_deleteimportfilter [
  tool_args 
 ] {
   mut header_params = []
@@ -2623,7 +2623,7 @@ def delete_delete_import_filter [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_app_endpoint_openid_connect_oidc)_provider [
+def post_createappendpointoidcprovider [
  tool_args 
 ] {
   mut header_params = []
@@ -2650,7 +2650,7 @@ def post_create_app_endpoint_openid_connect_oidc)_provider [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_app_endpoint_openid_connect_oidc)_providers [
+def get_listappendpointoidcproviders [
  tool_args 
 ] {
   mut header_params = []
@@ -2686,7 +2686,7 @@ def get_list_app_endpoint_openid_connect_oidc)_providers [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_endpoint_openid_connect_oidc)_provider [
+def get_getappendpointoidcprovider [
  tool_args 
 ] {
   mut header_params = []
@@ -2712,7 +2712,7 @@ def get_get_app_endpoint_openid_connect_oidc)_provider [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_app_endpoint_openid_connect_oidc)_provider [
+def put_updateappendpointoidcprovider [
  tool_args 
 ] {
   mut header_params = []
@@ -2741,7 +2741,7 @@ def put_update_app_endpoint_openid_connect_oidc)_provider [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_app_endpoint_openid_connect_oidc)_provider [
+def delete_deleteappendpointoidcprovider [
  tool_args 
 ] {
   mut header_params = []
@@ -2769,7 +2769,7 @@ def delete_delete_app_endpoint_openid_connect_oidc)_provider [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_app_endpoint_default_oidc_provider [
+def put_updateappendpointoidcdefaultprovider [
  tool_args 
 ] {
   mut header_params = []
@@ -2800,7 +2800,7 @@ def put_update_app_endpoint_default_oidc_provider [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_resync_status [
+def get_getappendpointresync [
  tool_args 
 ] {
   mut header_params = []
@@ -2830,7 +2830,7 @@ def get_get_resync_status [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_start_resync [
+def post_postappendpointresync [
  tool_args 
 ] {
   mut header_params = []
@@ -2859,7 +2859,7 @@ def post_start_resync [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_stop_resync [
+def delete_deleteappendpointresync [
  tool_args 
 ] {
   mut header_params = []
@@ -2893,7 +2893,7 @@ def delete_stop_resync [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_configure_app_service_audit_log_streaming [
+def put_putappserviceauditlogstreaming [
  tool_args 
 ] {
   mut header_params = []
@@ -2921,7 +2921,7 @@ def put_configure_app_service_audit_log_streaming [
 # 
 #   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def patch_start_or_resume_audit_log_streaming [
+def patch_patchappserviceauditlogstreaming [
  tool_args 
 ] {
   mut header_params = []
@@ -2957,7 +2957,7 @@ def patch_start_or_resume_audit_log_streaming [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_app_service_audit_log_streaming_state [
+def get_getappserviceauditlogstreaming [
  tool_args 
 ] {
   mut header_params = []
@@ -2981,7 +2981,7 @@ def get_get_app_service_audit_log_streaming_state [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_initiate_audit_log_export [
+def post_postappserviceauditlogexport [
  tool_args 
 ] {
   mut header_params = []
@@ -3008,7 +3008,7 @@ def post_initiate_audit_log_export [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_audit_log_export_jobs [
+def get_listappserviceauditlogexports [
  tool_args 
 ] {
   mut header_params = []
@@ -3041,7 +3041,7 @@ def get_list_audit_log_export_jobs [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_audit_log_export_job [
+def get_getappserviceauditlogexportbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3066,7 +3066,7 @@ def get_get_audit_log_export_job [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_database_credentials [
+def get_getdatabasecredential [
  tool_args 
 ] {
   mut header_params = []
@@ -3089,7 +3089,7 @@ def get_get_database_credentials [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_database_credentials [
+def put_putdatabasecredential [
  tool_args 
 ] {
   mut header_params = []
@@ -3116,7 +3116,7 @@ def put_update_database_credentials [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_database_credentials [
+def delete_deletedatabasecredential [
  tool_args 
 ] {
   mut header_params = []
@@ -3149,7 +3149,7 @@ def delete_delete_database_credentials [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_free_tier_bucket [
+def post_createfreetierbucket [
  tool_args 
 ] {
   mut header_params = []
@@ -3180,7 +3180,7 @@ def post_create_free_tier_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_free_tier_buckets [
+def get_listfreetierbuckets [
  tool_args 
 ] {
   mut header_params = []
@@ -3205,7 +3205,7 @@ def get_list_free_tier_buckets [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_bucket [
+def post_postbucket [
  tool_args 
 ] {
   mut header_params = []
@@ -3235,7 +3235,7 @@ def post_create_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_buckets [
+def get_listbuckets [
  tool_args 
 ] {
   mut header_params = []
@@ -3264,7 +3264,7 @@ def get_list_buckets [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_free_tier_bucket [
+def get_getfreetierbucketbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3288,7 +3288,7 @@ def get_get_free_tier_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_free_tier_bucket [
+def put_updatefreetierbucket [
  tool_args 
 ] {
   mut header_params = []
@@ -3316,7 +3316,7 @@ def put_update_free_tier_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_free_tier_bucket [
+def delete_deletefreetierbucketbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3345,7 +3345,7 @@ def delete_delete_free_tier_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_bucket [
+def get_getbucketbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3371,7 +3371,7 @@ def get_get_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_bucket [
+def put_putbucket [
  tool_args 
 ] {
   mut header_params = []
@@ -3399,7 +3399,7 @@ def put_update_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_bucket [
+def delete_deletebucketbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3430,7 +3430,7 @@ def delete_delete_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_flush_bucket_data [
+def put_flushbucket [
  tool_args 
 ] {
   mut header_params = []
@@ -3469,7 +3469,7 @@ def put_flush_bucket_data [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_migrate_buckets [
+def put_putbucketstoragebackend [
  tool_args 
 ] {
   mut header_params = []
@@ -3497,7 +3497,7 @@ def put_migrate_buckets [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_private_endpoint_service_status [
+def get_getprivateendpointservicestatus [
  tool_args 
 ] {
   mut header_params = []
@@ -3524,7 +3524,7 @@ def get_get_private_endpoint_service_status [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_enable_private_endpoint_service [
+def post_enableprivateendpointservice [
  tool_args 
 ] {
   mut header_params = []
@@ -3548,7 +3548,7 @@ def post_enable_private_endpoint_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_disable_private_endpoint_service [
+def delete_disableprivateendpointservice [
  tool_args 
 ] {
   mut header_params = []
@@ -3574,7 +3574,7 @@ def delete_disable_private_endpoint_service [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_private_endpoints [
+def get_listprivateendpoints [
  tool_args 
 ] {
   mut header_params = []
@@ -3620,7 +3620,7 @@ def get_list_private_endpoints [
 # 
 #   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_get_private_endpoint_cli_command_required_to_setup_private_endpoint_for_specific_csp [
+def post_getprivateendpointcommand [
  tool_args 
 ] {
   mut header_params = []
@@ -3645,7 +3645,7 @@ def post_get_private_endpoint_cli_command_required_to_setup_private_endpoint_for
 # 
 #   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_accept_private_endpoint_request [
+def post_acceptprivateendpoint [
  tool_args 
 ] {
   mut header_params = []
@@ -3670,7 +3670,7 @@ def post_accept_private_endpoint_request [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_reject_or_disassociate_private_endpoint [
+def post_deleteprivateendpoint [
  tool_args 
 ] {
   mut header_params = []
@@ -3694,7 +3694,7 @@ def post_reject_or_disassociate_private_endpoint [
 # 
 # To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def get_get_organization [
+def get_getorganizationbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3721,7 +3721,7 @@ def get_get_organization [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_organization_configuration [
+def put_putorganizationconfiguration [
  tool_args 
 ] {
   mut header_params = []
@@ -3746,7 +3746,7 @@ def put_update_organization_configuration [
 # 
 # To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def get_list_organizations [
+def get_listorganizations [
  tool_args 
 ] {
   mut header_params = []
@@ -3768,7 +3768,7 @@ def get_list_organizations [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_certificate [
+def get_getcertificate [
  tool_args 
 ] {
   mut header_params = []
@@ -3797,7 +3797,7 @@ def get_get_certificate [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_load_sample_data [
+def post_postsamplebucket [
  tool_args 
 ] {
   mut header_params = []
@@ -3825,7 +3825,7 @@ def post_load_sample_data [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_sample_data_import_buckets [
+def get_listsamplebuckets [
  tool_args 
 ] {
   mut header_params = []
@@ -3851,7 +3851,7 @@ def get_list_sample_data_import_buckets [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_sample_import_bucket [
+def get_getsamplebucketbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3875,7 +3875,7 @@ def get_get_sample_import_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_sample_import_bucket [
+def delete_deletesampledatabybucketid [
  tool_args 
 ] {
   mut header_params = []
@@ -3900,7 +3900,7 @@ def delete_delete_sample_import_bucket [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_backup [
+def post_postbackup [
  tool_args 
 ] {
   mut header_params = []
@@ -3927,7 +3927,7 @@ def post_create_backup [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_cluster_backups [
+def get_listclusterbackups [
  tool_args 
 ] {
   mut header_params = []
@@ -3951,7 +3951,7 @@ def get_list_cluster_backups [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_backup [
+def get_getbackupbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -3976,7 +3976,7 @@ def get_get_backup [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_backup_cycle [
+def delete_deletebackupcyclebyid [
  tool_args 
 ] {
   mut header_params = []
@@ -4001,7 +4001,7 @@ def delete_delete_backup_cycle [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_cloud_snapshot_backup [
+def post_createcloudsnapshotbackup [
  tool_args 
 ] {
   mut header_params = []
@@ -4029,7 +4029,7 @@ def post_create_cloud_snapshot_backup [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_cloud_snapshot_backups [
+def get_listcloudsnapshotbackups [
  tool_args 
 ] {
   mut header_params = []
@@ -4064,7 +4064,7 @@ def get_list_cloud_snapshot_backups [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_cloud_snapshot_restores [
+def get_listcloudsnapshotrestores [
  tool_args 
 ] {
   mut header_params = []
@@ -4099,7 +4099,7 @@ def get_list_cloud_snapshot_restores [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_edit_backup_retention [
+def put_editcloudsnapshotbackupretention [
  tool_args 
 ] {
   mut header_params = []
@@ -4126,7 +4126,7 @@ def put_edit_backup_retention [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_backup [
+def delete_deletecloudsnapshotbackup [
  tool_args 
 ] {
   mut header_params = []
@@ -4151,7 +4151,7 @@ def delete_delete_backup [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_restore_backup [
+def post_restore [
  tool_args 
 ] {
   mut header_params = []
@@ -4179,7 +4179,7 @@ def post_restore_backup [
 # 
 # For more information about roles and access, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_cloud_snapshot_backups_at_the_project_level [
+def get_listprojectlevelcloudsnapshotbackups [
  tool_args 
 ] {
   mut header_params = []
@@ -4213,7 +4213,7 @@ def get_list_cloud_snapshot_backups_at_the_project_level [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_clone_cluster_backup [
+def post_clone [
  tool_args 
 ] {
   mut header_params = []
@@ -4239,7 +4239,7 @@ def post_clone_cluster_backup [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_upsert_backup_schedule [
+def put_upsertcloudsnapshotbackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4265,7 +4265,7 @@ def put_upsert_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_backup_schedule [
+def get_getcloudsnapshotbackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4289,7 +4289,7 @@ def get_get_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_backup_schedule [
+def delete_deletecloudsnapshotbackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4314,7 +4314,7 @@ def delete_delete_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_backup_schedule [
+def post_postbackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4342,7 +4342,7 @@ def post_create_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_backup_schedule [
+def get_getbackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4368,7 +4368,7 @@ def get_get_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_backup_schedule [
+def put_putbackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4396,7 +4396,7 @@ def put_update_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_backup_schedule [
+def delete_deletebackupschedule [
  tool_args 
 ] {
   mut header_params = []
@@ -4421,7 +4421,7 @@ def delete_delete_backup_schedule [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_cycles [
+def get_listcycles [
  tool_args 
 ] {
   mut header_params = []
@@ -4451,7 +4451,7 @@ def get_list_cycles [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_backups [
+def get_listbackups [
  tool_args 
 ] {
   mut header_params = []
@@ -4477,7 +4477,7 @@ def get_list_backups [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_restore_backup [
+def post_postrestore [
  tool_args 
 ] {
   mut header_params = []
@@ -4505,7 +4505,7 @@ def post_restore_backup [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_scope [
+def post_postscope [
  tool_args 
 ] {
   mut header_params = []
@@ -4536,7 +4536,7 @@ def post_create_scope [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_scopes [
+def get_getscopes [
  tool_args 
 ] {
   mut header_params = []
@@ -4565,7 +4565,7 @@ def get_list_scopes [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_scope [
+def get_getscopebyname [
  tool_args 
 ] {
   mut header_params = []
@@ -4592,7 +4592,7 @@ def get_get_scope [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_scope [
+def delete_deletescopebyname [
  tool_args 
 ] {
   mut header_params = []
@@ -4619,7 +4619,7 @@ def delete_delete_scope [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_collection [
+def post_postcollection [
  tool_args 
 ] {
   mut header_params = []
@@ -4651,7 +4651,7 @@ def post_create_collection [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_collections [
+def get_getcollections [
  tool_args 
 ] {
   mut header_params = []
@@ -4681,7 +4681,7 @@ def get_list_collections [
 # 
 #  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_collection [
+def get_getcollectionbyname [
  tool_args 
 ] {
   mut header_params = []
@@ -4713,7 +4713,7 @@ def get_get_collection [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_collection [
+def put_putcollection [
  tool_args 
 ] {
   mut header_params = []
@@ -4743,7 +4743,7 @@ def put_update_collection [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_collection [
+def delete_deletecollectionbyname [
  tool_args 
 ] {
   mut header_params = []
@@ -4770,7 +4770,7 @@ def delete_delete_collection [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_network_peering [
+def post_postnetworkpeering [
  tool_args 
 ] {
   mut header_params = []
@@ -4794,7 +4794,7 @@ def post_create_network_peering [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_network_peering_records [
+def get_listnetworkpeeringrecords [
  tool_args 
 ] {
   mut header_params = []
@@ -4827,7 +4827,7 @@ def get_list_network_peering_records [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_network_peering_record [
+def get_getnetworkpeeringrecord [
  tool_args 
 ] {
   mut header_params = []
@@ -4850,7 +4850,7 @@ def get_get_network_peering_record [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_network_peering [
+def delete_deletenetworkpeering [
  tool_args 
 ] {
   mut header_params = []
@@ -4874,7 +4874,7 @@ def delete_delete_network_peering [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_create_alert_integration [
+def post_postalertintegration [
  tool_args 
 ] {
   mut header_params = []
@@ -4900,7 +4900,7 @@ def post_create_alert_integration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_alert_integrations [
+def get_listalertintegrations [
  tool_args 
 ] {
   mut header_params = []
@@ -4935,7 +4935,7 @@ def get_list_alert_integrations [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_alert_integration [
+def get_getalertintegrationbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -4958,7 +4958,7 @@ def get_get_alert_integration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def put_update_alert_integration [
+def put_putalertintegration [
  tool_args 
 ] {
   mut header_params = []
@@ -4983,7 +4983,7 @@ def put_update_alert_integration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def delete_delete_alert_integration [
+def delete_deletealertintegrationbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -5006,7 +5006,7 @@ def delete_delete_alert_integration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def post_test_alert_integration [
+def post_posttestalertintegration [
  tool_args 
 ] {
   mut header_params = []
@@ -5042,7 +5042,7 @@ def post_test_alert_integration [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_events [
+def get_listevents [
  tool_args 
 ] {
   mut header_params = []
@@ -5101,7 +5101,7 @@ def get_list_events [
 # 
 # To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def get_get_event [
+def get_geteventbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -5133,7 +5133,7 @@ def get_get_event [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_list_events [
+def get_listprojectevents [
  tool_args 
 ] {
   mut header_params = []
@@ -5189,7 +5189,7 @@ def get_list_events [
 # 
 # To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def get_get_project_event [
+def get_getprojecteventbyid [
  tool_args 
 ] {
   mut header_params = []
@@ -5229,7 +5229,7 @@ def get_get_project_event [
 #   - Organization Owner
 #   - Project Owner
 # 
-def post_get_azure_vnet_peering_cli_command [
+def post_getazurevnetpeeringcommand [
  tool_args 
 ] {
   mut header_params = []
@@ -5260,7 +5260,7 @@ def post_get_azure_vnet_peering_cli_command [
 # 
 # To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).
 # 
-def post_manage_query_indexes [
+def post_managequeryindexes [
  tool_args 
 ] {
   mut header_params = []
@@ -5286,7 +5286,7 @@ def post_manage_query_indexes [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_list_of_index_definitions [
+def get_listindexdefinitions [
  tool_args 
 ] {
   mut header_params = []
@@ -5318,7 +5318,7 @@ def get_get_list_of_index_definitions [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_index_properties [
+def get_indexdefinition [
  tool_args 
 ] {
   mut header_params = []
@@ -5351,7 +5351,7 @@ def get_get_index_properties [
 # 
 # To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).
 # 
-def get_get_index_build_status [
+def get_indexbuildstatus [
  tool_args 
 ] {
   mut header_params = []

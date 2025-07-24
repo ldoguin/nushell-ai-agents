@@ -5,7 +5,7 @@
       "Users"
     ],
     "function": {
-      "name": "post_create_user",
+      "name": "post_postuser",
       "description": "Invites a new user under the organization.\n# \n# After making a REST API request, an invitation email is triggered and sent to the user.\n# Upon receiving the invitation email, the user is required to click on a provided URL, which will redirect them to a page with a user interface (UI) where they can set their username and password.\n# \n# The modification of any personal information related to a user can only be performed by the user through the UI.\n# Similarly, the user can solely conduct password updates through the UI.\n# \n# The \"caller\" possessing Organization Owner access rights retains the exclusive user creation capability.\n# They hold the authority to assign roles at the organization and project levels.\n# \n# At present, our support is limited to the resourceType of \"project\" exclusively.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
       "parameters": {
         "type": "object",
@@ -34,7 +34,7 @@
       "Users"
     ],
     "function": {
-      "name": "get_list_users",
+      "name": "get_listusers",
       "description": "Lists all the users in the organization and filter on the basis of projectId.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Creator\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# When retrieving a list of users through a GET request, if a user holds the organization owner role, the response will exclude project-level permissions for those users. This is because organization owners have full access to all resources within the organization, making project-level permissions irrelevant for them.\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
       "parameters": {
         "type": "object",
@@ -87,7 +87,7 @@
       "Users"
     ],
     "function": {
-      "name": "get_get_user",
+      "name": "get_getuser",
       "description": "Fetches the details of the given user.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Creator\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# When performing a GET request for a user with an organization owner role, the response will exclude project-level permissions for that user. This is because organization owners have access to all resources at the organization level, rendering project-level permissions unnecessary for them.\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
       "parameters": {
         "type": "object",
@@ -118,7 +118,7 @@
       "Users"
     ],
     "function": {
-      "name": "patch_update_user",
+      "name": "patch_patchuser",
       "description": "Updates organizationRole and resources of the user.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# An Organization Owner API key can be utilized to update organizational-level roles and project-level roles for all projects within the organization.\n# \n# The Project Owner API key allows for updating project-level roles, solely within the projects where the API key holds the Project Owner role.\n# \n# The modification of any personal information related to a user, such as password updates, can only be performed by the respective user through the user interface (UI).\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
       "parameters": {
         "type": "object",
@@ -154,7 +154,7 @@
       "Users"
     ],
     "function": {
-      "name": "delete_delete_user",
+      "name": "delete_deleteuser",
       "description": "Removes user from the organization.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
       "parameters": {
         "type": "object",

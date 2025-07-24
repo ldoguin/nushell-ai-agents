@@ -5,7 +5,7 @@
       "Projects"
     ],
     "function": {
-      "name": "post_create_project",
+      "name": "post_postproject",
       "description": "Creates a new project under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -34,7 +34,7 @@
       "Projects"
     ],
     "function": {
-      "name": "get_list_project",
+      "name": "get_listprojects",
       "description": "Lists all the projects under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -81,7 +81,7 @@
       "Projects"
     ],
     "function": {
-      "name": "get_get_project",
+      "name": "get_getprojectbyid",
       "description": "Fetches the details of the given project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -112,7 +112,7 @@
       "Projects"
     ],
     "function": {
-      "name": "put_update_project",
+      "name": "put_putproject",
       "description": "Update project name and or project description.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -153,7 +153,7 @@
       "Projects"
     ],
     "function": {
-      "name": "delete_delete_project",
+      "name": "delete_deleteprojectbyid",
       "description": "Deletes an existing project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

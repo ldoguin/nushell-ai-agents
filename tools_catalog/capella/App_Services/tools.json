@@ -5,7 +5,7 @@
       "App Services"
     ],
     "function": {
-      "name": "post_create_app_service",
+      "name": "post_postappservice",
       "description": "Creates a new App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "App Services"
     ],
     "function": {
-      "name": "get_list_appservices",
+      "name": "get_listappservices",
       "description": "Lists all the clusters under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# Returned set of clusters is reduced to what the caller has access to view.\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -101,7 +101,7 @@
       "App Services"
     ],
     "function": {
-      "name": "get_get_app_service",
+      "name": "get_getappservice",
       "description": "Fetches the details of the given App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -146,7 +146,7 @@
       "App Services"
     ],
     "function": {
-      "name": "put_update_app_service",
+      "name": "put_putappservice",
       "description": "Updates an existing App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -201,7 +201,7 @@
       "App Services"
     ],
     "function": {
-      "name": "delete_delete_app_service",
+      "name": "delete_deleteappservice",
       "description": "Deletes an existing App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -246,7 +246,7 @@
       "App Services"
     ],
     "function": {
-      "name": "post_turn_on_app_service",
+      "name": "post_appserviceon",
       "description": "Turn App Service on. Free tier App Service can only be turned on when the linked free tier cluster is turned on.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -291,7 +291,7 @@
       "App Services"
     ],
     "function": {
-      "name": "delete_turn_off_app_service",
+      "name": "delete_appserviceoff",
       "description": "Turn App Service off.\n# \n# Turn off an App Service to temporarily deactivate it and reduce its consumption of compute resources.\n# The App Service itself and its related infrastructure will be removed once turned off.\n# \n# Free tier App Service can only be turned off when the linked free tier cluster is turned off.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -336,7 +336,7 @@
       "App Services"
     ],
     "function": {
-      "name": "post_create_app_service_admin_user",
+      "name": "post_addappserviceadminuser",
       "description": "Creates an Admin User on the specified App Service.\n# The user can either be granted access to all App Endpoints or to specific App Endpoints by listing them in the ```endpoints``` field.\n# \n# Currently, the user will be granted admin access to all App Endpoints in a bucket (that is currently associated with the App Endpoint(s) specified in the endpoints field), including ones that are created in future.\n# An option to grant access to specific App Endpoints in a bucket will be available in the future.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -386,7 +386,7 @@
       "App Services"
     ],
     "function": {
-      "name": "get_list_app_service_admin_users",
+      "name": "get_listappserviceadminusers",
       "description": "List the admin users for the specified App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -447,7 +447,7 @@
       "App Services"
     ],
     "function": {
-      "name": "put_update_app_service_admin_user",
+      "name": "put_updateappserviceadminuser",
       "description": "Updates the Admin User's access to App Endpoints on the specified App Service.\n# The update operation can either grant access to all App Endpoints or to specific App Endpoints by listing them in the ```endpoints``` field.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -504,7 +504,7 @@
       "App Services"
     ],
     "function": {
-      "name": "delete_delete_app_service_admin_user",
+      "name": "delete_deleteappserviceadminuser",
       "description": "Deletes the Admin User.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -556,7 +556,7 @@
       "App Services"
     ],
     "function": {
-      "name": "get_get_app_service_admin_user",
+      "name": "get_getappserviceadminuser",
       "description": "Fetches the Admin User.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -608,7 +608,7 @@
       "App Services"
     ],
     "function": {
-      "name": "get_get_public_certificate_for_app_service",
+      "name": "get_getappservicecertificate",
       "description": "The public certificate is a trusted Certificate Authority (CA) signed certificate.\n# You can copy or download the endpoint’s SSL public certificate to bundle into your mobile application.\n# Pinning your certificate to your App is not recommended as it can increase maintenance overhead and downtime risks.\n# For more information, see [here](https://docs.couchbase.com/cloud/app-services/connect/connect-apps-to-endpoint.html#setting-up-the-connection).\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -653,7 +653,7 @@
       "App Services"
     ],
     "function": {
-      "name": "get_list_app_endpoint_admin_users",
+      "name": "get_listappendpointadminusers",
       "description": "Lists the Admin Users that have access to the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

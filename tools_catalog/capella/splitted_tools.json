@@ -9,7 +9,7 @@
           "Alert Integration"
         ],
         "function": {
-          "name": "post_create_alert_integration",
+          "name": "post_postalertintegration",
           "description": "Creates a new alert integration for a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -45,7 +45,7 @@
           "Alert Integration"
         ],
         "function": {
-          "name": "get_list_alert_integrations",
+          "name": "get_listalertintegrations",
           "description": "Lists all the alert integrations under the project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -99,7 +99,7 @@
           "Alert Integration"
         ],
         "function": {
-          "name": "get_get_alert_integration",
+          "name": "get_getalertintegrationbyid",
           "description": "Fetches the details of the given alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -137,7 +137,7 @@
           "Alert Integration"
         ],
         "function": {
-          "name": "put_update_alert_integration",
+          "name": "put_putalertintegration",
           "description": "Update the details of the given alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -180,7 +180,7 @@
           "Alert Integration"
         ],
         "function": {
-          "name": "delete_delete_alert_integration",
+          "name": "delete_deletealertintegrationbyid",
           "description": "Deletes an existing alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -218,7 +218,7 @@
           "Alert Integration"
         ],
         "function": {
-          "name": "post_test_alert_integration",
+          "name": "post_posttestalertintegration",
           "description": "Tests a new alert integration for a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -260,7 +260,7 @@
           "Allowed CIDRs (App Services)"
         ],
         "function": {
-          "name": "delete_delete_app_service_allowed_cidr",
+          "name": "delete_deleteappserviceallowedcidr",
           "description": "Deletes an Allowed CIDR by ID on the specified App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -312,7 +312,7 @@
           "Allowed CIDRs (App Services)"
         ],
         "function": {
-          "name": "get_list_allowed_cidrs_for_an_app_service",
+          "name": "get_listappserviceallowedcidrs",
           "description": "Lists the Allowed CIDRs for the specified App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -380,7 +380,7 @@
           "Allowed CIDRs (App Services)"
         ],
         "function": {
-          "name": "post_create_allowed_cidr",
+          "name": "post_postappserviceallowedcidr",
           "description": "Adds a trusted CIDR to the specified App Service's list of allowed CIDRs.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -436,7 +436,7 @@
           "Allowed CIDRs (Cluster)"
         ],
         "function": {
-          "name": "post_create_allowed_cidr",
+          "name": "post_postallowedcidrs",
           "description": "Adds a trusted CIDR to a cluster's list of allowed CIDRs.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# \n# Note that updating this resource is not supported; you must delete and recreate allowed CIDRs instead. As a result, ETags are also not supported for this resource.\n# ",
           "parameters": {
             "type": "object",
@@ -479,7 +479,7 @@
           "Allowed CIDRs (Cluster)"
         ],
         "function": {
-          "name": "get_list_allowed_cidrs",
+          "name": "get_listallowedcidrs",
           "description": "Lists all of the allowed CIDRs for a given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -540,7 +540,7 @@
           "Allowed CIDRs (Cluster)"
         ],
         "function": {
-          "name": "get_get_allowed_cidr",
+          "name": "get_getallowedcidrbyid",
           "description": "Fetches the details for the specified allowed CIDR.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -585,7 +585,7 @@
           "Allowed CIDRs (Cluster)"
         ],
         "function": {
-          "name": "delete_delete_allowed_cidr",
+          "name": "delete_deleteallowedcidrbyid",
           "description": "Deletes the existing allowed CIDR.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -636,7 +636,7 @@
           "Api Keys"
         ],
         "function": {
-          "name": "post_create_api_key",
+          "name": "post_postorganizationapikeys",
           "description": "Creates a new API key under an organization.\n# \n# Organization Owners can create Organization and Project scoped API keys.\n# \n# Project Owner and Project Creator can create project scoped keys.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -665,7 +665,7 @@
           "Api Keys"
         ],
         "function": {
-          "name": "get_list_api_keys",
+          "name": "get_listorganizationapikeys",
           "description": "Lists all the API keys under an organization.\n# \n# Organization Owners can list all the API keys inside the Organization.\n# \n# Organization Members and Project Creators can list all the Project scoped API key for which they are Project Owner.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -712,7 +712,7 @@
           "Api Keys"
         ],
         "function": {
-          "name": "get_get_api_key",
+          "name": "get_getorganizationapikeybyaccesskey",
           "description": "Fetches the details of the given API key under an organization.\n# \n# Organization Owners can get any API key inside the Organization.\n# \n# Organization Members and Project Creator can get any Project scoped API key for which they are Project Owner.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -742,7 +742,7 @@
           "Api Keys"
         ],
         "function": {
-          "name": "delete_delete_api_key",
+          "name": "delete_deleteorganizationapikey",
           "description": "Deletes the given API key under an organization.\n# \n# Organization Owners can delete any API key inside the Organization.\n# \n# Organization Members and Project Creator can delete any Project scoped API key for which they are Project Owner.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -772,7 +772,7 @@
           "Api Keys"
         ],
         "function": {
-          "name": "post_rotate_api_key",
+          "name": "post_postorganizationapikeyrotate",
           "description": "Rotate the secret of a given API key under an organization.\n# \n# Organization Owners can rotate any API key inside the Organization.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -813,7 +813,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_list_app_endpoints",
+          "name": "get_listappendpoints",
           "description": "Lists all the App Endpoints under a specific App Service along with their associated configurations such as Access Control function, Import Filter or user defined xattr key.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -881,7 +881,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "post_create_app_endpoint",
+          "name": "post_postappendpoint",
           "description": "Creates an App Endpoint within an App Service with specific configurations such as collection level Access Control function and Import Filter.\n# If the scopes property is not included in the request body, the default scope and collection will be used.\n# The first OpenID Connect provider given will be set as the default provider for the App Endpoint. To change the default, please use the Change App Endpoint OIDC Default Provider endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -931,7 +931,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_get_app_endpoint",
+          "name": "get_getappendpoint",
           "description": "Fetches the details of the given App Endpoint, including operational and resync states and various configurations such as Access Control function and Import Filter.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -982,7 +982,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "put_update_app_endpoint",
+          "name": "put_putappendpoint",
           "description": "Replaces a specified App Endpoint’s configurations such as Access Control function, Import Filter, Delta Sync, or user defined xattr key.\n# The first OpenID Connect provider given will be set as the default provider for the App Endpoint. To change the default, please use the Change App Endpoint OIDC Default Provider endpoint.\n# All fields are required, the App Endpoint and bucket names cannot be changed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1038,7 +1038,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "delete_delete_app_endpoint",
+          "name": "delete_deleteappendpoint",
           "description": "Deletes an existing App Endpoint given its name.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1089,7 +1089,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_list_app_endpoint_collections",
+          "name": "get_listappendpointcollections",
           "description": "Lists all the collections under a specific App Endpoint along with their associated configurations such as Access Control function, Import Filter or user defined xattr key.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1156,7 +1156,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "post_resume_or_bring_an_app_endpoint_online",
+          "name": "post_postappendpointactivationstatus",
           "description": "Brings an App Endpoint online to close and reopen the connection to the backing Cluster bucket,\n# re-establish access from the Public REST API and accept all incoming Admin API requests.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1207,7 +1207,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "delete_pause_or_take_an_app_endpoint_offline",
+          "name": "delete_deleteappendpointactivationstatus",
           "description": "Take the database offline to run resync or to make changes without disrupting current App Endpoint operations.\n# Clients currently connected to the App Endpoint will not be able to sync data with the Cluster while the App Endpoint is paused.\n# This will not take the backing Cluster bucket offline.\n# Pausing an App Endpoint that is in the progress of coming online will pause the App Endpoint after it comes online.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1258,7 +1258,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_get_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration.",
+          "name": "get_getappendpointcors",
           "description": "Fetch the App Endpoint Cross-Origin Resource Sharing (CORS) Configuration.\n# CORS is disabled by default. For more information\n# See [Cross-Origin Resource Sharing (CORS) on App Endpoints.](https://docs.couchbase.com/cloud/app-services/deployment/cors-configuration-for-app-services.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1309,7 +1309,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "put_upsert_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration.",
+          "name": "put_putappendpointcors",
           "description": "Upsert the App Endpoint Cross-Origin Resource Sharing (CORS) Configuration.\n# CORS is disabled by default. For more information\n# See [Cross-Origin Resource Sharing (CORS) on App Endpoints.](https://docs.couchbase.com/cloud/app-services/deployment/cors-configuration-for-app-services.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1365,7 +1365,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_get_access_control_and_validation_function",
+          "name": "get_getaccessfunction",
           "description": "Retrieves the Access Control and Validation function for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1416,7 +1416,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "put_upsert_custom_access_control_and_validation_function",
+          "name": "put_putaccessfunction",
           "description": "Used to upsert a custom Access Control and Validation function for the given keyspace.\n# This is a Javascript function specified at a keyspace, where a user’s read/write access is defined for documents in that particular keyspace.\n# Every document mutation is processed by this function. If an Access Control function is not explicitly defined, a default is applied.\n# [Read more.](https://docs.couchbase.com/cloud/app-services/deployment/access-control-data-validation.html?)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1472,7 +1472,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "delete_delete_access_control_and_validation_function",
+          "name": "delete_deleteaccessfunction",
           "description": "Deletes the Access Control and Validation function for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1523,7 +1523,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_get_import_filter",
+          "name": "get_getimportfilter",
           "description": "Retrieves the Import Filter for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1574,7 +1574,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "put_upsert_import_filter",
+          "name": "put_putimportfilter",
           "description": "Upserts the Import Filter for the given keyspace. By default, there is no import filter and all documents are imported.\n# Import Filters identify the subset of documents eligible to be replicated by App services based on user-defined requirements.\n# This subset is applied to all future mutations.\n# Once the document has been imported and processed by the App Endpoint, changing the Import Filter will not remove it,\n# even if the updated import filters would prevent newer mutations or iterations of the document from getting imported.\n# [Read more.](https://docs.couchbase.com/cloud/app-services/deployment/import-filters.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1630,7 +1630,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "delete_delete_import_filter",
+          "name": "delete_deleteimportfilter",
           "description": "Deletes the Import Filter for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1681,7 +1681,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "post_create_app_endpoint_openid_connect_oidc)_provider",
+          "name": "post_createappendpointoidcprovider",
           "description": "Creates an OIDC provider for the specified App Endpoint.\n# The first OIDC provider will automatically be set as the default OIDC provider.\n# All client requests will use the default OIDC provider, unless the OIDC provider for the request is explicitly specified on authentication.\n# See more [here](https://docs.couchbase.com/cloud/app-services/user-management/set-up-authentication-provider.html#oidc-authorization-step-by-step).\n# \n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1737,7 +1737,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_list_app_endpoint_openid_connect_oidc)_providers",
+          "name": "get_listappendpointoidcproviders",
           "description": "List OpenID Connect (OIDC) Providers configured on an App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1804,7 +1804,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_get_app_endpoint_openid_connect_oidc)_provider",
+          "name": "get_getappendpointoidcprovider",
           "description": "Fetches an OIDC provider by ID for the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1862,7 +1862,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "put_update_app_endpoint_openid_connect_oidc)_provider",
+          "name": "put_updateappendpointoidcprovider",
           "description": "Updates an OIDC provider for the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1925,7 +1925,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "delete_delete_app_endpoint_openid_connect_oidc)_provider",
+          "name": "delete_deleteappendpointoidcprovider",
           "description": "Deletes an OIDC provider for the specified App Endpoint. Deleting the default provider will error unless it is the only provider.\n# Before deleting the default provider, you must set a new provider as default or have no other providers.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -1983,7 +1983,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "put_update_app_endpoint_default_oidc_provider",
+          "name": "put_updateappendpointoidcdefaultprovider",
           "description": "Updates the default OIDC provider for the specified App Endpoint.\n# All client requests will use the default OIDC provider, unless the OIDC provider for the request is explicitly specified.\n# See more [here](https://docs.couchbase.com/cloud/app-services/user-management/set-up-authentication-provider.html#oidc-authorization-step-by-step).\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2039,7 +2039,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "get_get_resync_status",
+          "name": "get_getappendpointresync",
           "description": "Fetches the Resync status of the given App Endpoint. If no resync operation was triggered, the response will say the status is completed\n# with 0 values for other properties.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2090,7 +2090,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "post_start_resync",
+          "name": "post_postappendpointresync",
           "description": "Initialises the Resync operation for the given collections.\n# By default, all collections that require resync will be resynced unless they are specified in the scopes property, in which case only\n# the specified collections that require resync will be resynced.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2146,7 +2146,7 @@
           "App Endpoints"
         ],
         "function": {
-          "name": "delete_stop_resync",
+          "name": "delete_deleteappendpointresync",
           "description": "Stops the Resync operation. When stopping resync, it will be stopped for all collections being processed.\n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2203,7 +2203,7 @@
           "App Services"
         ],
         "function": {
-          "name": "post_create_app_service",
+          "name": "post_postappservice",
           "description": "Creates a new App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2246,7 +2246,7 @@
           "App Services"
         ],
         "function": {
-          "name": "get_list_appservices",
+          "name": "get_listappservices",
           "description": "Lists all the clusters under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# Returned set of clusters is reduced to what the caller has access to view.\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2299,7 +2299,7 @@
           "App Services"
         ],
         "function": {
-          "name": "get_get_app_service",
+          "name": "get_getappservice",
           "description": "Fetches the details of the given App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2344,7 +2344,7 @@
           "App Services"
         ],
         "function": {
-          "name": "put_update_app_service",
+          "name": "put_putappservice",
           "description": "Updates an existing App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2399,7 +2399,7 @@
           "App Services"
         ],
         "function": {
-          "name": "delete_delete_app_service",
+          "name": "delete_deleteappservice",
           "description": "Deletes an existing App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2444,7 +2444,7 @@
           "App Services"
         ],
         "function": {
-          "name": "post_turn_on_app_service",
+          "name": "post_appserviceon",
           "description": "Turn App Service on. Free tier App Service can only be turned on when the linked free tier cluster is turned on.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2489,7 +2489,7 @@
           "App Services"
         ],
         "function": {
-          "name": "delete_turn_off_app_service",
+          "name": "delete_appserviceoff",
           "description": "Turn App Service off.\n# \n# Turn off an App Service to temporarily deactivate it and reduce its consumption of compute resources.\n# The App Service itself and its related infrastructure will be removed once turned off.\n# \n# Free tier App Service can only be turned off when the linked free tier cluster is turned off.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2534,7 +2534,7 @@
           "App Services"
         ],
         "function": {
-          "name": "post_create_app_service_admin_user",
+          "name": "post_addappserviceadminuser",
           "description": "Creates an Admin User on the specified App Service.\n# The user can either be granted access to all App Endpoints or to specific App Endpoints by listing them in the ```endpoints``` field.\n# \n# Currently, the user will be granted admin access to all App Endpoints in a bucket (that is currently associated with the App Endpoint(s) specified in the endpoints field), including ones that are created in future.\n# An option to grant access to specific App Endpoints in a bucket will be available in the future.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2584,7 +2584,7 @@
           "App Services"
         ],
         "function": {
-          "name": "get_list_app_service_admin_users",
+          "name": "get_listappserviceadminusers",
           "description": "List the admin users for the specified App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2645,7 +2645,7 @@
           "App Services"
         ],
         "function": {
-          "name": "put_update_app_service_admin_user",
+          "name": "put_updateappserviceadminuser",
           "description": "Updates the Admin User's access to App Endpoints on the specified App Service.\n# The update operation can either grant access to all App Endpoints or to specific App Endpoints by listing them in the ```endpoints``` field.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2702,7 +2702,7 @@
           "App Services"
         ],
         "function": {
-          "name": "delete_delete_app_service_admin_user",
+          "name": "delete_deleteappserviceadminuser",
           "description": "Deletes the Admin User.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2754,7 +2754,7 @@
           "App Services"
         ],
         "function": {
-          "name": "get_get_app_service_admin_user",
+          "name": "get_getappserviceadminuser",
           "description": "Fetches the Admin User.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2806,7 +2806,7 @@
           "App Services"
         ],
         "function": {
-          "name": "get_get_public_certificate_for_app_service",
+          "name": "get_getappservicecertificate",
           "description": "The public certificate is a trusted Certificate Authority (CA) signed certificate.\n# You can copy or download the endpoint’s SSL public certificate to bundle into your mobile application.\n# Pinning your certificate to your App is not recommended as it can increase maintenance overhead and downtime risks.\n# For more information, see [here](https://docs.couchbase.com/cloud/app-services/connect/connect-apps-to-endpoint.html#setting-up-the-connection).\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2851,7 +2851,7 @@
           "App Services"
         ],
         "function": {
-          "name": "get_list_app_endpoint_admin_users",
+          "name": "get_listappendpointadminusers",
           "description": "Lists the Admin Users that have access to the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2924,7 +2924,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "put_enable_or_disable_app_service_audit_logging",
+          "name": "put_putappserviceauditlogstate",
           "description": "Enable or disable Audit Logging for an App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -2974,7 +2974,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "get_get_app_service_audit_log_state",
+          "name": "get_getappserviceauditlogstate",
           "description": "Retrieves the audit logging state for a specific App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3019,7 +3019,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "get_list_app_endpoint_audit_log_event_ids",
+          "name": "get_getappserviceauditlogevents",
           "description": "Retrieves all audit log event ids, their descriptions and enabled status for an App Endpoint.\n# The list of filterable event IDs can be specified while configuring audit logging for the App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3070,7 +3070,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "put_update_app_endpoint_audit_logging_config",
+          "name": "put_putappendpointauditlogconfig",
           "description": "Updates the audit logging configuration for a specific App Endpoint. Operations performed by disabled users and roles are excluded from audit logs.\n# See a list of event IDs by calling /auditLogEvents, add event IDs to the enabledEventIds field to enable audit logging for those events.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3126,7 +3126,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "get_get_app_endpoint_audit_logging_config",
+          "name": "get_getappendpointauditlogconfig",
           "description": "Retrieves the audit logging configuration for a specific App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3177,7 +3177,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "put_configure_app_service_audit_log_streaming",
+          "name": "put_putappserviceauditlogstreaming",
           "description": "Sets up audit log streaming for a specific App Service with filters. If streamingEnabled is true log streaming will begin.\n# \n# Ensure you have provided collector credentials if you wish to begin streaming; log streaming cannot be enabled without credentials.\n# Refer to schema below to see required fields for your log collection provider.\n# Providers include Datadog, Sumo Logic, Grafana Loki, Elasticsearch (versions 8 and newer only) and generic HTTP.\n# To start or resume streaming, set streamingEnabled to true while providing the rest of the log collector config.\n# \n# To disable log streaming and remove the log streaming config including credentials, set streamingEnabled to false and leave the rest of the payload empty.\n# \n# To pause log streaming, set streamingEnabled to false while providing the rest of the log collector config.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3227,7 +3227,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "patch_start_or_resume_audit_log_streaming",
+          "name": "patch_patchappserviceauditlogstreaming",
           "description": "To start or resume streaming, set streamingEnabled to true. To pause log streaming, set streamingEnabled to false.\n# \n# If log streaming is paused we will retain the collector credentials. To clear these use the PUT request.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n# \n#   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3277,7 +3277,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "get_get_app_service_audit_log_streaming_state",
+          "name": "get_getappserviceauditlogstreaming",
           "description": "Retrieves the current state of audit log streaming for a specific App Service, as well as the output type and enabled App endpoints.\n# \n# The audit log streaming states are:\n#   - disabled\n#   - disabling\n#   - enabled\n#   - enabling\n#   - paused\n#   - pausing\n#   - errored\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3322,7 +3322,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "post_initiate_audit_log_export",
+          "name": "post_postappserviceauditlogexport",
           "description": "Initiates an audit log export for a specific App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3372,7 +3372,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "get_list_audit_log_export_jobs",
+          "name": "get_listappserviceauditlogexports",
           "description": "Retrieves a list of all audit log export jobs for an App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3433,7 +3433,7 @@
           "App Services Audit Logging"
         ],
         "function": {
-          "name": "get_get_audit_log_export_job",
+          "name": "get_getappserviceauditlogexportbyid",
           "description": "Retrieves details of a specific audit log export job for a given App Service.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3490,7 +3490,7 @@
           "Audit Logs"
         ],
         "function": {
-          "name": "put_update_cluster_audit_log_configuration",
+          "name": "put_putclusterauditsettings",
           "description": "Updates the audit log configuration for the cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3533,7 +3533,7 @@
           "Audit Logs"
         ],
         "function": {
-          "name": "get_get_cluster_audit_log_configuration",
+          "name": "get_getclusterauditsettings",
           "description": "Fetches information on whether audit logging is enabled, and which event IDs are enabled.\n# \n# To learn more about cluster audit logs, please refer to [audit management](https://docs.couchbase.com/cloud/security/audit-management.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3571,7 +3571,7 @@
           "Audit Logs"
         ],
         "function": {
-          "name": "get_list_filterable_audit_log_events",
+          "name": "get_getauditlogeventids",
           "description": "Retrieves a list of audit event IDs. The list of filterable event IDs can be specified while configuring audit log for cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3609,7 +3609,7 @@
           "Audit Logs"
         ],
         "function": {
-          "name": "post_create_cluster_audit_log_export_job",
+          "name": "post_postauditlogexport",
           "description": "Creates a new audit log export job.\n# \n# Audit Logs for the last 30 days can be requested, otherwise they are purged. A pre-signed URL to a s3 bucket location is returned, which is used to download these audit logs.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3652,7 +3652,7 @@
           "Audit Logs"
         ],
         "function": {
-          "name": "get_list_cluster_audit_log_export_jobs",
+          "name": "get_listauditlogexports",
           "description": "Lists all the audit log export jobs and shows the status for each job.\n# \n# It will show the pre-signed URL if the export was successful, a failure error if it was unsuccessful or a message saying no audit logs available if there were no audit logs found.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3698,7 +3698,7 @@
           "Audit Logs"
         ],
         "function": {
-          "name": "get_get_cluster_audit_log_export",
+          "name": "get_getauditlogexport",
           "description": "Fetches the status of a single audit log export job.\n# \n# It will show the pre-signed URL if the export was successful, a failure error if it was unsuccessful or a message saying no audit logs available if there were no audit logs found during the given timeframe.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3748,7 +3748,7 @@
           "Backup Schedule (Bucket)"
         ],
         "function": {
-          "name": "post_create_backup_schedule",
+          "name": "post_postbackupschedule",
           "description": "Creates a scheduled backup for a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3797,7 +3797,7 @@
           "Backup Schedule (Bucket)"
         ],
         "function": {
-          "name": "get_get_backup_schedule",
+          "name": "get_getbackupschedule",
           "description": "Fetched the backup schedule for a bucket in a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3841,7 +3841,7 @@
           "Backup Schedule (Bucket)"
         ],
         "function": {
-          "name": "put_update_backup_schedule",
+          "name": "put_putbackupschedule",
           "description": "Updates an existing backup schedule.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3890,7 +3890,7 @@
           "Backup Schedule (Bucket)"
         ],
         "function": {
-          "name": "delete_delete_backup_schedule",
+          "name": "delete_deletebackupschedule",
           "description": "Deletes an existing backup schedule\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3934,7 +3934,7 @@
           "Backup Schedule (Bucket)"
         ],
         "function": {
-          "name": "get_list_cycles",
+          "name": "get_listcycles",
           "description": "Lists the cycles for a bucket in a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -3990,7 +3990,7 @@
           "Backup Schedule (Bucket)"
         ],
         "function": {
-          "name": "get_list_backups",
+          "name": "get_listbackups",
           "description": "Lists the backups for a cycle in a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4047,7 +4047,7 @@
           "Backups & Restore (Bucket)"
         ],
         "function": {
-          "name": "post_create_backup",
+          "name": "post_postbackup",
           "description": "Creates an on-demand backup for a bucket.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4091,7 +4091,7 @@
           "Backups & Restore (Bucket)"
         ],
         "function": {
-          "name": "get_list_cluster_backups",
+          "name": "get_listclusterbackups",
           "description": "Lists the latest backup for all buckets in a cluster.\n# \n# Note: This endpoint doesn’t return queued backups and only returns ones that are actively being processed or are completed/failed.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4129,7 +4129,7 @@
           "Backups & Restore (Bucket)"
         ],
         "function": {
-          "name": "get_get_backup",
+          "name": "get_getbackupbyid",
           "description": "Fetches the details of an existing backup.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4174,7 +4174,7 @@
           "Backups & Restore (Bucket)"
         ],
         "function": {
-          "name": "delete_delete_backup_cycle",
+          "name": "delete_deletebackupcyclebyid",
           "description": "Deletes the backup records that belong to the same cycle from the DB by using the backup ID.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4219,7 +4219,7 @@
           "Backups & Restore (Bucket)"
         ],
         "function": {
-          "name": "post_restore_backup",
+          "name": "post_postrestore",
           "description": "Creates an on-demand restore job for a backup immediately.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/backup-restore.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4275,7 +4275,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "post_create_bucket",
+          "name": "post_postbucket",
           "description": "Creates a new bucket configuration under a cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4318,7 +4318,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "get_list_buckets",
+          "name": "get_listbuckets",
           "description": "Lists all the buckets under the cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4356,7 +4356,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "get_get_bucket",
+          "name": "get_getbucketbyid",
           "description": "Fetches the configuration of the given bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4400,7 +4400,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "put_update_bucket",
+          "name": "put_putbucket",
           "description": "Updates an existing bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4449,7 +4449,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "delete_delete_bucket",
+          "name": "delete_deletebucketbyid",
           "description": "Deletes an existing bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4493,7 +4493,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "put_flush_bucket_data",
+          "name": "put_flushbucket",
           "description": "Flushing of the bucket occurs, causing all items in the bucket to be deleted by the system at the earliest opportunity.\n# This operation can only be performed if the bucket has been configured with flushEnabled to true. If it is disabled, \n# it will throw an error.\n# \n# It is recommended not to run with the flushEnabled configuration set to true in production; \n# due to the danger of all a bucket's data being inadvertently lost. \n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4537,7 +4537,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "post_create_scope",
+          "name": "post_postscope",
           "description": "Creates a new scope in a bucket.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n#  In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4586,7 +4586,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "get_list_scopes",
+          "name": "get_getscopes",
           "description": "Lists all the scopes in the bucket.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4630,7 +4630,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "get_get_scope",
+          "name": "get_getscopebyname",
           "description": "Fetches the details of the given scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4680,7 +4680,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "delete_delete_scope",
+          "name": "delete_deletescopebyname",
           "description": "Deletes an existing scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4730,7 +4730,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "post_create_collection",
+          "name": "post_postcollection",
           "description": "Creates a new collection in a scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4785,7 +4785,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "get_list_collections",
+          "name": "get_getcollections",
           "description": "Lists all the collections in a scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4835,7 +4835,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "get_get_collection",
+          "name": "get_getcollectionbyname",
           "description": "Fetches the details of the given collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4891,7 +4891,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "put_update_collection",
+          "name": "put_putcollection",
           "description": "Updates an existing collection.\n# \n# This operation is only allowed for a cluster with server version >= 7.6.0. A collection cannot be updated for the server versions lower than this.\n# \n# This allows to update the maxTTL of the given collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -4952,7 +4952,7 @@
           "Buckets, Scopes, & Collections"
         ],
         "function": {
-          "name": "delete_delete_collection",
+          "name": "delete_deletecollectionbyname",
           "description": "Deletes an existing collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5014,7 +5014,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "get_get_cloud_accounts",
+          "name": "get_getcloudaccounts",
           "description": "Fetches the cloud account ID associated with the organization. Use this account ID when adding CMEK to other AWS databases in your organization.\n# \n# To learn more, see [CMEK at Rest](https://docs.couchbase.com/cloud/security/cmek.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Creator\n#   - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5038,7 +5038,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "post_create_key_metadata",
+          "name": "post_postcmekmetadata",
           "description": "Initializes the metadata record for a customer-managed encryption key stored in AWS or GCP, linking it to the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5067,7 +5067,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "get_list_key_metadata",
+          "name": "get_getkeymetadatalist",
           "description": "Retrieves detailed metadata for all customer-managed encryption keys associated with the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5114,7 +5114,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "get_list_key_rotation_history",
+          "name": "get_listcmekhistory",
           "description": "Retrieves the full history of rotations for a specific customer-managed encryption key within the organization.\n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Organization Member\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5171,7 +5171,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "get_get_key_metadata",
+          "name": "get_getkeymetadata",
           "description": "Retrieves the full metadata details for a specific customer-managed encryption key within the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Organization Member\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5202,7 +5202,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "put_rotate_key",
+          "name": "put_rotatecmekkey",
           "description": "Initiates the process to rotate a customer-managed encryption key and update its associated metadata within the system.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5238,7 +5238,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "delete_delete_key_metadata",
+          "name": "delete_deletekeymetadata",
           "description": "Permanently removes the specified customer-managed encryption key's metadata from the organization's account.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5269,7 +5269,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "post_associate_key_with_cluster",
+          "name": "post_associatecmek",
           "description": "Redeploys the cluster and encrypts the disks with the newly associated customer-managed encryption key.\n# Throws an error before redeploying the cluster if the customer-managed encryption key is inaccessible.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5314,7 +5314,7 @@
           "CMEK"
         ],
         "function": {
-          "name": "post_unassociate_key_from_cluster",
+          "name": "post_unassociatecmek",
           "description": "Removes the customer-managed encryption key associated with the cluster, which redeploys the cluster and removes any encryption on the disks.\n# This does not delete the customer-managed encryption key itself since the same key could be used across clusters.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5365,7 +5365,7 @@
           "Certificates"
         ],
         "function": {
-          "name": "get_get_certificate",
+          "name": "get_getcertificate",
           "description": "In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5409,7 +5409,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "post_create_cloud_snapshot_backup",
+          "name": "post_createcloudsnapshotbackup",
           "description": "Creates a cloud snapshot backup for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5452,7 +5452,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "get_list_cloud_snapshot_backups",
+          "name": "get_listcloudsnapshotbackups",
           "description": "List the backups belonging to a cluster.\n# \n# Note: This endpoint doesn’t return queued backups and only returns ones that are actively being processed or are completed/failed.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5513,7 +5513,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "get_list_cloud_snapshot_restores",
+          "name": "get_listcloudsnapshotrestores",
           "description": "Lists the restores that have taken place for a given cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5574,7 +5574,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "put_edit_backup_retention",
+          "name": "put_editcloudsnapshotbackupretention",
           "description": "Edits the retention time for a backup.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5624,7 +5624,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "delete_delete_backup",
+          "name": "delete_deletecloudsnapshotbackup",
           "description": "Deletes the backup.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5669,7 +5669,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "post_restore_backup",
+          "name": "post_restore",
           "description": "Creates a restore job for a backup immediately.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5714,7 +5714,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "get_list_cloud_snapshot_backups_at_the_project_level",
+          "name": "get_listprojectlevelcloudsnapshotbackups",
           "description": "Lists cloud snapshot backups associated with operational clusters within a specific project.\n# \n# The \"most recent\" and \"oldest\" backup fields do not include backups that are in a queued state. Only backups that are actively being processed, successfully completed, or marked as failed are returned.\n# \n# For detailed guidance on backup and restore functionality, please refer to [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# The provided API key must have at least one of the following roles.\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# For more information about roles and access, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5775,7 +5775,7 @@
           "Cloud Snapshot Backups & Restore"
         ],
         "function": {
-          "name": "post_clone_cluster_backup",
+          "name": "post_clone",
           "description": "Clones the cluster backup into a new cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5824,7 +5824,7 @@
           "Cloud Snapshot Backups Schedule"
         ],
         "function": {
-          "name": "put_upsert_backup_schedule",
+          "name": "put_upsertcloudsnapshotbackupschedule",
           "description": "Creates or updates a cloud snapshot backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5867,7 +5867,7 @@
           "Cloud Snapshot Backups Schedule"
         ],
         "function": {
-          "name": "get_get_backup_schedule",
+          "name": "get_getcloudsnapshotbackupschedule",
           "description": "Retrieves the cloud snapshot backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5905,7 +5905,7 @@
           "Cloud Snapshot Backups Schedule"
         ],
         "function": {
-          "name": "delete_delete_backup_schedule",
+          "name": "delete_deletecloudsnapshotbackupschedule",
           "description": "Deletes the backup schedule for a cluster.\n# \n# To learn more about backup and restore, see [Backup and Restore Data](https://docs.couchbase.com/cloud/clusters/cloud-snapshots.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5949,7 +5949,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "post_create_cluster",
+          "name": "post_postcluster",
           "description": "Creates a new Couchbase Capella provisioned cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -5985,7 +5985,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "get_list_clusters",
+          "name": "get_listclusters",
           "description": "Lists all the clusters under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# Returned set of clusters is reduced to what the caller has access to view.\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6039,7 +6039,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "get_get_cluster",
+          "name": "get_getcluster",
           "description": "Fetches the details of the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6077,7 +6077,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "put_update_cluster",
+          "name": "put_putcluster",
           "description": "Updates an existing cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6125,7 +6125,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "delete_delete_cluster",
+          "name": "delete_deletecluster",
           "description": "Deletes an existing cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6168,7 +6168,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "post_turn_on_cluster",
+          "name": "post_clusteron",
           "description": "Turn cluster on.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6211,7 +6211,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "delete_turn_off_cluster",
+          "name": "delete_clusteroff",
           "description": "Turn cluster off.\n# \n# - Turning off your cluster turns off the compute for your cluster but the storage remains.\n# All of the data, schema (buckets, scopes, and collections), and indexes remain, as well as cluster configuration, including users and allow lists.\n# \n# - Turning off cluster will also turn off any linked app services.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6249,7 +6249,7 @@
           "Clusters"
         ],
         "function": {
-          "name": "put_migrate_buckets",
+          "name": "put_putbucketstoragebackend",
           "description": "Updates the storage backend of an existing bucket from Couchstore to Magma.\n# \n# The following should be noted while doing this operation -\n# \n# 1. The outcome of this migration is that all data service nodes in the cluster will be replaced.\n# - During the migration all buckets will remain operational and still be able to perform read and writes. Hence applications will not incur any downtime during this migration and can continue to read/write to the cluster.\n# - The re-balances that occur from the node replacements will result in the bucket(s) being migrated to Magma.\n# - The status of the cluster can be monitored via the [GET cluster API](https://docs.couchbase.com/cloud/management-api-reference/index.html#tag/clusters/operation/getCluster). The cluster will transition to healthy state after migration is completed for all listed buckets.\n# \n# 2. This operation is only allowed for clusters with server version >= 7.6.0. The storage backend cannot be updated for the cluster with server versions lower than this. All the nodes must be upgraded to 7.6.0 before the bucket migration can be performed.\n# \n# 3. Before migrating from Couchstore to Magma, the bucket memory allocation should be upgraded to at least the minimum amount required for a Magma bucket that is 1024 MiB.\n# \n# 4. Cluster must be in a healthy state to perform this operation.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6298,7 +6298,7 @@
           "Database Credentials"
         ],
         "function": {
-          "name": "get_list_database_credentials",
+          "name": "get_listdatabasecredentials",
           "description": "Lists all the database credential information under a cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6359,7 +6359,7 @@
           "Database Credentials"
         ],
         "function": {
-          "name": "post_create_database_credentials",
+          "name": "post_postdatabasecredential",
           "description": "Creates a new database credential under a cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# Valid fields to sort the results are: \"id\", \"name\".\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6402,7 +6402,7 @@
           "Database Credentials"
         ],
         "function": {
-          "name": "get_get_database_credentials",
+          "name": "get_getdatabasecredential",
           "description": "Fetches the details of a given cluster's database credential information.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6447,7 +6447,7 @@
           "Database Credentials"
         ],
         "function": {
-          "name": "put_update_database_credentials",
+          "name": "put_putdatabasecredential",
           "description": "Updates an existing database credential.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6502,7 +6502,7 @@
           "Database Credentials"
         ],
         "function": {
-          "name": "delete_delete_database_credentials",
+          "name": "delete_deletedatabasecredential",
           "description": "Deletes an existing cluster's database credential.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6553,7 +6553,7 @@
           "Events"
         ],
         "function": {
-          "name": "get_list_events",
+          "name": "get_listevents",
           "description": "Lists all the events information under a organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Creator\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader\n#  - Database Data Reader/Writer\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# Currently, only the `tags` filter is multi-valued; all other filters are single-valued.\n# \n# By default, `to` is set to the request time, and `from` is set to 24 hours before the\n# request time. If 'to' is set and 'from' is not set, then 'from' is set to 24 hours\n# before 'to'.\n# \n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6670,7 +6670,7 @@
           "Events"
         ],
         "function": {
-          "name": "get_get_event",
+          "name": "get_geteventbyid",
           "description": "Fetches the details of an event by ID.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Creator\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader\n#  - Database Data Reader/Writer\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6701,7 +6701,7 @@
           "Events"
         ],
         "function": {
-          "name": "get_list_events",
+          "name": "get_listprojectevents",
           "description": "Lists all the events information under a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader\n#  - Database Data Reader/Writer\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# Currently, only the `tags` filter is multi-valued; all other filters are single-valued.\n# \n# By default, `to` is set to the request time, and `from` is set to 24 hours before the\n# request time. If 'to' is set and 'from' is not set, then 'from' is set to 24 hours\n# before 'to'.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6816,7 +6816,7 @@
           "Events"
         ],
         "function": {
-          "name": "get_get_project_event",
+          "name": "get_getprojecteventbyid",
           "description": "Fetches the details of an event by ID within a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader\n#  - Database Data Reader/Writer\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6860,7 +6860,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "post_create_free_tier_cluster",
+          "name": "post_createfreetiercluster",
           "description": "Creates a free tier cluster.  This is a 1 node cluster than only runs data, query, index and search services.\n# \n# You can have at most 1 free tier cluster per tenant.\n# \n# The following features are not available for free tier clusters:\n#   - backup/restore\n#   - private endpoint service\n#   - network peering\n#   - audit logs\n#   - alert integration\n#   - CMEK\n#   - on/off schedule\n# \n# Only cluster name, description, CSP, region and CIDR are configurable.\n# \n# There are limited regions available based on CSP:\n#   a. for AWS they are us-east-2, eu-west-1, ap-southeast-1\n#   b. for GCP they are us-central1, europe-west1, asia-east1\n#   c. for Azure they are eastus, swedencentral, koreacentral\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6896,45 +6896,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "get_get_free_tier_cluster",
-          "description": "Get details of the free tier cluster.\n# \n# While only cluster name, description, CSP, region and CIDR are configurable, other read only fields are retrieved.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
-          "parameters": {
-            "type": "object",
-            "properties": {
-              "clusterId": {
-                "type": "string",
-                "format": "uuid",
-                "example": "ffffffff-aaaa-1414-eeee-000000000000",
-                "description": "The GUID4 ID of the cluster."
-              },
-              "projectId": {
-                "type": "string",
-                "format": "uuid",
-                "example": "ffffffff-aaaa-1414-eeee-000000000000",
-                "description": "The GUID4 ID of the project."
-              },
-              "organizationId": {
-                "type": "string",
-                "format": "uuid",
-                "example": "ffffffff-aaaa-1414-eeee-000000000000",
-                "description": "The GUID4 ID of the organization. "
-              }
-            },
-            "required": [
-              "organizationId",
-              "projectId",
-              "clusterId"
-            ]
-          }
-        }
-      },
-      {
-        "type": "function",
-        "tags": [
-          "Free Tier"
-        ],
-        "function": {
-          "name": "put_update_free_tier_cluster",
+          "name": "put_updatefreetiercluster",
           "description": "Updates an existing free tier cluster.  Only name and description are configurable.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -6982,7 +6944,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "delete_delete_free_tier_cluster",
+          "name": "delete_deletefreetiercluster",
           "description": "Deletes an existing free tier cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7020,7 +6982,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "post_turn_on_free_tier_cluster",
+          "name": "post_freetierclusteron",
           "description": "Turn free tier cluster on.  It will also turn on the linked app services, if any.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7058,7 +7020,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "delete_turn_off_free_tier_cluster",
+          "name": "delete_freetierclusteroff",
           "description": "Turn free tier cluster off.\n# \n# - Turning off your cluster turns off the compute for your cluster but the storage remains.\n# All of the data, schema (buckets, scopes, and collections), and indexes remain, as well as cluster configuration, including users and allow lists.\n# \n# - Turning off cluster will also turn off any linked app services.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7096,7 +7058,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "post_create_free_tier_app_service",
+          "name": "post_createfreetierappservice",
           "description": "Creates a free tier App Service. This is a 1 node cluster which can only be linked to a free tier cluster.\n# \n# The following features are not available for free tier clusters:\n#   - audit logging \n#   - turn App Service off/on\n# \n# Free tier App Service can only be turned off/on when the linked free tier cluster is turned off/on.\n# \n# Only name a description are configurable.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7139,7 +7101,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "get_get_free_tier_app_service",
+          "name": "get_getfreetierappservice",
           "description": "Fetches the details of the free tier App Service.\n# \n# While only name and description are configurable, other read only fields will be displayed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7184,7 +7146,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "put_update_free_tier_app_service",
+          "name": "put_updatefreetierappservice",
           "description": "Updates an existing free tier App Service. Only name and description are configurable.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7239,7 +7201,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "delete_delete_free_tier_app_service",
+          "name": "delete_deletefreetierappservice",
           "description": "Deletes an existing free tier App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7284,7 +7246,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "post_create_free_tier_bucket",
+          "name": "post_createfreetierbucket",
           "description": "Creates a new free tier bucket.  This is a Couchbase bucket where only the name a memory quota is configurable.\n# Other bucket properties use default values.  \n# \n# The following features are not available for free tier buckets:\n#   - bucket flush \n#   - migrate to another storage engine like magma\n# \n# Note that you can only create a free tier bucket on a free tier cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7327,7 +7289,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "get_list_free_tier_buckets",
+          "name": "get_listfreetierbuckets",
           "description": "Lists all buckets in the free tier cluster. While only name and memory quota are configurable for free tier buckets, the response will show\n# additional read only bucket properties such as replicas, etc.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7365,7 +7327,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "get_get_free_tier_bucket",
+          "name": "get_getfreetierbucketbyid",
           "description": "Get bucket.  While only name and memory quota are configurable for free tier buckets, the response will show\n# additional read only bucket properties such as replicas, etc.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7409,7 +7371,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "put_update_free_tier_bucket",
+          "name": "put_updatefreetierbucket",
           "description": "Updates an existing free tier bucket.  Only bucket memory quota is configurable.  Once created bucket name cannot be changed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7458,7 +7420,7 @@
           "Free Tier"
         ],
         "function": {
-          "name": "delete_delete_free_tier_bucket",
+          "name": "delete_deletefreetierbucketbyid",
           "description": "Deletes an existing free tier bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7508,7 +7470,7 @@
           "Network Peers"
         ],
         "function": {
-          "name": "post_create_network_peering",
+          "name": "post_postnetworkpeering",
           "description": "Creates a network peering record for Capella. Capella does not support peering of networks between different cloud providers. For example, you cannot peer GCP VPC that hosts Capella cluster with an AWS VPC hosting an application.\n# \n# - Create configures a Couchbase Capella private networking with the cloud provider. Setting up a private network enables your application to interact with Couchbase Capella over a private connection by co-locating them through network peering.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7551,7 +7513,7 @@
           "Network Peers"
         ],
         "function": {
-          "name": "get_list_network_peering_records",
+          "name": "get_listnetworkpeeringrecords",
           "description": "Lists all the network peering records.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7612,7 +7574,7 @@
           "Network Peers"
         ],
         "function": {
-          "name": "get_get_network_peering_record",
+          "name": "get_getnetworkpeeringrecord",
           "description": "Fetches the details of the network peering meta data based on the peerID provided.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7657,7 +7619,7 @@
           "Network Peers"
         ],
         "function": {
-          "name": "delete_delete_network_peering",
+          "name": "delete_deletenetworkpeering",
           "description": "Deletes the network peering relationship.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7702,7 +7664,7 @@
           "Network Peers"
         ],
         "function": {
-          "name": "post_get_azure_vnet_peering_cli_command",
+          "name": "post_getazurevnetpeeringcommand",
           "description": "Retrieves the role assignment command or script to be executed in the Azure CLI to assign a new network contributor role. It scopes only to the specified subscription and the virtual network within that subscription.\n# \n# - Before using this API, please make sure that the *Admin consent granting* process has been completed through the Capella UI.\n# - This process to grant consent to the VNET peering service principal in the external Azure tenant needs to be done only once for the organization i.e. the first time when the VNET peering is created.\n# - Consenting to this permission request creates a service principal that grants Capella access to the Azure tenant to perform VNET peering.\n# - To complete the admin consent granting process, the Organization owner should follow the steps below -\n#     1. Login to the Capella UI.\n#     2. Deploy an Azure Cluster or open an existing one you want to peer with your application.\n#     3. Click the Settings tab, in the navigation pane click VNET Peering.\n#     4. Click Setup VNET Peering.\n#     5. Confirm that you have a user with the Global Administrator Role.\n#     6. Add the Azure configuration details to allow peering access.\n#     7. Click Allow Peering Access - A new browser tab opens. Sign in to Azure if you have not already.\n#     8. In Azure, accept Capella’s permissions request - The Azure permissions request page is open in the new browser tab and consent to the new permissions request.\n#       For more information refer [docs]- https://docs.couchbase.com/cloud/clouds/vpc-peering/peer-azure.html\n# - On accepting the new permission, you automatically return to the Capella VNET peering page. The Capella VNET peering page shows a notice indicating that peering access is successful.\n# \n# - The Organization Owner should set this up once, then for network peering, use the public API -\n#     1. Use this `Get Azure VNET Peering CLI Command` API to fetch the command.\n#     2. Run the role assignment command in the Azure CLI.\n#     3. Use the `Create VPC Peering` API to create the network peering.\n# \n# - In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n# ",
           "parameters": {
             "type": "object",
@@ -7751,7 +7713,7 @@
           "On/Off Schedule"
         ],
         "function": {
-          "name": "post_create_cluster_onoff_schedule",
+          "name": "post_postonoffschedule",
           "description": "This provides the means to add a new cluster on/off schedule.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7794,7 +7756,7 @@
           "On/Off Schedule"
         ],
         "function": {
-          "name": "get_get_cluster_onoff_schedule",
+          "name": "get_getonoffschedule",
           "description": "Fetches the details of the cluster on/off schedule for the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7832,7 +7794,7 @@
           "On/Off Schedule"
         ],
         "function": {
-          "name": "put_update_cluster_onoff_schedule",
+          "name": "put_putonoffschedule",
           "description": "This provides the means to update an existing cluster on/off schedule.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7875,7 +7837,7 @@
           "On/Off Schedule"
         ],
         "function": {
-          "name": "delete_delete_cluster_onoff_schedule",
+          "name": "delete_deleteonoffschedule",
           "description": "Deletes the cluster on/off schedule for the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7919,7 +7881,7 @@
           "Organizations"
         ],
         "function": {
-          "name": "get_get_organization",
+          "name": "get_getorganizationbyid",
           "description": "Fetches the details of an organization by ID.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# - Organization Member\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7943,7 +7905,7 @@
           "Organizations"
         ],
         "function": {
-          "name": "put_update_organization_configuration",
+          "name": "put_putorganizationconfiguration",
           "description": "Updates an existing organization configuration. Use this endpoint to add, update, and delete network subdomains.\n# \n# Subdomains:\n# - Can have a maximum of 30 alphanumeric characters.\n# - Must be a unique string and not already in use in another tenant or organization. Empty strings are allowed.\n# - Only affect new clusters. You cannot update existing clusters to include a new subdomain.\n# - Currently only supported for AWS clusters.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# Subdomains are not automatically available. You must contact Couchbase support to enable this feature.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -7977,7 +7939,7 @@
           "Organizations"
         ],
         "function": {
-          "name": "get_list_organizations",
+          "name": "get_listorganizations",
           "description": "Returns a list of all organizations the user has access to.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# - Organization Member\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# "
         }
       }
@@ -7993,7 +7955,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "get_get_private_endpoint_service_status",
+          "name": "get_getprivateendpointservicestatus",
           "description": "Private endpoint service allows you to access your Capella cluster from your private network, using private endpoints.\n# \n# This endpoint determines if the endpoint service is enabled or disabled on your cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8031,7 +7993,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "post_enable_private_endpoint_service",
+          "name": "post_enableprivateendpointservice",
           "description": "Enable private endpoint service on your cluster.\n# \n# Supporting infrastructure is deployed and it may take a few minutes for private endpoints to be available.\n# After it's enabled, you can create private endpoint in your network.  You can do this using the cloud provider's CLI.  For an example, use\n# the POST privateEndpointService/endpointCommand endpoint to get the command.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Manager\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8069,7 +8031,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "delete_disable_private_endpoint_service",
+          "name": "delete_disableprivateendpointservice",
           "description": "Disable private endpoint service on your cluster.\n# \n# Supporting infrastructure is removed and it may take a few minutes before private endpoints is disabled.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8107,7 +8069,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "get_list_private_endpoints",
+          "name": "get_listprivateendpoints",
           "description": "Returns a list of private endpoints associated with the endpoint service for your Capella cluster, along\n# with the endpoint state.  Each private endpoint connects a private network to the Capella cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Creator\n#   - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8145,7 +8107,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "post_get_private_endpoint_cli_command_required_to_setup_private_endpoint_for_specific_csp",
+          "name": "post_getprivateendpointcommand",
           "description": "Retrieve the command or script to be executed in order to create the private endpoint which will provides a private connection between the specified VPC and the specified Capella private endpoint service.  An example for AWS:\n# \n# ```\n# aws ec2 create-vpc-endpoint \\\n#   --vpc-id vpc-1234 \\\n#   --region us-east-1 \\\n#   --service-name com.amazonaws.vpce.us-east-1.vpce-svc-1234 \\\n#   --vpc-endpoint-type Interface \\\n#   --subnet-ids subnet-1234\n# ```\n# \n# An example for Azure:\n# \n# ```\n# az network private-endpoint create \\\n#   --connection-name connection-1 \\\n#   --name private-endpoint \\\n#   --private-connection-resource-id svc-1 \\\n#   --resource-group test-rg \\\n#   --subnet subnet-1 \\\n#   --group-id sites \\\n#   --vnet-name vnet-1\n# ```\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n#   - Project Viewer\n# \n#   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8188,7 +8150,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "post_accept_private_endpoint_request",
+          "name": "post_acceptprivateendpoint",
           "description": "Accept a new private endpoint connection request so that it is associated with the endpoint service.  This means the private endpoint is available for use.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n# \n#   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8232,7 +8194,7 @@
           "Private Endpoint Service"
         ],
         "function": {
-          "name": "post_reject_or_disassociate_private_endpoint",
+          "name": "post_deleteprivateendpoint",
           "description": "Removes the private endpoint associated with the endpoint service.  This means the private endpoint is no\n# longer able to connect to the private endpoint service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8282,7 +8244,7 @@
           "Projects"
         ],
         "function": {
-          "name": "post_create_project",
+          "name": "post_postproject",
           "description": "Creates a new project under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8311,7 +8273,7 @@
           "Projects"
         ],
         "function": {
-          "name": "get_list_project",
+          "name": "get_listprojects",
           "description": "Lists all the projects under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8358,7 +8320,7 @@
           "Projects"
         ],
         "function": {
-          "name": "get_get_project",
+          "name": "get_getprojectbyid",
           "description": "Fetches the details of the given project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8389,7 +8351,7 @@
           "Projects"
         ],
         "function": {
-          "name": "put_update_project",
+          "name": "put_putproject",
           "description": "Update project name and or project description.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8430,7 +8392,7 @@
           "Projects"
         ],
         "function": {
-          "name": "delete_delete_project",
+          "name": "delete_deleteprojectbyid",
           "description": "Deletes an existing project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8467,7 +8429,7 @@
           "Query Indexes"
         ],
         "function": {
-          "name": "post_manage_query_indexes",
+          "name": "post_managequeryindexes",
           "description": "CREATE/DROP/ALTER/BUILD primary and secondary indexes.\n# \n# To learn more about indexes please refer to the [documentation](https://docs.couchbase.com/server/current/learn/services-and-indexes/indexes/indexing-and-query-perf.html).\n# \n# It is recommended to use deferred index builds, especially for larger indexes. \n# When creating indexes in bulk, we do not recommend sending requests to create all of them at once. \n# Instead, we strongly recommend creating indexes in batches of 100 or less.\n# \n# To access this endpoint the API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8510,7 +8472,7 @@
           "Query Indexes"
         ],
         "function": {
-          "name": "get_get_list_of_index_definitions",
+          "name": "get_listindexdefinitions",
           "description": "Get index definitions in a keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8564,7 +8526,7 @@
           "Query Indexes"
         ],
         "function": {
-          "name": "get_get_index_properties",
+          "name": "get_indexdefinition",
           "description": "Get the index properties of a specified index in a keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8624,7 +8586,7 @@
           "Query Indexes"
         ],
         "function": {
-          "name": "get_get_index_build_status",
+          "name": "get_indexbuildstatus",
           "description": "Monitor the build status of an index.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8690,7 +8652,7 @@
           "Sample Bucket"
         ],
         "function": {
-          "name": "post_load_sample_data",
+          "name": "post_postsamplebucket",
           "description": "Loads predefined sample data into a cluster by selecting from three available options:\n# \n# - travel-sample \n# - gamesim-sample\n# - beer-sample \n# \n# Upon a successful request, a new bucket is created within the cluster, and populated with the chosen sample data.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8733,7 +8695,7 @@
           "Sample Bucket"
         ],
         "function": {
-          "name": "get_list_sample_data_import_buckets",
+          "name": "get_listsamplebuckets",
           "description": "Lists all the sample buckets under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8771,7 +8733,7 @@
           "Sample Bucket"
         ],
         "function": {
-          "name": "get_get_sample_import_bucket",
+          "name": "get_getsamplebucketbyid",
           "description": "Fetches the configuration of the given bucket.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8815,7 +8777,7 @@
           "Sample Bucket"
         ],
         "function": {
-          "name": "delete_delete_sample_import_bucket",
+          "name": "delete_deletesampledatabybucketid",
           "description": "Deletes an existing bucket which was loaded with sample data.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8865,7 +8827,7 @@
           "Users"
         ],
         "function": {
-          "name": "post_create_user",
+          "name": "post_postuser",
           "description": "Invites a new user under the organization.\n# \n# After making a REST API request, an invitation email is triggered and sent to the user.\n# Upon receiving the invitation email, the user is required to click on a provided URL, which will redirect them to a page with a user interface (UI) where they can set their username and password.\n# \n# The modification of any personal information related to a user can only be performed by the user through the UI.\n# Similarly, the user can solely conduct password updates through the UI.\n# \n# The \"caller\" possessing Organization Owner access rights retains the exclusive user creation capability.\n# They hold the authority to assign roles at the organization and project levels.\n# \n# At present, our support is limited to the resourceType of \"project\" exclusively.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8894,7 +8856,7 @@
           "Users"
         ],
         "function": {
-          "name": "get_list_users",
+          "name": "get_listusers",
           "description": "Lists all the users in the organization and filter on the basis of projectId.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Creator\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# When retrieving a list of users through a GET request, if a user holds the organization owner role, the response will exclude project-level permissions for those users. This is because organization owners have full access to all resources within the organization, making project-level permissions irrelevant for them.\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8947,7 +8909,7 @@
           "Users"
         ],
         "function": {
-          "name": "get_get_user",
+          "name": "get_getuser",
           "description": "Fetches the details of the given user.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Creator\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# \n# When performing a GET request for a user with an organization owner role, the response will exclude project-level permissions for that user. This is because organization owners have access to all resources at the organization level, rendering project-level permissions unnecessary for them.\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -8978,7 +8940,7 @@
           "Users"
         ],
         "function": {
-          "name": "patch_update_user",
+          "name": "patch_patchuser",
           "description": "Updates organizationRole and resources of the user.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# An Organization Owner API key can be utilized to update organizational-level roles and project-level roles for all projects within the organization.\n# \n# The Project Owner API key allows for updating project-level roles, solely within the projects where the API key holds the Project Owner role.\n# \n# The modification of any personal information related to a user, such as password updates, can only be performed by the respective user through the user interface (UI).\n# \n# The results are always limited by the role and scope of the caller's privileges.\n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html) and [Project Roles](https://docs.couchbase.com/cloud/projects/project-roles.html).\n# ",
           "parameters": {
             "type": "object",
@@ -9014,7 +8976,7 @@
           "Users"
         ],
         "function": {
-          "name": "delete_delete_user",
+          "name": "delete_deleteuser",
           "description": "Removes user from the organization.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# To learn more about the roles, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
           "parameters": {
             "type": "object",

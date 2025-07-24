@@ -5,7 +5,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "post_create_bucket",
+      "name": "post_postbucket",
       "description": "Creates a new bucket configuration under a cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "get_list_buckets",
+      "name": "get_listbuckets",
       "description": "Lists all the buckets under the cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -86,7 +86,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "get_get_bucket",
+      "name": "get_getbucketbyid",
       "description": "Fetches the configuration of the given bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -130,7 +130,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "put_update_bucket",
+      "name": "put_putbucket",
       "description": "Updates an existing bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -179,7 +179,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "delete_delete_bucket",
+      "name": "delete_deletebucketbyid",
       "description": "Deletes an existing bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -223,7 +223,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "put_flush_bucket_data",
+      "name": "put_flushbucket",
       "description": "Flushing of the bucket occurs, causing all items in the bucket to be deleted by the system at the earliest opportunity.\n# This operation can only be performed if the bucket has been configured with flushEnabled to true. If it is disabled, \n# it will throw an error.\n# \n# It is recommended not to run with the flushEnabled configuration set to true in production; \n# due to the danger of all a bucket's data being inadvertently lost. \n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -267,7 +267,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "post_create_scope",
+      "name": "post_postscope",
       "description": "Creates a new scope in a bucket.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n#  In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -316,7 +316,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "get_list_scopes",
+      "name": "get_getscopes",
       "description": "Lists all the scopes in the bucket.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -360,7 +360,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "get_get_scope",
+      "name": "get_getscopebyname",
       "description": "Fetches the details of the given scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -410,7 +410,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "delete_delete_scope",
+      "name": "delete_deletescopebyname",
       "description": "Deletes an existing scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -460,7 +460,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "post_create_collection",
+      "name": "post_postcollection",
       "description": "Creates a new collection in a scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -515,7 +515,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "get_list_collections",
+      "name": "get_getcollections",
       "description": "Lists all the collections in a scope.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -565,7 +565,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "get_get_collection",
+      "name": "get_getcollectionbyname",
       "description": "Fetches the details of the given collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -621,7 +621,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "put_update_collection",
+      "name": "put_putcollection",
       "description": "Updates an existing collection.\n# \n# This operation is only allowed for a cluster with server version >= 7.6.0. A collection cannot be updated for the server versions lower than this.\n# \n# This allows to update the maxTTL of the given collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -682,7 +682,7 @@
       "Buckets, Scopes, & Collections"
     ],
     "function": {
-      "name": "delete_delete_collection",
+      "name": "delete_deletecollectionbyname",
       "description": "Deletes an existing collection.\n# \n# To learn more about scopes and collections, see [Buckets, Scopes, and Collections](https://docs.couchbase.com/cloud/clusters/data-service/about-buckets-scopes-collections.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

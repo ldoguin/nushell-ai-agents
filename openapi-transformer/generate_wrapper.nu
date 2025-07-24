@@ -2,7 +2,7 @@
 
 # Sanitize a string to be used as a Nushell function name
 def sanitize_name [text: string] {
-  $text | str downcase | str replace -a " " "_" | str replace -r "[^a-z0-9_]" ""
+  $text | str downcase | str replace -a " " "_" | str replace -a '(' '_' | str replace -a ')' '_' | str replace -r "[^a-z0-9_]" ""
 }
 # Sanitize a string to be used as a Nushell function name
 def sanitize_param_name [text: string] {
@@ -66,6 +66,7 @@ def generate_function [
     path: string
     method: string
     summary: string
+    operationId: string
     description: string
     parameters: list
     request_body: record
@@ -74,7 +75,7 @@ def generate_function [
   
   let path = $path | str replace -a -r '\{' "($"
   let path = $path | str replace -a  '}' ')'
-  let clean_name = sanitize_name $summary
+  let clean_name = sanitize_name $operationId
   let func_name = $"($method)_($clean_name)"
   
   # Replace null by false when value is empty
@@ -232,7 +233,7 @@ def main [
     $methods | transpose key value | each { |m|
         let method = $m.key
         let op = $m.value
-        let tuple = generate_function $path $method $op.summary ( $op.description | str replace -a "\n" "\n# ") (  (  $op.parameters? | default [] ) | append $path_params ) ($op.requestBody? | default {} ) ($op.tags? | default [] )
+        let tuple = generate_function $path $method $op.summary ($op.operationId? | default $op.summary ) ( $op.description | str replace -a "\n" "\n# ") (  (  $op.parameters? | default [] ) | append $path_params ) ($op.requestBody? | default {} ) ($op.tags? | default [] )
         $tuple
      }
     }
@@ -245,6 +246,8 @@ def main [
   mut tools = $tuples | flatten | each { |x|
     $x.1
   }
+
+print $functions
 
   let curl_file_content = open $curl_request_file
   mut full_script = $functions | str join "\n" | str join

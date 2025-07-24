@@ -1,0 +1,326 @@
+{
+  "Alert_Integration": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Alert_Integration/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Alert_Integration/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Alert_Integration/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase Capella supports sending Capella alert notifications to the most common service like ServiceNow.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Allowed_CIDRs__App_Services_": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Allowed_CIDRs__App_Services_/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Allowed_CIDRs__App_Services_/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Allowed_CIDRs__App_Services_/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nApp Services only allow trusted IP addresses to connect and use its REST APIs.\nEach App Service has a configurable Allowed IP list that can include up to 75 entries.\nEach entry can be a single IP address or an IP address space.\nAny IP address you add to this list can have a user-specified expiration time for temporary access, or be permanent.\nCapella automatically denies any connection attempts to and from an IP not in the allowed IP list.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Allowed_CIDRs__Cluster_": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Allowed_CIDRs__Cluster_/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Allowed_CIDRs__Cluster_/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Allowed_CIDRs__Cluster_/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase Capella only allows trusted IP addresses to connect to databases.\nEach database has a configurable Allowed IP list that can include up to 75 entries.\nEach entry can be a single IP address or an IP address space.\nAny IP address you add to this list can have a user-specified expiration time for temporary access, or be permanent.\nCapella automatically denies any connection attempts to and from an IP not in the allowed IP list.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Api_Keys": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Api_Keys/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Api_Keys/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Api_Keys/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase Capella Management API uses a Bearer token mechanism for authentication; each call to the Management API has to be authenticated by API key.",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "App_Endpoints": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Endpoints/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Endpoints/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Endpoints/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nApp Endpoints represent instances of mobile applications on App Services. Each App Endpoint is linked to one bucket and synchronizes data to a set of\nlinked collections. Users can configure App Endpoints, including setting the Access Control function, Import Filter and OpenID Connect (OIDC) authentication configuration.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "App_Services": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Services/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Services/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Services/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nApp Services is a fully managed application backend designed to provide data synchronization between mobile or IoT applications running Couchbase Lite and your Couchbase Capella database.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "App_Services_Audit_Logging": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Services_Audit_Logging/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Services_Audit_Logging/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/App_Services_Audit_Logging/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nUsers can configure audit log support on Capella App Services and can export audit logs from cloud blob storage to an AWS S3 bucket. Users can retrieve audit logs from a pre-signed download URL. Logs are retained for 30 days.",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Audit_Logs": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Audit_Logs/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Audit_Logs/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Audit_Logs/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nUsers can configure audit log support on Capella database and can export audit logs from cloud blob storage to an AWS S3 bucket. Users can retrieve audit logs from a pre-signed download URL. Logs are retained for 30 days.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Backup_Schedule__Bucket_": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Backup_Schedule__Bucket_/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Backup_Schedule__Bucket_/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Backup_Schedule__Bucket_/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.\nCouchbase Capella supports scheduled and on-demand backups of bucket data.\nA backup can be restored to the same database where it was created or another database in the same organization.\nOn setting up a backup schedule, the bucket automatically backs up the bucket based on the chosen schedule.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Backups___Restore__Bucket_": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Backups___Restore__Bucket_/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Backups___Restore__Bucket_/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Backups___Restore__Bucket_/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.\nCouchbase Capella supports scheduled and on-demand backups of bucket data.\nA backup can be restored to the same database where it was created or another database in the same organization.\nAn on-demand backup of a bucket is always a Full backup.\nCapella schedules on-demand backup to start immediately.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Buckets__Scopes____Collections": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Buckets__Scopes____Collections/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Buckets__Scopes____Collections/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Buckets__Scopes____Collections/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nA bucket is the fundamental space for storing data in Couchbase Capella.\nScopes and Collections are logical containers within a bucket and a way for organizing data within buckets.\nA scope is a mechanism for the grouping of multiple collections. A collection is a data container for related documents.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "CMEK": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/CMEK/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/CMEK/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/CMEK/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nThe CMEK (Customer Managed Encryption Keys) endpoints facilitate the management of encryption keys used by clusters for data encryption.\nThey allow organizations to register, list, retrieve, rotate, and delete the metadata associated with their own encryption keys within Capella.\nThis suite of endpoints ensures that organizations have full control over the lifecycle of their keys, enhancing security and compliance by allowing encryption keys that are managed in external key management services like AWS KMS or GCP KMS to be used within the organization's clusters.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Certificates": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Certificates/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Certificates/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Certificates/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase Capella supports the use of x.509 certificates, for clients and servers.\nThis ensures that only approved users, applications, machines, and endpoints have access to system resources.\nConsequently, the mechanism can be used by Couchbase SDK clients to access Couchbase Services, and by source clusters that use XDCR to replicate data to target clusters.\nClients can verify the identity of Couchbase Capella, thereby ensuring that they are not exchanging data with a rogue entity.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Cloud_Snapshot_Backups___Restore": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Cloud_Snapshot_Backups___Restore/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Cloud_Snapshot_Backups___Restore/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Cloud_Snapshot_Backups___Restore/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.\nCouchbase Capella supports scheduled and on-demand backups of cloud snapshot data.\nA backup can be restored to the same database where it was created or another database in the same organization.\nA backup can also be cloned to create a new database with the same specifications as the backed up cluster in the same organization.\nAn on-demand backup of a bucket is always a Full backup.\nCapella schedules on-demand backup to start immediately.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Cloud_Snapshot_Backups_Schedule": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Cloud_Snapshot_Backups_Schedule/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Cloud_Snapshot_Backups_Schedule/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Cloud_Snapshot_Backups_Schedule/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase supports a robust scheduled backup and retention time policy as part of an overall disaster recovery plan for production data.\nCouchbase Capella supports scheduled and on-demand backups of cloud snapshot data.\nA backup can be restored to the same database where it was created or another database in the same organization.\nOn setting up a backup schedule, the bucket automatically backs up the bucket based on the chosen schedule.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Clusters": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Clusters/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Clusters/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Clusters/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nA Couchbase cluster consists of one or more instances of Couchbase Capella, each running on an independent node.\nData and services are shared across the cluster.\nA cluster may be referred to as a \"database\" in the documentation and in the Couchbase Capella user interface.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Database_Credentials": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Database_Credentials/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Database_Credentials/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Database_Credentials/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nDatabase credentials provide programmatic and application-level access to data on a database.\nOnly database credentials can access data.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Events": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Events/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Events/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Events/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nEvents represent a trail of actions that users performs within Capella at an organization or project level\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Free_Tier": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Free_Tier/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Free_Tier/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Free_Tier/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nEndpoints to manage resources that are available with free tier plan.  These resources are buckets, clusters and app services.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Network_Peers": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Network_Peers/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Network_Peers/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Network_Peers/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nNetwork Peering enables you to configure a secure private network connection between the Virtual Private Cloud (VPC) hosting your applications and the VPC of your Couchbase Capella database.\nYou can set a network peering connection from a Couchbase Capella database hosted with Amazon Web Services (AWS), Google Cloud (GCP) or Azure.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "On_Off_Schedule": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/On_Off_Schedule/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/On_Off_Schedule/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/On_Off_Schedule/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nThe On/Off Schedule endpoint enables you to schedule when your provisioned database should turn on or off to save costs.\nTurning off your database only turns off the compute;\nall of your data, schema (buckets, scopes, and collections), and indexes remain, as well as your cluster configuration, including users and allow lists.\nWhen you turn your provisioned database off, you will be charged the OFF amount for the database.\nYou can turn the cluster and any linked app services on or off on demand using the [cluster API](https://docs.couchbase.com/cloud/management-api-reference/index.html#tag/clusters).\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Organizations": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Organizations/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Organizations/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Organizations/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nCouchbase Capella uses an ordered hierarchy to help you keep all of your data organized and securely accessible.\nThe entity at the top of the hierarchy is called an organization.\nEverything you do in Capella, whether it's creating a cluster or managing billing, happens within the scope of an organization.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Private_Endpoint_Service": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Private_Endpoint_Service/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Private_Endpoint_Service/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Private_Endpoint_Service/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nAccess your Capella cluster from your cloud provider's private network.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Projects": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Projects/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Projects/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Projects/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nProjects contain and allow access to Couchbase databases.\nProjects are used to organize and manage groups of Couchbase databases within organizations.\nAn organization can contain any number of projects, and a project can contain any number of databases.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Query_Indexes": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Query_Indexes/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Query_Indexes/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Query_Indexes/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nUsed to manage primary and secondary indexes on your Capella cluster.  You can CREATE/ALTER/DROP/BUILD indexes.\n\nIt is recommended to use deferred index builds, especially for larger indexes. When creating indexes in bulk, we do not recommend sending requests to create all of them at once. Instead, we strongly recommend creating indexes in batches of 100 or less.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Sample_Bucket": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Sample_Bucket/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Sample_Bucket/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Sample_Bucket/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nThe sampleBucket endpoint lets users easily create a bucket filled with sample data.\nThis is a quick way for users to try out features and learn how things work with ready-to-use data.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  },
+  "Users": {
+    "runtime": "openai",
+    "model": "gpt-4o-mini",
+    "prompt": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Users/prompt.txt",
+    "model_tools": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Users/tools.json",
+    "tool_functions": "/home/ldoguing/data/Code/nushell-ai-agents/tools_catalog/capella/Users/functions.nu",
+    "description": "This function calls an ai agent able to do the following :\nTo access an organization, your Couchbase Capella user account must be added to it.\nAccounts are added to an organization using email invitations sent from Capella by a user with the Organization Owner organization role.\nAll organization users are given one or more organization roles that define what they can view and manage in their organization.\n",
+    "options": {
+      "stream": false,
+      "temperature": 0
+    }
+  }
+}

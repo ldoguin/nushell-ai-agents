@@ -5,7 +5,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "post_create_free_tier_cluster",
+      "name": "post_createfreetiercluster",
       "description": "Creates a free tier cluster.  This is a 1 node cluster than only runs data, query, index and search services.\n# \n# You can have at most 1 free tier cluster per tenant.\n# \n# The following features are not available for free tier clusters:\n#   - backup/restore\n#   - private endpoint service\n#   - network peering\n#   - audit logs\n#   - alert integration\n#   - CMEK\n#   - on/off schedule\n# \n# Only cluster name, description, CSP, region and CIDR are configurable.\n# \n# There are limited regions available based on CSP:\n#   a. for AWS they are us-east-2, eu-west-1, ap-southeast-1\n#   b. for GCP they are us-central1, europe-west1, asia-east1\n#   c. for Azure they are eastus, swedencentral, koreacentral\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -41,45 +41,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "get_get_free_tier_cluster",
-      "description": "Get details of the free tier cluster.\n# \n# While only cluster name, description, CSP, region and CIDR are configurable, other read only fields are retrieved.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "clusterId": {
-            "type": "string",
-            "format": "uuid",
-            "example": "ffffffff-aaaa-1414-eeee-000000000000",
-            "description": "The GUID4 ID of the cluster."
-          },
-          "projectId": {
-            "type": "string",
-            "format": "uuid",
-            "example": "ffffffff-aaaa-1414-eeee-000000000000",
-            "description": "The GUID4 ID of the project."
-          },
-          "organizationId": {
-            "type": "string",
-            "format": "uuid",
-            "example": "ffffffff-aaaa-1414-eeee-000000000000",
-            "description": "The GUID4 ID of the organization. "
-          }
-        },
-        "required": [
-          "organizationId",
-          "projectId",
-          "clusterId"
-        ]
-      }
-    }
-  },
-  {
-    "type": "function",
-    "tags": [
-      "Free Tier"
-    ],
-    "function": {
-      "name": "put_update_free_tier_cluster",
+      "name": "put_updatefreetiercluster",
       "description": "Updates an existing free tier cluster.  Only name and description are configurable.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -127,7 +89,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "delete_delete_free_tier_cluster",
+      "name": "delete_deletefreetiercluster",
       "description": "Deletes an existing free tier cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -165,7 +127,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "post_turn_on_free_tier_cluster",
+      "name": "post_freetierclusteron",
       "description": "Turn free tier cluster on.  It will also turn on the linked app services, if any.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -203,7 +165,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "delete_turn_off_free_tier_cluster",
+      "name": "delete_freetierclusteroff",
       "description": "Turn free tier cluster off.\n# \n# - Turning off your cluster turns off the compute for your cluster but the storage remains.\n# All of the data, schema (buckets, scopes, and collections), and indexes remain, as well as cluster configuration, including users and allow lists.\n# \n# - Turning off cluster will also turn off any linked app services.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -241,7 +203,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "post_create_free_tier_app_service",
+      "name": "post_createfreetierappservice",
       "description": "Creates a free tier App Service. This is a 1 node cluster which can only be linked to a free tier cluster.\n# \n# The following features are not available for free tier clusters:\n#   - audit logging \n#   - turn App Service off/on\n# \n# Free tier App Service can only be turned off/on when the linked free tier cluster is turned off/on.\n# \n# Only name a description are configurable.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -284,7 +246,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "get_get_free_tier_app_service",
+      "name": "get_getfreetierappservice",
       "description": "Fetches the details of the free tier App Service.\n# \n# While only name and description are configurable, other read only fields will be displayed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -329,7 +291,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "put_update_free_tier_app_service",
+      "name": "put_updatefreetierappservice",
       "description": "Updates an existing free tier App Service. Only name and description are configurable.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -384,7 +346,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "delete_delete_free_tier_app_service",
+      "name": "delete_deletefreetierappservice",
       "description": "Deletes an existing free tier App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -429,7 +391,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "post_create_free_tier_bucket",
+      "name": "post_createfreetierbucket",
       "description": "Creates a new free tier bucket.  This is a Couchbase bucket where only the name a memory quota is configurable.\n# Other bucket properties use default values.  \n# \n# The following features are not available for free tier buckets:\n#   - bucket flush \n#   - migrate to another storage engine like magma\n# \n# Note that you can only create a free tier bucket on a free tier cluster.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -472,7 +434,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "get_list_free_tier_buckets",
+      "name": "get_listfreetierbuckets",
       "description": "Lists all buckets in the free tier cluster. While only name and memory quota are configurable for free tier buckets, the response will show\n# additional read only bucket properties such as replicas, etc.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -510,7 +472,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "get_get_free_tier_bucket",
+      "name": "get_getfreetierbucketbyid",
       "description": "Get bucket.  While only name and memory quota are configurable for free tier buckets, the response will show\n# additional read only bucket properties such as replicas, etc.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -554,7 +516,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "put_update_free_tier_bucket",
+      "name": "put_updatefreetierbucket",
       "description": "Updates an existing free tier bucket.  Only bucket memory quota is configurable.  Once created bucket name cannot be changed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -603,7 +565,7 @@
       "Free Tier"
     ],
     "function": {
-      "name": "delete_delete_free_tier_bucket",
+      "name": "delete_deletefreetierbucketbyid",
       "description": "Deletes an existing free tier bucket.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

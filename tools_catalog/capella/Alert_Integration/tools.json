@@ -5,7 +5,7 @@
       "Alert Integration"
     ],
     "function": {
-      "name": "post_create_alert_integration",
+      "name": "post_postalertintegration",
       "description": "Creates a new alert integration for a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -41,7 +41,7 @@
       "Alert Integration"
     ],
     "function": {
-      "name": "get_list_alert_integrations",
+      "name": "get_listalertintegrations",
       "description": "Lists all the alert integrations under the project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -95,7 +95,7 @@
       "Alert Integration"
     ],
     "function": {
-      "name": "get_get_alert_integration",
+      "name": "get_getalertintegrationbyid",
       "description": "Fetches the details of the given alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Organization Member\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -133,7 +133,7 @@
       "Alert Integration"
     ],
     "function": {
-      "name": "put_update_alert_integration",
+      "name": "put_putalertintegration",
       "description": "Update the details of the given alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -176,7 +176,7 @@
       "Alert Integration"
     ],
     "function": {
-      "name": "delete_delete_alert_integration",
+      "name": "delete_deletealertintegrationbyid",
       "description": "Deletes an existing alert integration.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -214,7 +214,7 @@
       "Alert Integration"
     ],
     "function": {
-      "name": "post_test_alert_integration",
+      "name": "post_posttestalertintegration",
       "description": "Tests a new alert integration for a project.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

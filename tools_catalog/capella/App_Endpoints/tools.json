@@ -5,7 +5,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_list_app_endpoints",
+      "name": "get_listappendpoints",
       "description": "Lists all the App Endpoints under a specific App Service along with their associated configurations such as Access Control function, Import Filter or user defined xattr key.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -73,7 +73,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "post_create_app_endpoint",
+      "name": "post_postappendpoint",
       "description": "Creates an App Endpoint within an App Service with specific configurations such as collection level Access Control function and Import Filter.\n# If the scopes property is not included in the request body, the default scope and collection will be used.\n# The first OpenID Connect provider given will be set as the default provider for the App Endpoint. To change the default, please use the Change App Endpoint OIDC Default Provider endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -123,7 +123,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_get_app_endpoint",
+      "name": "get_getappendpoint",
       "description": "Fetches the details of the given App Endpoint, including operational and resync states and various configurations such as Access Control function and Import Filter.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -174,7 +174,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "put_update_app_endpoint",
+      "name": "put_putappendpoint",
       "description": "Replaces a specified App Endpoint’s configurations such as Access Control function, Import Filter, Delta Sync, or user defined xattr key.\n# The first OpenID Connect provider given will be set as the default provider for the App Endpoint. To change the default, please use the Change App Endpoint OIDC Default Provider endpoint.\n# All fields are required, the App Endpoint and bucket names cannot be changed.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -230,7 +230,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "delete_delete_app_endpoint",
+      "name": "delete_deleteappendpoint",
       "description": "Deletes an existing App Endpoint given its name.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -281,7 +281,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_list_app_endpoint_collections",
+      "name": "get_listappendpointcollections",
       "description": "Lists all the collections under a specific App Endpoint along with their associated configurations such as Access Control function, Import Filter or user defined xattr key.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -348,7 +348,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "post_resume_or_bring_an_app_endpoint_online",
+      "name": "post_postappendpointactivationstatus",
       "description": "Brings an App Endpoint online to close and reopen the connection to the backing Cluster bucket,\n# re-establish access from the Public REST API and accept all incoming Admin API requests.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -399,7 +399,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "delete_pause_or_take_an_app_endpoint_offline",
+      "name": "delete_deleteappendpointactivationstatus",
       "description": "Take the database offline to run resync or to make changes without disrupting current App Endpoint operations.\n# Clients currently connected to the App Endpoint will not be able to sync data with the Cluster while the App Endpoint is paused.\n# This will not take the backing Cluster bucket offline.\n# Pausing an App Endpoint that is in the progress of coming online will pause the App Endpoint after it comes online.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -450,7 +450,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_get_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration.",
+      "name": "get_getappendpointcors",
       "description": "Fetch the App Endpoint Cross-Origin Resource Sharing (CORS) Configuration.\n# CORS is disabled by default. For more information\n# See [Cross-Origin Resource Sharing (CORS) on App Endpoints.](https://docs.couchbase.com/cloud/app-services/deployment/cors-configuration-for-app-services.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -501,7 +501,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "put_upsert_the_app_endpoint_crossorigin_resource_sharing_(cors)_configuration.",
+      "name": "put_putappendpointcors",
       "description": "Upsert the App Endpoint Cross-Origin Resource Sharing (CORS) Configuration.\n# CORS is disabled by default. For more information\n# See [Cross-Origin Resource Sharing (CORS) on App Endpoints.](https://docs.couchbase.com/cloud/app-services/deployment/cors-configuration-for-app-services.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -557,7 +557,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_get_access_control_and_validation_function",
+      "name": "get_getaccessfunction",
       "description": "Retrieves the Access Control and Validation function for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -608,7 +608,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "put_upsert_custom_access_control_and_validation_function",
+      "name": "put_putaccessfunction",
       "description": "Used to upsert a custom Access Control and Validation function for the given keyspace.\n# This is a Javascript function specified at a keyspace, where a user’s read/write access is defined for documents in that particular keyspace.\n# Every document mutation is processed by this function. If an Access Control function is not explicitly defined, a default is applied.\n# [Read more.](https://docs.couchbase.com/cloud/app-services/deployment/access-control-data-validation.html?)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -664,7 +664,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "delete_delete_access_control_and_validation_function",
+      "name": "delete_deleteaccessfunction",
       "description": "Deletes the Access Control and Validation function for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -715,7 +715,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_get_import_filter",
+      "name": "get_getimportfilter",
       "description": "Retrieves the Import Filter for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -766,7 +766,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "put_upsert_import_filter",
+      "name": "put_putimportfilter",
       "description": "Upserts the Import Filter for the given keyspace. By default, there is no import filter and all documents are imported.\n# Import Filters identify the subset of documents eligible to be replicated by App services based on user-defined requirements.\n# This subset is applied to all future mutations.\n# Once the document has been imported and processed by the App Endpoint, changing the Import Filter will not remove it,\n# even if the updated import filters would prevent newer mutations or iterations of the document from getting imported.\n# [Read more.](https://docs.couchbase.com/cloud/app-services/deployment/import-filters.html)\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -822,7 +822,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "delete_delete_import_filter",
+      "name": "delete_deleteimportfilter",
       "description": "Deletes the Import Filter for the given keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -873,7 +873,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "post_create_app_endpoint_openid_connect_oidc)_provider",
+      "name": "post_createappendpointoidcprovider",
       "description": "Creates an OIDC provider for the specified App Endpoint.\n# The first OIDC provider will automatically be set as the default OIDC provider.\n# All client requests will use the default OIDC provider, unless the OIDC provider for the request is explicitly specified on authentication.\n# See more [here](https://docs.couchbase.com/cloud/app-services/user-management/set-up-authentication-provider.html#oidc-authorization-step-by-step).\n# \n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -929,7 +929,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_list_app_endpoint_openid_connect_oidc)_providers",
+      "name": "get_listappendpointoidcproviders",
       "description": "List OpenID Connect (OIDC) Providers configured on an App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -996,7 +996,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_get_app_endpoint_openid_connect_oidc)_provider",
+      "name": "get_getappendpointoidcprovider",
       "description": "Fetches an OIDC provider by ID for the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -1054,7 +1054,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "put_update_app_endpoint_openid_connect_oidc)_provider",
+      "name": "put_updateappendpointoidcprovider",
       "description": "Updates an OIDC provider for the specified App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -1117,7 +1117,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "delete_delete_app_endpoint_openid_connect_oidc)_provider",
+      "name": "delete_deleteappendpointoidcprovider",
       "description": "Deletes an OIDC provider for the specified App Endpoint. Deleting the default provider will error unless it is the only provider.\n# Before deleting the default provider, you must set a new provider as default or have no other providers.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -1175,7 +1175,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "put_update_app_endpoint_default_oidc_provider",
+      "name": "put_updateappendpointoidcdefaultprovider",
       "description": "Updates the default OIDC provider for the specified App Endpoint.\n# All client requests will use the default OIDC provider, unless the OIDC provider for the request is explicitly specified.\n# See more [here](https://docs.couchbase.com/cloud/app-services/user-management/set-up-authentication-provider.html#oidc-authorization-step-by-step).\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -1231,7 +1231,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "get_get_resync_status",
+      "name": "get_getappendpointresync",
       "description": "Fetches the Resync status of the given App Endpoint. If no resync operation was triggered, the response will say the status is completed\n# with 0 values for other properties.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -1282,7 +1282,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "post_start_resync",
+      "name": "post_postappendpointresync",
       "description": "Initialises the Resync operation for the given collections.\n# By default, all collections that require resync will be resynced unless they are specified in the scopes property, in which case only\n# the specified collections that require resync will be resynced.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -1338,7 +1338,7 @@
       "App Endpoints"
     ],
     "function": {
-      "name": "delete_stop_resync",
+      "name": "delete_deleteappendpointresync",
       "description": "Stops the Resync operation. When stopping resync, it will be stopped for all collections being processed.\n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

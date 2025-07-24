@@ -79,8 +79,8 @@
      return $result_tool 
   } 
 }
-  def Backups_&_Restore__Bucket_ [query] {
-    let result_tool = ( cbsh -c ( $" source agent.nu;  agent_run "Backups_&_Restore__Bucket_" "($query)" "  )  ) | complete 
+  def Backups___Restore__Bucket_ [query] {
+    let result_tool = ( cbsh -c ( $" source agent.nu;  agent_run "Backups___Restore__Bucket_" "($query)" "  )  ) | complete 
     if ( $result_tool.exit_code == 0 ) { 
       return $result_tool.stdout 
     } else {
@@ -88,8 +88,8 @@
      return $result_tool 
   } 
 }
-  def Buckets,_Scopes,_&_Collections [query] {
-    let result_tool = ( cbsh -c ( $" source agent.nu;  agent_run "Buckets,_Scopes,_&_Collections" "($query)" "  )  ) | complete 
+  def Buckets__Scopes____Collections [query] {
+    let result_tool = ( cbsh -c ( $" source agent.nu;  agent_run "Buckets__Scopes____Collections" "($query)" "  )  ) | complete 
     if ( $result_tool.exit_code == 0 ) { 
       return $result_tool.stdout 
     } else {
@@ -115,8 +115,8 @@
      return $result_tool 
   } 
 }
-  def Cloud_Snapshot_Backups_&_Restore [query] {
-    let result_tool = ( cbsh -c ( $" source agent.nu;  agent_run "Cloud_Snapshot_Backups_&_Restore" "($query)" "  )  ) | complete 
+  def Cloud_Snapshot_Backups___Restore [query] {
+    let result_tool = ( cbsh -c ( $" source agent.nu;  agent_run "Cloud_Snapshot_Backups___Restore" "($query)" "  )  ) | complete 
     if ( $result_tool.exit_code == 0 ) { 
       return $result_tool.stdout 
     } else {

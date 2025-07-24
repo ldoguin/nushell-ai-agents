@@ -5,7 +5,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "put_enable_or_disable_app_service_audit_logging",
+      "name": "put_putappserviceauditlogstate",
       "description": "Enable or disable Audit Logging for an App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -55,7 +55,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "get_get_app_service_audit_log_state",
+      "name": "get_getappserviceauditlogstate",
       "description": "Retrieves the audit logging state for a specific App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -100,7 +100,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "get_list_app_endpoint_audit_log_event_ids",
+      "name": "get_getappserviceauditlogevents",
       "description": "Retrieves all audit log event ids, their descriptions and enabled status for an App Endpoint.\n# The list of filterable event IDs can be specified while configuring audit logging for the App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -151,7 +151,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "put_update_app_endpoint_audit_logging_config",
+      "name": "put_putappendpointauditlogconfig",
       "description": "Updates the audit logging configuration for a specific App Endpoint. Operations performed by disabled users and roles are excluded from audit logs.\n# See a list of event IDs by calling /auditLogEvents, add event IDs to the enabledEventIds field to enable audit logging for those events.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -207,7 +207,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "get_get_app_endpoint_audit_logging_config",
+      "name": "get_getappendpointauditlogconfig",
       "description": "Retrieves the audit logging configuration for a specific App Endpoint.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -258,7 +258,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "put_configure_app_service_audit_log_streaming",
+      "name": "put_putappserviceauditlogstreaming",
       "description": "Sets up audit log streaming for a specific App Service with filters. If streamingEnabled is true log streaming will begin.\n# \n# Ensure you have provided collector credentials if you wish to begin streaming; log streaming cannot be enabled without credentials.\n# Refer to schema below to see required fields for your log collection provider.\n# Providers include Datadog, Sumo Logic, Grafana Loki, Elasticsearch (versions 8 and newer only) and generic HTTP.\n# To start or resume streaming, set streamingEnabled to true while providing the rest of the log collector config.\n# \n# To disable log streaming and remove the log streaming config including credentials, set streamingEnabled to false and leave the rest of the payload empty.\n# \n# To pause log streaming, set streamingEnabled to false while providing the rest of the log collector config.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -308,7 +308,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "patch_start_or_resume_audit_log_streaming",
+      "name": "patch_patchappserviceauditlogstreaming",
       "description": "To start or resume streaming, set streamingEnabled to true. To pause log streaming, set streamingEnabled to false.\n# \n# If log streaming is paused we will retain the collector credentials. To clear these use the PUT request.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Project Manager\n# \n#   To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -358,7 +358,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "get_get_app_service_audit_log_streaming_state",
+      "name": "get_getappserviceauditlogstreaming",
       "description": "Retrieves the current state of audit log streaming for a specific App Service, as well as the output type and enabled App endpoints.\n# \n# The audit log streaming states are:\n#   - disabled\n#   - disabling\n#   - enabled\n#   - enabling\n#   - paused\n#   - pausing\n#   - errored\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -403,7 +403,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "post_initiate_audit_log_export",
+      "name": "post_postappserviceauditlogexport",
       "description": "Initiates an audit log export for a specific App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -453,7 +453,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "get_list_audit_log_export_jobs",
+      "name": "get_listappserviceauditlogexports",
       "description": "Retrieves a list of all audit log export jobs for an App Service.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -514,7 +514,7 @@
       "App Services Audit Logging"
     ],
     "function": {
-      "name": "get_get_audit_log_export_job",
+      "name": "get_getappserviceauditlogexportbyid",
       "description": "Retrieves details of a specific audit log export job for a given App Service.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n# \n#  To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

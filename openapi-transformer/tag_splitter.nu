@@ -13,4 +13,4 @@ let all_tools = ($unique_tags | each { |tag_entry|
 let functions = ( $data | where {|x| ( $x.tags? == null or $x.tags? == [] ) } )
 let $tag_entry = { functions: $functions }
 $tag_entry
-#$all_tools | to json | save -f splitted_tools.json
+$all_tools | to json | save -f splitted_tools.json

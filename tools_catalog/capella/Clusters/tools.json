@@ -5,7 +5,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "post_create_cluster",
+      "name": "post_postcluster",
       "description": "Creates a new Couchbase Capella provisioned cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -41,7 +41,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "get_list_clusters",
+      "name": "get_listclusters",
       "description": "Lists all the clusters under the organization.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# Returned set of clusters is reduced to what the caller has access to view.\n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -95,7 +95,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "get_get_cluster",
+      "name": "get_getcluster",
       "description": "Fetches the details of the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n#  - Project Manager\n#  - Project Viewer\n#  - Database Data Reader/Writer\n#  - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -133,7 +133,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "put_update_cluster",
+      "name": "put_putcluster",
       "description": "Updates an existing cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -181,7 +181,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "delete_delete_cluster",
+      "name": "delete_deletecluster",
       "description": "Deletes an existing cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -224,7 +224,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "post_turn_on_cluster",
+      "name": "post_clusteron",
       "description": "Turn cluster on.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -267,7 +267,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "delete_turn_off_cluster",
+      "name": "delete_clusteroff",
       "description": "Turn cluster off.\n# \n# - Turning off your cluster turns off the compute for your cluster but the storage remains.\n# All of the data, schema (buckets, scopes, and collections), and indexes remain, as well as cluster configuration, including users and allow lists.\n# \n# - Turning off cluster will also turn off any linked app services.\n# \n#  In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -305,7 +305,7 @@
       "Clusters"
     ],
     "function": {
-      "name": "put_migrate_buckets",
+      "name": "put_putbucketstoragebackend",
       "description": "Updates the storage backend of an existing bucket from Couchstore to Magma.\n# \n# The following should be noted while doing this operation -\n# \n# 1. The outcome of this migration is that all data service nodes in the cluster will be replaced.\n# - During the migration all buckets will remain operational and still be able to perform read and writes. Hence applications will not incur any downtime during this migration and can continue to read/write to the cluster.\n# - The re-balances that occur from the node replacements will result in the bucket(s) being migrated to Magma.\n# - The status of the cluster can be monitored via the [GET cluster API](https://docs.couchbase.com/cloud/management-api-reference/index.html#tag/clusters/operation/getCluster). The cluster will transition to healthy state after migration is completed for all listed buckets.\n# \n# 2. This operation is only allowed for clusters with server version >= 7.6.0. The storage backend cannot be updated for the cluster with server versions lower than this. All the nodes must be upgraded to 7.6.0 before the bucket migration can be performed.\n# \n# 3. Before migrating from Couchstore to Magma, the bucket memory allocation should be upgraded to at least the minimum amount required for a Magma bucket that is 1024 MiB.\n# \n# 4. Cluster must be in a healthy state to perform this operation.\n# \n# To learn more about bucket configuration, see [Buckets](https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/buckets.html).\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

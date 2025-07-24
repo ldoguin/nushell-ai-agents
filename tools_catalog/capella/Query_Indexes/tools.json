@@ -5,7 +5,7 @@
       "Query Indexes"
     ],
     "function": {
-      "name": "post_manage_query_indexes",
+      "name": "post_managequeryindexes",
       "description": "CREATE/DROP/ALTER/BUILD primary and secondary indexes.\n# \n# To learn more about indexes please refer to the [documentation](https://docs.couchbase.com/server/current/learn/services-and-indexes/indexes/indexing-and-query-perf.html).\n# \n# It is recommended to use deferred index builds, especially for larger indexes. \n# When creating indexes in bulk, we do not recommend sending requests to create all of them at once. \n# Instead, we strongly recommend creating indexes in batches of 100 or less.\n# \n# To access this endpoint the API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "Query Indexes"
     ],
     "function": {
-      "name": "get_get_list_of_index_definitions",
+      "name": "get_listindexdefinitions",
       "description": "Get index definitions in a keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -102,7 +102,7 @@
       "Query Indexes"
     ],
     "function": {
-      "name": "get_get_index_properties",
+      "name": "get_indexdefinition",
       "description": "Get the index properties of a specified index in a keyspace.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -162,7 +162,7 @@
       "Query Indexes"
     ],
     "function": {
-      "name": "get_get_index_build_status",
+      "name": "get_indexbuildstatus",
       "description": "Monitor the build status of an index.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#   - Organization Owner\n#   - Project Owner\n#   - Database Data Reader/Writer\n#   - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

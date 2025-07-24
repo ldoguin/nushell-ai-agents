@@ -5,7 +5,7 @@
       "Organizations"
     ],
     "function": {
-      "name": "get_get_organization",
+      "name": "get_getorganizationbyid",
       "description": "Fetches the details of an organization by ID.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# - Organization Member\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# ",
       "parameters": {
         "type": "object",
@@ -29,7 +29,7 @@
       "Organizations"
     ],
     "function": {
-      "name": "put_update_organization_configuration",
+      "name": "put_putorganizationconfiguration",
       "description": "Updates an existing organization configuration. Use this endpoint to add, update, and delete network subdomains.\n# \n# Subdomains:\n# - Can have a maximum of 30 alphanumeric characters.\n# - Must be a unique string and not already in use in another tenant or organization. Empty strings are allowed.\n# - Only affect new clusters. You cannot update existing clusters to include a new subdomain.\n# - Currently only supported for AWS clusters.\n# \n# In order to access this endpoint, the provided API key must have the following role:\n# - Organization Owner\n# \n# Subdomains are not automatically available. You must contact Couchbase support to enable this feature.\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -63,7 +63,7 @@
       "Organizations"
     ],
     "function": {
-      "name": "get_list_organizations",
+      "name": "get_listorganizations",
       "description": "Returns a list of all organizations the user has access to.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Creator\n# - Organization Member\n# \n# To learn more, see [Organization Roles](https://docs.couchbase.com/cloud/organizations/organization-user-roles.html).\n# "
     }
   }

@@ -5,7 +5,7 @@
       "On/Off Schedule"
     ],
     "function": {
-      "name": "post_create_cluster_onoff_schedule",
+      "name": "post_postonoffschedule",
       "description": "This provides the means to add a new cluster on/off schedule.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "On/Off Schedule"
     ],
     "function": {
-      "name": "get_get_cluster_onoff_schedule",
+      "name": "get_getonoffschedule",
       "description": "Fetches the details of the cluster on/off schedule for the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n#  - Organization Owner\n#  - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -86,7 +86,7 @@
       "On/Off Schedule"
     ],
     "function": {
-      "name": "put_update_cluster_onoff_schedule",
+      "name": "put_putonoffschedule",
       "description": "This provides the means to update an existing cluster on/off schedule.\n# \n# In order to access this endpoint, the provided API key must have at least one of the roles referenced below:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -129,7 +129,7 @@
       "On/Off Schedule"
     ],
     "function": {
-      "name": "delete_delete_cluster_onoff_schedule",
+      "name": "delete_deleteonoffschedule",
       "description": "Deletes the cluster on/off schedule for the given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",

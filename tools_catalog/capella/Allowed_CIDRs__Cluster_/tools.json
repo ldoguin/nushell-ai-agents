@@ -5,7 +5,7 @@
       "Allowed CIDRs (Cluster)"
     ],
     "function": {
-      "name": "post_create_allowed_cidr",
+      "name": "post_postallowedcidrs",
       "description": "Adds a trusted CIDR to a cluster's list of allowed CIDRs.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# \n# Note that updating this resource is not supported; you must delete and recreate allowed CIDRs instead. As a result, ETags are also not supported for this resource.\n# ",
       "parameters": {
         "type": "object",
@@ -48,7 +48,7 @@
       "Allowed CIDRs (Cluster)"
     ],
     "function": {
-      "name": "get_list_allowed_cidrs",
+      "name": "get_listallowedcidrs",
       "description": "Lists all of the allowed CIDRs for a given cluster.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -109,7 +109,7 @@
       "Allowed CIDRs (Cluster)"
     ],
     "function": {
-      "name": "get_get_allowed_cidr",
+      "name": "get_getallowedcidrbyid",
       "description": "Fetches the details for the specified allowed CIDR.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# - Project Viewer\n# - Database Data Reader/Writer\n# - Database Data Reader\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
@@ -154,7 +154,7 @@
       "Allowed CIDRs (Cluster)"
     ],
     "function": {
-      "name": "delete_delete_allowed_cidr",
+      "name": "delete_deleteallowedcidrbyid",
       "description": "Deletes the existing allowed CIDR.\n# \n# In order to access this endpoint, the provided API key must have at least one of the following roles:\n# - Organization Owner\n# - Project Owner\n# - Project Manager\n# \n# To learn more, see [Organization, Project, and Database Access Overview](https://docs.couchbase.com/cloud/organizations/organization-projects-overview.html).\n# ",
       "parameters": {
         "type": "object",
