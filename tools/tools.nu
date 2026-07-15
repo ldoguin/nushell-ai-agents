@@ -33,7 +33,7 @@ export def calculate [$op] {
 }
 
 export def get_planet_mass [$planet] {
-    match ( $planet | str downcase ) {
+    match ( $planet | str lowercase ) {
         "earth" => 5
         "jupiter" => 1.898e27
         "mars" => 6.39e23
@@ -103,7 +103,7 @@ export def callTool [$toolCall, tool_functions] {
         print "Do you want to execute this tool call ? (y/N)"
 
         loop {
-            $key = (input listen --types [key])
+            let $key = (input listen --types [key])
             match [$key.code $key.modifiers] {
                 $keymatch if $keymatch == $keys.y => {print 'Running';break}
                 $keymatch if $keymatch == $keys.n  => {print 'Stop'; break}

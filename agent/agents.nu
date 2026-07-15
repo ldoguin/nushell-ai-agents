@@ -55,7 +55,7 @@ export def run_agent [query] {
     mut x = 0; 
     mut agent = $in
     mut next_prompt = $query
-    mut answer = null
+    mut answer: any = null
     while $x < $max_iterations {
         $x = $x + 1 
         let response = call $agent $next_prompt
@@ -72,7 +72,12 @@ export def run_agent [query] {
             }
         }
         if ( ($msg | column_exist "finish_reason") and ( $msg.finish_reason == "stop" ) ) {
-            $answer = ( $agent.messages | last ).content
+            # $agent here is still the pre-call agent object (its messages end
+            # with the system prompt) -- the assistant's reply only exists on
+            # $response.agent, appended inside `call`. Read from there instead
+            # of $agent, otherwise this returns the system prompt, not the
+            # model's actual reply.
+            $answer = ( $response.agent.messages | last ).content
             return $answer
         }
         $agent = $response.agent
