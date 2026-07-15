@@ -1,5 +1,24 @@
 use ../common/utils.nu *
 
+# callTool's shell-out target, configurable via the TOOL_SHELL environment
+# variable:
+#   - unset or "nu"   -> shell out via `nu -c "..."` (default)
+#   - "cbsh"          -> shell out via `cbsh -c "..."` (legacy/opt-in,
+#                        needed only for tool functions that call into
+#                        Couchbase Shell specifically, e.g. ask_repo /
+#                        import_git_repo)
+#   - anything else   -> treated as a tool-call-time error (same shape
+#                        `callTool` already returns for a failed shell-out),
+#                        not a silent fallback to either shell.
+def tool-shell-run [cmd: string] {
+    let shell = ($env.TOOL_SHELL? | default "nu")
+    match $shell {
+        "nu" => (^nu -c $cmd | complete)
+        "cbsh" => (^cbsh -c $cmd | complete)
+        _ => { stdout: "", stderr: $"Invalid TOOL_SHELL value '($shell)' -- must be 'nu' or 'cbsh'.", exit_code: 1 }
+    }
+}
+
 # Function Library
 export def cbsh_tool_library [] {
     let tools = open "tools/nushell/cbsh-cat-couchbase.json"
@@ -117,7 +136,7 @@ export def callTool [$toolCall, tool_functions] {
         # Act on the captured keypress from the mutable variable
         match [$key.code $key.modifiers] {
             $k if $k == $keys.y => {
-                let result_tool = ( cbsh -c ( $" source ($tool_functions);  ($functionName) ($arguments ) "  )  ) | complete
+                let result_tool = (tool-shell-run $" source ($tool_functions);  ($functionName) ($arguments ) ")
                 if ( $result_tool.exit_code == 0 ) {
                     return $result_tool.stdout
                 } else {
@@ -128,7 +147,7 @@ export def callTool [$toolCall, tool_functions] {
         }
         "Tool call has been cancelled by user"
     } else {
-        let result_tool = ( cbsh -c ( $" source ($tool_functions);  ($functionName) ($arguments ) "  )  ) | complete
+        let result_tool = (tool-shell-run $" source ($tool_functions);  ($functionName) ($arguments ) ")
         if ( $result_tool.exit_code == 0 ) {
             return $result_tool.stdout
         } else {
