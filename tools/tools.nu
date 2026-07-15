@@ -1,5 +1,4 @@
 use ../common/utils.nu *
-use cbsh.nu *
 
 # Function Library
 export def cbsh_tool_library [] {
