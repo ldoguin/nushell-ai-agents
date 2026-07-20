@@ -47,6 +47,7 @@ export def agent [ config ] {
     match $config.runtime {
         "openai" => ( build_agent { |messages| calloai $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
         "ollama" => ( build_agent { |messages| callama $config.model $messages false "api/chat" $model_tools $config.options } $system_prompt $config.tool_functions? )
+        "anthropic" => ( build_agent { |messages| call_anthropic $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
     }
 }
 
