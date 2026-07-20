@@ -31,6 +31,25 @@ OpenAI Agents will work as long as you have set your OpenAi API key.
 
 `export OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx`
 
+#### Anthropic
+
+Set `"runtime": "anthropic"` in an agent's `agents.json` entry (e.g.
+`"model": "claude-opus-4-5"`) and export your API key:
+
+`export ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxx`
+
+Tool-calling (`model_tools`/`tool_functions`) works the same way it does
+for the `openai` runtime -- `agent/model.nu`'s `call_anthropic` translates
+this repo's OpenAI-shaped messages/tools/response to and from Anthropic's
+Messages API shape, so `agent/agents.nu` and `agent/internal.nu` need no
+runtime-specific handling.
+
+Anthropic-specific request options (e.g. extended thinking --
+`{ "thinking": { "type": "enabled", "budget_tokens": 8000 } }`) can be set
+directly in the agent's `options` in `agents.json`; note Anthropic
+requires `max_tokens` to exceed `thinking.budget_tokens` and rejects
+`temperature` alongside `thinking`.
+
 #### Ollama
 
 Follow their documentation on [https://github.com/ollama/ollama/blob/main/README.md#quickstart](https://github.com/ollama/ollama/blob/main/README.md#quickstart)
