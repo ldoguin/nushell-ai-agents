@@ -164,5 +164,16 @@ export def call_anthropic [model, messages, model_tools, options] {
         "anthropic-version" "2023-06-01"
     ] --content-type "application/json")
 
+    # A non-2xx response body has a { type: "error", error: { message } }
+    # shape rather than the { content, stop_reason } shape
+    # anthropic_response_to_openai expects -- surface the actual API
+    # error message via a raised error rather than let a malformed
+    # `content`/`stop_reason` cascade into a confusing "Input type not
+    # supported"-style crash several calls downstream.
+    if ($response.body | get -o type | default "") == "error" {
+        let msg = ($response.body | get -o error.message | default "unknown error")
+        error make { msg: $"Anthropic API error: ($msg)" }
+    }
+
     anthropic_response_to_openai $response.body
 }
