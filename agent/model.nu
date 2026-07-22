@@ -1,5 +1,16 @@
 use ../common/utils.nu *
 
+# Ceiling on how long any single model completion call is allowed to take
+# before nu's http client aborts it. Without this, a stalled TCP
+# connection (e.g. a dropped connection with no server-side response)
+# hangs the calling job indefinitely, bounded only by the CI platform's
+# own job timeout (GitHub Actions' default is 6 hours) rather than
+# anything under this codebase's control. 10 minutes comfortably covers
+# normal completion latency -- including long multi-thousand-word
+# drafting/reasoning calls -- while still failing fast enough for a
+# retry loop or a human to notice well before an hours-long hang.
+const MODEL_CALL_TIMEOUT = 10min
+
 # Call local ollama API
 export def callama [$model, $messages, $stream, $endpoint, $model_tools, options] {
     let url = $"http://localhost:11434/($endpoint)" 
@@ -17,7 +28,7 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
     $url | log
     $json | log
     let jsonString = ( $json | to json )
-    let response = http post  $url  $json
+    let response = http post --max-time $MODEL_CALL_TIMEOUT $url  $json
     $response
 }
 
@@ -31,7 +42,7 @@ export def calloai [model, messages, model_tools, options] {
     };
     let json = $json | merge $options
     let jsonString = ( $json | to json )
-    let response = ( http post  -e -f $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json")
+    let response = ( http post  -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json")
     $response.body
 }
 
@@ -159,7 +170,7 @@ export def call_anthropic [model, messages, model_tools, options] {
         $json = ($json | merge $extra)
     }
 
-    let response = (http post -e -f "https://api.anthropic.com/v1/messages" $json --headers [
+    let response = (http post -e -f --max-time $MODEL_CALL_TIMEOUT "https://api.anthropic.com/v1/messages" $json --headers [
         "x-api-key" $env.ANTHROPIC_API_KEY
         "anthropic-version" "2023-06-01"
     ] --content-type "application/json")
