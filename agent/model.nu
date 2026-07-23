@@ -12,28 +12,55 @@ use ../common/utils.nu *
 const MODEL_CALL_TIMEOUT = 10min
 
 # Attempts (including the first) for a model call before giving up on a
-# transient error. 4 attempts with the backoff below spans ~1min total
-# before failing for good -- long enough to ride out a brief overload
-# spike, short enough to still fail fast compared to MODEL_CALL_TIMEOUT.
-const MAX_ATTEMPTS = 4
+# transient error. Anthropic's own overload incidents have run several
+# minutes, not seconds -- 8 attempts with the backoff below (capped at
+# 60s/step) spans up to ~5-6min of total retry sleep, long enough to ride
+# out a real overload window, while callers running inside a
+# multi-hour-budgeted CI job (see product-narrative-agent.yml's
+# timeout-minutes) can easily absorb that on top of MODEL_CALL_TIMEOUT.
+const MAX_ATTEMPTS = 8
 const RETRY_BASE_DELAY = 2sec
-const RETRY_MAX_DELAY = 30sec
+const RETRY_MAX_DELAY = 60sec
 
 # HTTP status codes worth retrying: rate limiting and server-side
 # overload/transient failures, per Anthropic's and OpenAI's own error
 # docs (429 rate_limit_error, 500 api_error, 502/503 upstream/gateway,
 # 529 overloaded_error -- the exact error a stuck product-narrative-agent
 # run hit in practice). Deliberately excludes 400/401/402/403/404/413 --
-# retrying a malformed request or bad credentials just wastes the same
-# ~1min before failing anyway, with no chance of succeeding.
+# retrying a malformed request or bad credentials just wastes time before
+# failing anyway, with no chance of succeeding.
 const RETRYABLE_STATUSES = [429 500 502 503 529]
 
-# Sleep with exponential backoff (capped at RETRY_MAX_DELAY) before the
-# next of MAX_ATTEMPTS attempts, logging why. `label` identifies which
-# runtime/error triggered it, since all three model_call closures share
-# this helper.
-def retry-backoff [attempt: int, label: string] {
-    let delay = ([($RETRY_BASE_DELAY * (2 ** ($attempt - 1))), $RETRY_MAX_DELAY] | math min)
+# Parse a `retry-after` response header (seconds, per RFC 9110 -- neither
+# Anthropic nor OpenAI use the HTTP-date variant) into a duration, if
+# present and numeric. Anthropic explicitly recommends honoring this
+# header over blind exponential backoff when it's given -- a server under
+# real sustained load knows its own recovery time better than a client's
+# guess does.
+def retry-after-delay [headers: table] {
+    let raw = ($headers | where {|h| ($h.name | str lowercase) == "retry-after" } | get -o 0.value | default "")
+    if ($raw | is-empty) {
+        return null
+    }
+    try {
+        ($raw | into int) * 1sec
+    } catch {
+        null
+    }
+}
+
+# Sleep before the next of MAX_ATTEMPTS attempts, logging why. Uses the
+# server's `retry-after` header when present (capped at RETRY_MAX_DELAY
+# so a misbehaving/huge value can't stall a job for an unreasonable
+# time), otherwise falls back to exponential backoff. `label` identifies
+# which runtime/error triggered it, since all three model_call closures
+# share this helper; `headers` is the response headers table to check
+# for `retry-after` -- omit (empty table) for network-level exceptions,
+# which have no response to read a header from.
+def retry-backoff [attempt: int, label: string, headers: table = []] {
+    let server_delay = (retry-after-delay $headers)
+    let backoff_delay = ([($RETRY_BASE_DELAY * (2 ** ($attempt - 1))), $RETRY_MAX_DELAY] | math min)
+    let delay = if $server_delay != null { ([$server_delay, $RETRY_MAX_DELAY] | math min) } else { $backoff_delay }
     print $"($label) -- retrying in ($delay) \(attempt ($attempt)/($MAX_ATTEMPTS)\)"
     sleep $delay
 }
@@ -118,7 +145,7 @@ export def calloai [model, messages, model_tools, options] {
         # so use the HTTP status itself to detect a non-2xx response.
         if ($response.status in $RETRYABLE_STATUSES) and ($attempt < $MAX_ATTEMPTS) {
             let msg = ($response.body | get -o error.message | default "unknown error")
-            retry-backoff $attempt $"OpenAI API error \(HTTP ($response.status)\): ($msg)"
+            retry-backoff $attempt $"OpenAI API error \(HTTP ($response.status)\): ($msg)" $response.headers.response
             continue
         }
 
@@ -288,7 +315,7 @@ export def call_anthropic [model, messages, model_tools, options] {
         if ($response.body | get -o type | default "") == "error" {
             let msg = ($response.body | get -o error.message | default "unknown error")
             if ($response.status in $RETRYABLE_STATUSES) and ($attempt < $MAX_ATTEMPTS) {
-                retry-backoff $attempt $"Anthropic API error \(HTTP ($response.status)\): ($msg)"
+                retry-backoff $attempt $"Anthropic API error \(HTTP ($response.status)\): ($msg)" $response.headers.response
                 continue
             }
             error make { msg: $"Anthropic API error: ($msg)" }
