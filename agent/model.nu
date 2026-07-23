@@ -11,6 +11,33 @@ use ../common/utils.nu *
 # retry loop or a human to notice well before an hours-long hang.
 const MODEL_CALL_TIMEOUT = 10min
 
+# Attempts (including the first) for a model call before giving up on a
+# transient error. 4 attempts with the backoff below spans ~1min total
+# before failing for good -- long enough to ride out a brief overload
+# spike, short enough to still fail fast compared to MODEL_CALL_TIMEOUT.
+const MAX_ATTEMPTS = 4
+const RETRY_BASE_DELAY = 2sec
+const RETRY_MAX_DELAY = 30sec
+
+# HTTP status codes worth retrying: rate limiting and server-side
+# overload/transient failures, per Anthropic's and OpenAI's own error
+# docs (429 rate_limit_error, 500 api_error, 502/503 upstream/gateway,
+# 529 overloaded_error -- the exact error a stuck product-narrative-agent
+# run hit in practice). Deliberately excludes 400/401/402/403/404/413 --
+# retrying a malformed request or bad credentials just wastes the same
+# ~1min before failing anyway, with no chance of succeeding.
+const RETRYABLE_STATUSES = [429 500 502 503 529]
+
+# Sleep with exponential backoff (capped at RETRY_MAX_DELAY) before the
+# next of MAX_ATTEMPTS attempts, logging why. `label` identifies which
+# runtime/error triggered it, since all three model_call closures share
+# this helper.
+def retry-backoff [attempt: int, label: string] {
+    let delay = ([($RETRY_BASE_DELAY * (2 ** ($attempt - 1))), $RETRY_MAX_DELAY] | math min)
+    print $"($label) -- retrying in ($delay) \(attempt ($attempt)/($MAX_ATTEMPTS)\)"
+    sleep $delay
+}
+
 # Call local ollama API
 export def callama [$model, $messages, $stream, $endpoint, $model_tools, options] {
     let url = $"http://localhost:11434/($endpoint)" 
@@ -28,8 +55,31 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
     $url | log
     $json | log
     let jsonString = ( $json | to json )
-    let response = http post --max-time $MODEL_CALL_TIMEOUT $url  $json
-    $response
+
+    mut attempt = 0
+    loop {
+        $attempt = $attempt + 1
+
+        let outcome = (try {
+            { kind: "response", response: (http post --max-time $MODEL_CALL_TIMEOUT $url  $json) }
+        } catch {|e|
+            # Most common case locally: ollama still loading the model
+            # into memory refuses connections briefly right after
+            # startup -- worth a couple of retries rather than failing
+            # the whole run over a few seconds of startup lag.
+            { kind: "exception", error: $e }
+        })
+
+        if $outcome.kind == "exception" {
+            if $attempt >= $MAX_ATTEMPTS {
+                error make { msg: $"Ollama request error: request failed after ($MAX_ATTEMPTS) attempts: ($outcome.error.msg)" }
+            }
+            retry-backoff $attempt $"Ollama request error: ($outcome.error.msg)"
+            continue
+        }
+
+        return $outcome.response
+    }
 }
 
 # Call openai api
@@ -42,8 +92,38 @@ export def calloai [model, messages, model_tools, options] {
     };
     let json = $json | merge $options
     let jsonString = ( $json | to json )
-    let response = ( http post  -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json")
-    $response.body
+
+    mut attempt = 0
+    loop {
+        $attempt = $attempt + 1
+
+        let outcome = (try {
+            let response = ( http post  -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json")
+            { kind: "response", response: $response }
+        } catch {|e|
+            { kind: "exception", error: $e }
+        })
+
+        if $outcome.kind == "exception" {
+            if $attempt >= $MAX_ATTEMPTS {
+                error make { msg: $"OpenAI API error: request failed after ($MAX_ATTEMPTS) attempts: ($outcome.error.msg)" }
+            }
+            retry-backoff $attempt $"OpenAI request error: ($outcome.error.msg)"
+            continue
+        }
+
+        let response = $outcome.response
+        # OpenAI's error body shape is { error: { message, type, code } }
+        # with no top-level "type": "error" marker (unlike Anthropic's),
+        # so use the HTTP status itself to detect a non-2xx response.
+        if ($response.status in $RETRYABLE_STATUSES) and ($attempt < $MAX_ATTEMPTS) {
+            let msg = ($response.body | get -o error.message | default "unknown error")
+            retry-backoff $attempt $"OpenAI API error \(HTTP ($response.status)\): ($msg)"
+            continue
+        }
+
+        return $response.body
+    }
 }
 
 # Translate an OpenAI-style tools.json entry list
@@ -170,21 +250,50 @@ export def call_anthropic [model, messages, model_tools, options] {
         $json = ($json | merge $extra)
     }
 
-    let response = (http post -e -f --max-time $MODEL_CALL_TIMEOUT "https://api.anthropic.com/v1/messages" $json --headers [
-        "x-api-key" $env.ANTHROPIC_API_KEY
-        "anthropic-version" "2023-06-01"
-    ] --content-type "application/json")
+    mut attempt = 0
+    loop {
+        $attempt = $attempt + 1
 
-    # A non-2xx response body has a { type: "error", error: { message } }
-    # shape rather than the { content, stop_reason } shape
-    # anthropic_response_to_openai expects -- surface the actual API
-    # error message via a raised error rather than let a malformed
-    # `content`/`stop_reason` cascade into a confusing "Input type not
-    # supported"-style crash several calls downstream.
-    if ($response.body | get -o type | default "") == "error" {
-        let msg = ($response.body | get -o error.message | default "unknown error")
-        error make { msg: $"Anthropic API error: ($msg)" }
+        let outcome = (try {
+            let response = (http post -e -f --max-time $MODEL_CALL_TIMEOUT "https://api.anthropic.com/v1/messages" $json --headers [
+                "x-api-key" $env.ANTHROPIC_API_KEY
+                "anthropic-version" "2023-06-01"
+            ] --content-type "application/json")
+            { kind: "response", response: $response }
+        } catch {|e|
+            # A stalled/refused connection, DNS failure, or --max-time
+            # abort raises here rather than returning a response record
+            # -- e.g. the same class of failure MODEL_CALL_TIMEOUT is
+            # meant to bound, just retried a few times first in case it
+            # was a momentary blip rather than a real outage.
+            { kind: "exception", error: $e }
+        })
+
+        if $outcome.kind == "exception" {
+            if $attempt >= $MAX_ATTEMPTS {
+                error make { msg: $"Anthropic API error: request failed after ($MAX_ATTEMPTS) attempts: ($outcome.error.msg)" }
+            }
+            retry-backoff $attempt $"Anthropic request error: ($outcome.error.msg)"
+            continue
+        }
+
+        let response = $outcome.response
+
+        # A non-2xx response body has a { type: "error", error: { message } }
+        # shape rather than the { content, stop_reason } shape
+        # anthropic_response_to_openai expects -- surface the actual API
+        # error message via a raised error rather than let a malformed
+        # `content`/`stop_reason` cascade into a confusing "Input type not
+        # supported"-style crash several calls downstream.
+        if ($response.body | get -o type | default "") == "error" {
+            let msg = ($response.body | get -o error.message | default "unknown error")
+            if ($response.status in $RETRYABLE_STATUSES) and ($attempt < $MAX_ATTEMPTS) {
+                retry-backoff $attempt $"Anthropic API error \(HTTP ($response.status)\): ($msg)"
+                continue
+            }
+            error make { msg: $"Anthropic API error: ($msg)" }
+        }
+
+        return (anthropic_response_to_openai $response.body)
     }
-
-    anthropic_response_to_openai $response.body
 }
