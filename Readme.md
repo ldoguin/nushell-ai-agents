@@ -91,6 +91,33 @@ Follow their documentation on [https://github.com/ollama/ollama/blob/main/README
 
 Make sure you have pulled models used by your agents first, and that your server is running on _localhost:11434_.
 
+### Observability (OpenTelemetry)
+
+`agent/common/otel.nu` sends real OTLP/HTTP+protobuf traces -- one span per
+model call (`gen_ai.chat`, with token usage), one per agent run/iteration
+(`agent.run`/`agent.iteration`), and one per tool call (`execute_tool
+<name>`, per [OpenTelemetry's GenAI semantic
+conventions](https://github.com/open-telemetry/semantic-conventions-genai)).
+Off by default in the sense that a down/unreachable collector never blocks
+or fails a real call -- point it at a real one to actually see anything:
+
+```sh
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318  # default if unset
+export OTEL_EXPORTER_OTLP_HEADERS=x-api-key=abc,x-team=obs # optional, "k=v,k2=v2"
+export OTEL_SERVICE_NAME=authoring-pipeline                # default if unset
+```
+
+Tool call arguments/results (`gen_ai.tool.call.arguments`/
+`gen_ai.tool.call.result`) are opt-in, since the semantic conventions flag
+both as possibly sensitive:
+
+```sh
+export OTEL_CAPTURE_TOOL_CONTENT=true
+```
+
+Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
+(a local dev collector) and Arize Phoenix (a real external one, protobuf-only).
+
 ### Tools
 
 #### Couchbase Shell
