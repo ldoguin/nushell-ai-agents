@@ -1,4 +1,5 @@
 use ../common/utils.nu *
+use ../common/otel.nu *
 
 # Ceiling on how long any single model completion call is allowed to take
 # before nu's http client aborts it. Without this, a stalled TCP
@@ -65,6 +66,38 @@ def retry-backoff [attempt: int, label: string, headers: table = []] {
     sleep $delay
 }
 
+# Normalizes each provider's differently-shaped token-usage field into
+# OpenAI's {prompt_tokens, completion_tokens, total_tokens} naming -- the
+# convention every other part of this file already normalizes responses
+# toward. Anthropic's Messages API and Bedrock's Converse API both discard
+# usage today before this existed (translated away by
+# anthropic_response_to_openai/converse_response_to_openai below, which
+# only ever read content/stop_reason) -- this fixes that as a side effect
+# of adding it once here, rather than duplicating token-usage extraction
+# in all four provider functions individually.
+def normalize-usage [runtime: string, raw: record] {
+    match $runtime {
+        "anthropic" => {
+            prompt_tokens: ($raw | get -o usage.input_tokens | default 0)
+            completion_tokens: ($raw | get -o usage.output_tokens | default 0)
+            total_tokens: (($raw | get -o usage.input_tokens | default 0) + ($raw | get -o usage.output_tokens | default 0))
+        }
+        "bedrock" => {
+            prompt_tokens: ($raw | get -o usage.inputTokens | default 0)
+            completion_tokens: ($raw | get -o usage.outputTokens | default 0)
+            total_tokens: ($raw | get -o usage.totalTokens | default 0)
+        }
+        # Ollama's /api/chat has no `usage` object at all -- these two
+        # top-level fields are its equivalent.
+        "ollama" => {
+            prompt_tokens: ($raw | get -o prompt_eval_count | default 0)
+            completion_tokens: ($raw | get -o eval_count | default 0)
+            total_tokens: (($raw | get -o prompt_eval_count | default 0) + ($raw | get -o eval_count | default 0))
+        }
+        _ => ($raw | get -o usage | default { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 })  # openai: already OpenAI-shaped
+    }
+}
+
 # Call local ollama API
 export def callama [$model, $messages, $stream, $endpoint, $model_tools, options] {
     let url = $"http://localhost:11434/($endpoint)" 
@@ -105,7 +138,7 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
             continue
         }
 
-        return $outcome.response
+        return ($outcome.response | upsert usage (normalize-usage "ollama" $outcome.response) | upsert retry_attempts $attempt)
     }
 }
 
@@ -149,7 +182,7 @@ export def calloai [model, messages, model_tools, options] {
             continue
         }
 
-        return $response.body
+        return ($response.body | upsert usage (normalize-usage "openai" $response.body) | upsert retry_attempts $attempt)
     }
 }
 
@@ -244,6 +277,222 @@ def anthropic_response_to_openai [response: record] {
     { choices: [{ message: $message, finish_reason: $finish_reason }] }
 }
 
+# Translate an OpenAI-style tools.json entry list into Bedrock Converse's
+# toolConfig.tools shape ([{toolSpec:{name,description,inputSchema:{json}}}]).
+def openai_tools_to_converse [model_tools: list] {
+    $model_tools | each {|t|
+        {
+            toolSpec: {
+                name: $t.function.name
+                description: ($t.function | get -o description | default "")
+                inputSchema: { json: $t.function.parameters }
+            }
+        }
+    }
+}
+
+# Translate this repo's OpenAI-shaped message list into Bedrock Converse's
+# { system, messages } request shape -- the same translation
+# openai_messages_to_anthropic does for Anthropic's Messages API, adapted
+# to Converse's own block shapes:
+#   - system-role message(s) become the top-level `system` field, a list
+#     of {text} blocks (Converse's system field is a block list, not the
+#     plain string Anthropic's Messages API takes)
+#   - "tool"-role messages become user-role toolResult blocks
+#   - assistant messages carrying `tool_calls` get their toolUse blocks
+#     rebuilt from those entries
+#   - adjacent entries mapping to the same Converse role are merged into
+#     one message, since Converse rejects two consecutive same-role
+#     messages the same way Anthropic's Messages API does
+def openai_messages_to_converse [messages: list] {
+    let system_text = ($messages | where role == "system" | get content | str join "\n\n")
+    let system = (if ($system_text | is-empty) { [] } else { [{ text: $system_text }] })
+    let converted = ($messages | where role != "system" | each {|m|
+        match $m.role {
+            "tool" => {
+                role: "user"
+                content: [{
+                    toolResult: {
+                        toolUseId: ($m | get -o tool_call_id | default ($m | get -o id | default ""))
+                        content: [{ text: ($m | get -o content | default "") }]
+                    }
+                }]
+            }
+            "assistant" => (
+                if ($m | get -o tool_calls | default [] | is-not-empty) {
+                    let text_blocks = (if ($m | get -o content | default "" | is-empty) { [] } else { [{ text: $m.content }] })
+                    let tool_blocks = ($m.tool_calls | each {|tc| { toolUse: { toolUseId: $tc.id, name: $tc.function.name, input: ($tc.function.arguments | from json) } } })
+                    { role: "assistant", content: ($text_blocks | append $tool_blocks) }
+                } else {
+                    { role: "assistant", content: [{ text: ($m | get -o content | default "") }] }
+                }
+            )
+            _ => { role: "user", content: [{ text: ($m | get -o content | default "") }] }
+        }
+    })
+
+    mut merged = []
+    for m in $converted {
+        if ($merged | is-not-empty) and (($merged | last).role == $m.role) {
+            let prev = ($merged | last)
+            $merged = ($merged | drop 1 | append { role: $m.role, content: ($prev.content | append $m.content) })
+        } else {
+            $merged = ($merged | append $m)
+        }
+    }
+    { system: $system, messages: $merged }
+}
+
+# Translate Bedrock Converse's { output: { message: { content } },
+# stopReason } response shape back into an OpenAI-shaped
+# { choices: [{ message, finish_reason }] } response -- the same contract
+# anthropic_response_to_openai produces, so every downstream consumer
+# (agent/internal.nu's execute/call, run_agent's ReAct loop) stays
+# runtime-agnostic regardless of provider.
+def converse_response_to_openai [response: record] {
+    let blocks = ($response | get -o output.message.content | default [])
+    let text = ($blocks | where {|b| ($b | get -o text | default null) != null } | get -o text | default [] | str join "")
+    let tool_use_blocks = ($blocks | where {|b| ($b | get -o toolUse | default null) != null } | get toolUse)
+    let finish_reason = (match ($response | get -o stopReason | default "") {
+        "tool_use" => "tool_calls"
+        "max_tokens" => "length"
+        _ => "stop"
+    })
+
+    mut message = { role: "assistant", content: (if ($text | is-empty) { null } else { $text }) }
+    if ($tool_use_blocks | is-not-empty) {
+        let tool_calls = ($tool_use_blocks | each {|b| { id: $b.toolUseId, type: "function", function: { name: $b.name, arguments: ($b.input | to json) } } })
+        $message = ($message | insert tool_calls $tool_calls)
+    }
+
+    { choices: [{ message: $message, finish_reason: $finish_reason }] }
+}
+
+# http post's own error message for anything raised before a response is
+# received (dropped connection, TLS failure, DNS, but ALSO a malformed
+# request the HTTP client itself refuses to send, e.g. a header value
+# containing a stray newline) is a generic "Network failure" string --
+# nu's ShellError::NetworkFailure display, shared across every one of
+# those cases. That's misleading enough to cost real debugging time: an
+# 8-attempt exponential-backoff retry loop treating a non-transient,
+# guaranteed-to-repeat request-construction error (like a corrupted
+# bearer token containing a trailing newline -- confirmed live, see
+# ldoguin/nushell-ai-agents#9) as if it might be a flaky connection.
+# The actually-useful detail nu's http client attaches (e.g. "protocol:
+# authorization header is not a string") lives in the error's `json`
+# field's first label, not `.msg` -- pull it out so retry-backoff/the
+# final error message says the real thing instead of "Network failure"
+# eight times in a row.
+def bedrock-exception-detail [e: record] {
+    let label = (try {
+        ($e | get -o json | default "" | from json | get -o labels.0.text | default "")
+    } catch { "" })
+    if ($label | is-not-empty) and ($label != $e.msg) {
+        $"($e.msg) -- ($label)"
+    } else {
+        $e.msg
+    }
+}
+
+# Call Amazon Bedrock's Converse API using a Bedrock API key (a bearer
+# token, generated in the Bedrock console) rather than IAM SigV4 request
+# signing -- this keeps the call a plain HTTPS POST shaped like
+# call_anthropic/calloai instead of needing the AWS CLI or a hand-rolled
+# signing implementation. Converse is Bedrock's provider-agnostic
+# inference API (unlike InvokeModel, whose request/response body is
+# different for every model family), so this one function covers any
+# model Bedrock hosts. Shares calloai/callama/call_anthropic's
+# OpenAI-shaped request/response contract -- see
+# openai_messages_to_converse / converse_response_to_openai above for the
+# translation this requires.
+#
+# `model` is a Bedrock model ID or cross-region inference profile ID
+# (e.g. "us.anthropic.claude-opus-4-5-20250929-v1:0" -- on-demand
+# "serverless" usage of Anthropic's newer models on Bedrock requires the
+# inference-profile form, not the bare model ID). Requires
+# $env.AWS_BEARER_TOKEN_BEDROCK (a Bedrock API key) and $env.AWS_REGION
+# (or $env.AWS_DEFAULT_REGION, the AWS CLI/SDKs' own fallback var).
+export def call_bedrock [model, messages, model_tools, options] {
+    # AWS_REGION takes precedence over AWS_DEFAULT_REGION when both are
+    # set, matching the AWS CLI/SDKs' own resolution order.
+    mut region = ($env.AWS_REGION? | default "")
+    if ($region | is-empty) {
+        $region = ($env.AWS_DEFAULT_REGION? | default "")
+    }
+    if ($region | is-empty) {
+        error make { msg: "Bedrock API error: neither AWS_REGION nor AWS_DEFAULT_REGION is set" }
+    }
+    if ($env.AWS_BEARER_TOKEN_BEDROCK? | default "" | is-empty) {
+        error make { msg: "Bedrock API error: AWS_BEARER_TOKEN_BEDROCK is not set" }
+    }
+
+    let translated = (openai_messages_to_converse $messages)
+    let bedrock_tools = (if ($model_tools | is-empty) { [] } else { openai_tools_to_converse $model_tools })
+
+    mut inference_config = { maxTokens: ($options | get -o max_tokens | default 4096) }
+    let temperature = ($options | get -o temperature | default null)
+    if $temperature != null {
+        $inference_config = ($inference_config | insert temperature $temperature)
+    }
+
+    mut json = {
+        messages: $translated.messages
+        inferenceConfig: $inference_config
+    }
+    if ($translated.system | is-not-empty) {
+        $json = ($json | insert system $translated.system)
+    }
+    if ($bedrock_tools | is-not-empty) {
+        $json = ($json | insert toolConfig { tools: $bedrock_tools })
+    }
+    # additionalModelRequestFields is Converse's passthrough for
+    # model-specific fields Converse itself doesn't standardize --
+    # notably Anthropic's `thinking` (extended-thinking budget), the
+    # same field the direct Anthropic Messages API takes at the top
+    # level. See translate-bedrock-options in .github/scripts/agents/engine.nu.
+    let additional_fields = ($options | get -o additionalModelRequestFields | default {})
+    if ($additional_fields | is-not-empty) {
+        $json = ($json | insert additionalModelRequestFields $additional_fields)
+    }
+
+    let url = $"https://bedrock-runtime.($region).amazonaws.com/model/($model | url encode)/converse"
+
+    mut attempt = 0
+    loop {
+        $attempt = $attempt + 1
+
+        let outcome = (try {
+            let response = (http post -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers [
+                "Authorization" $"Bearer ($env.AWS_BEARER_TOKEN_BEDROCK)"
+            ] --content-type "application/json")
+            { kind: "response", response: $response }
+        } catch {|e|
+            { kind: "exception", error: (bedrock-exception-detail $e) }
+        })
+
+        if $outcome.kind == "exception" {
+            if $attempt >= $MAX_ATTEMPTS {
+                error make { msg: $"Bedrock API error: request failed after ($MAX_ATTEMPTS) attempts: ($outcome.error)" }
+            }
+            retry-backoff $attempt $"Bedrock request error: ($outcome.error)"
+            continue
+        }
+
+        let response = $outcome.response
+
+        if ($response.status >= 300) {
+            let msg = ($response.body | get -o message | default ($response.body | get -o Message | default "unknown error"))
+            if ($response.status in $RETRYABLE_STATUSES) and ($attempt < $MAX_ATTEMPTS) {
+                retry-backoff $attempt $"Bedrock API error \(HTTP ($response.status)\): ($msg)" $response.headers.response
+                continue
+            }
+            error make { msg: $"Bedrock API error: ($msg)" }
+        }
+
+        return ((converse_response_to_openai $response.body) | upsert usage (normalize-usage "bedrock" $response.body) | upsert retry_attempts $attempt)
+    }
+}
+
 # Call Anthropic's Messages API. Shares calloai/callama's OpenAI-shaped
 # request/response contract (an OpenAI-style { messages, model_tools,
 # options } record in, an OpenAI-shaped chat-completion response out) so
@@ -321,6 +570,6 @@ export def call_anthropic [model, messages, model_tools, options] {
             error make { msg: $"Anthropic API error: ($msg)" }
         }
 
-        return (anthropic_response_to_openai $response.body)
+        return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert retry_attempts $attempt)
     }
 }

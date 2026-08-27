@@ -50,11 +50,90 @@ directly in the agent's `options` in `agents.json`; note Anthropic
 requires `max_tokens` to exceed `thinking.budget_tokens` and rejects
 `temperature` alongside `thinking`.
 
+#### Amazon Bedrock
+
+Set `"runtime": "bedrock"` in an agent's `agents.json` entry, with `"model"`
+set to a Bedrock model ID or cross-region inference profile ID -- on-demand/
+"serverless" usage of Anthropic's newer models on Bedrock requires the
+inference-profile form, not the bare model ID. The same Claude models this
+repo's `anthropic` runtime uses are available on Bedrock too, e.g. (verified
+live against a `us-west-2` account):
+
+- `us.anthropic.claude-haiku-4-5-20251001-v1:0`
+- `us.anthropic.claude-sonnet-4-5-20250929-v1:0`
+- `us.anthropic.claude-opus-4-5-20251101-v1:0`
+
+Export a
+[Bedrock API key](https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html)
+(a bearer token generated in the Bedrock console) plus the region it's
+scoped to (`AWS_DEFAULT_REGION`, the AWS CLI/SDKs' own standard var, works
+too -- `AWS_REGION` just takes precedence when both are set):
+
+```sh
+export AWS_BEARER_TOKEN_BEDROCK=bedrock-api-key-xxxxxxxxxxxxxxxxxxxx
+export AWS_REGION=us-east-1
+```
+
+This avoids IAM SigV4 request signing entirely -- `agent/model.nu`'s
+`call_bedrock` is a plain HTTPS call to Bedrock's Converse API with an
+`Authorization: Bearer` header, shaped like `call_anthropic`/`calloai`
+rather than needing the AWS CLI or an AWS SDK. Converse is
+provider-agnostic across every model Bedrock hosts, so tool-calling
+(`model_tools`/`tool_functions`) works the same way it does for the other
+runtimes -- `call_bedrock` translates this repo's OpenAI-shaped
+messages/tools/response convention to and from Converse's shape, so
+`agent/agents.nu` and `agent/internal.nu` need no runtime-specific
+handling.
+
 #### Ollama
 
 Follow their documentation on [https://github.com/ollama/ollama/blob/main/README.md#quickstart](https://github.com/ollama/ollama/blob/main/README.md#quickstart)
 
 Make sure you have pulled models used by your agents first, and that your server is running on _localhost:11434_.
+
+### Observability (OpenTelemetry)
+
+`agent/common/otel.nu` sends real OTLP/HTTP+protobuf traces -- one span per
+model call (`gen_ai.chat`, with token usage), one per agent run/iteration
+(`agent.run`/`agent.iteration`), and one per tool call (`execute_tool
+<name>`, per [OpenTelemetry's GenAI semantic
+conventions](https://github.com/open-telemetry/semantic-conventions-genai)).
+Off by default in the sense that a down/unreachable collector never blocks
+or fails a real call -- point it at a real one to actually see anything:
+
+```sh
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318  # default if unset
+export OTEL_EXPORTER_OTLP_HEADERS=x-api-key=abc,x-team=obs # optional, "k=v,k2=v2"
+export OTEL_SERVICE_NAME=authoring-pipeline                # default if unset
+```
+
+Tool call arguments/results (`gen_ai.tool.call.arguments`/
+`gen_ai.tool.call.result`) are opt-in, since the semantic conventions flag
+both as possibly sensitive:
+
+```sh
+export OTEL_CAPTURE_TOOL_CONTENT=true
+```
+
+Each `gen_ai.chat` span also emits three GenAI metrics (OTLP/HTTP+protobuf to
+`<endpoint>/v1/metrics`) as OTel's required Histogram instrument type:
+`gen_ai.client.token.usage` (once per token type, `gen_ai.token.type` =
+`input`/`output`) and `gen_ai.client.operation.duration` (seconds), all
+tagged with `gen_ai.operation.name`/`gen_ai.provider.name`/
+`gen_ai.request.model`. A `retry_count` attribute (from each provider
+function's own retry loop) rides on the span alongside the existing token
+counts. If the underlying model call fails after exhausting its retries, the
+span is still ended (status ERROR, `error.type`) instead of being silently
+dropped -- the original error still propagates to the caller unchanged.
+
+When run inside GitHub Actions, every span's resource picks up
+`cicd.pipeline.name`/`cicd.pipeline.run.id`/`cicd.pipeline.run.url.full`/
+`vcs.repository.name`/`vcs.ref.head.name` automatically from the standard
+`GITHUB_*` environment variables Actions itself sets -- no configuration
+needed, and these stay absent for local runs.
+
+Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
+(a local dev collector) and Arize Phoenix (a real external one, protobuf-only).
 
 ### Tools
 
