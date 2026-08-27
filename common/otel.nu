@@ -64,6 +64,17 @@ def now-ns [] {
     date now | date to-timezone GMT | into int
 }
 
+# Gates capturing tool-call arguments/results as span attributes -- opt-in
+# via $env.OTEL_CAPTURE_TOOL_CONTENT ("true"/"1"/"yes"), off by default.
+# OTel's own gen_ai.tool.call.arguments/gen_ai.tool.call.result attributes
+# are explicitly flagged in the semantic conventions as "may contain
+# sensitive information" (tool inputs/outputs can carry anything a prompt
+# or a tool's data source does), so this defaults to NOT recording them
+# rather than opting every deployment in silently.
+export def otel-capture-tool-content [] {
+    ($env.OTEL_CAPTURE_TOOL_CONTENT? | default "" | str lowercase) in ["true" "1" "yes"]
+}
+
 # ============================================================================
 # Protobuf wire format -- varints, tags, length-delimited fields. Each
 # "message builder" below (pb-span, pb-resource, etc.) returns the raw
