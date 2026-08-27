@@ -435,3 +435,85 @@ export def otel-record-counter [name: string, unit: string, value: float = 1.0, 
         print $"::warning::otel-record-counter \(($name)\) failed to send: ($e.msg)"
     }
 }
+
+# ============================================================================
+# Logs signal -- exists specifically to replace this pipeline's old habit of
+# writing per-call debug output (e.g. the full raw model response) to files
+# under logs/, which never survive an ephemeral CI runner once the job ends.
+# Sending it here instead means it lands wherever OTEL_EXPORTER_OTLP_ENDPOINT
+# already points -- the same durable destination every span/metric in this
+# module already relies on -- and, when a span_ctx is given, shows up
+# correlated with the exact span it came from instead of as a same-named
+# file a human has to match up by hand.
+# ============================================================================
+
+# LogRecord (logs.proto): time_unix_nano=1, severity_number=2, severity_text=3,
+# body=5 (AnyValue), attributes=6, trace_id=9 (bytes), span_id=10 (bytes) --
+# field numbers verified directly against the proto source, same discipline
+# as every other message in this file. trace_id/span_id are only written
+# when a real span_ctx was given -- an absent/invalid trace_id or span_id
+# is how the spec says "not associated with a trace/span", same rule that
+# governs a root span's absent parent_span_id elsewhere in this module.
+def pb-log-record [rec: record] {
+    mut payload = 0x[]
+    $payload = $payload ++ (pb-fixed64-field 1 $rec.time_ns)
+    $payload = $payload ++ (pb-varint-field 2 $rec.severity_number)
+    $payload = $payload ++ (pb-string 3 $rec.severity_text)
+    $payload = $payload ++ (pb-message 5 (pb-any-value-payload $rec.body))
+    $payload = $payload ++ (pb-attributes-fields 6 ($rec.attrs | default {}))
+    if ($rec.trace_id? | default null) != null {
+        $payload = $payload ++ (pb-bytes 9 ($rec.trace_id | decode hex))
+    }
+    if ($rec.span_id? | default null) != null {
+        $payload = $payload ++ (pb-bytes 10 ($rec.span_id | decode hex))
+    }
+    $payload
+}
+
+def build-export-logs-request [log_record_payload: binary, service_name: string] {
+    let scope_logs_payload = (pb-message 1 (pb-instrumentation-scope "authoring-pipeline.nu" "0.1.0")) ++ (pb-message 2 $log_record_payload)
+    let resource_logs_payload = (pb-message 1 (pb-resource $service_name)) ++ (pb-message 2 $scope_logs_payload)
+    pb-message 1 $resource_logs_payload
+}
+
+# "debug"/"info"/"warn"/"error"/"fatal" -> OTel's SeverityNumber, per the
+# Log Data Model spec's own enum (INFO=9, WARN=13, ERROR=17, DEBUG=5,
+# FATAL=21) -- an unrecognized value defaults to INFO rather than erroring,
+# since severity here is advisory (filtering/color in a UI), not something
+# that should ever block a send.
+def otel-severity-number [severity: string] {
+    match ($severity | str lowercase) {
+        "debug" => 5
+        "warn" => 13
+        "warning" => 13
+        "error" => 17
+        "fatal" => 21
+        _ => 9
+    }
+}
+
+# Sends one OTLP log record. `span_ctx` (a {trace_id, span_id} record, e.g.
+# the same value otel-start-span returns) correlates this log with a
+# specific span when given; omit it (default {}) for a standalone log with
+# no trace association. Same fail-open/best-effort guarantee as every other
+# send in this module.
+export def otel-send-log [body: string, attrs: record = {}, severity: string = "info", span_ctx: record = {}] {
+    try {
+        let cfg = (otel-config)
+        let rec = {
+            time_ns: (now-ns)
+            severity_number: (otel-severity-number $severity)
+            severity_text: ($severity | str uppercase)
+            body: $body
+            attrs: $attrs
+            trace_id: ($span_ctx | get -o trace_id | default null)
+            span_id: ($span_ctx | get -o span_id | default null)
+        }
+        let payload = (pb-log-record $rec)
+        let body_req = (build-export-logs-request $payload $cfg.service)
+        let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
+        http post -H $headers $"($cfg.endpoint)/v1/logs" $body_req
+    } catch {|e|
+        print $"::warning::otel-send-log failed to send: ($e.msg)"
+    }
+}

@@ -150,6 +150,17 @@ linear parent/child sequence (`logs/.otel-parent-span-id`, alongside the
 existing `logs/.otel-trace-id`), rather than each being an unrelated
 root-level span that only shares a trace ID.
 
+`execute []` also sends an OTLP log record (`otel-send-log`, `/v1/logs`)
+correlated to its `gen_ai.chat` span, carrying the full raw model response.
+This **replaces** the old behavior of dumping that same response to a file
+under `logs/` on every call -- those files never survived an ephemeral CI
+runner once the job ended, whereas the log record lands wherever
+`OTEL_EXPORTER_OTLP_ENDPOINT` already points, alongside the exact span it
+belongs to. Set `AGENT_LOG=true` to also print it locally (useful when no
+collector is running); this carries the same content-sensitivity profile
+the old log files always had, just persisted centrally instead of on local
+disk.
+
 Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
 (a local dev collector) and Arize Phoenix (a real external one, protobuf-only).
 

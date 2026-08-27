@@ -116,7 +116,6 @@ export def execute [] {
         otel-end-span $span { "error.type": "_OTHER" } $e.msg [(otel-exception-event "_OTHER" $e.msg)]
         error make { msg: $e.msg }
     })
-    let save_path = new_logfile
     # Only get the first choice when model propose different choices
     if ( $result | column_exist "choices" ) {
         let choice0 = $result.choices.0
@@ -141,7 +140,16 @@ export def execute [] {
         "retry_count": $retry_count
     }
 
-    $result | to json | save $"logs/($save_path)"
+    # Replaces the old per-call file dump (logs/<counter>-<uuid>) -- those
+    # files never survived an ephemeral CI runner once the job ended.
+    # Sending this as a log record correlated to $span means it lands
+    # wherever OTEL_EXPORTER_OTLP_ENDPOINT already points, alongside the
+    # gen_ai.chat span it belongs to, instead of a file a human had to
+    # match up by timestamp after the fact.
+    otel-send-log ($result | to json) { "gen_ai.operation.name": "chat", "gen_ai.provider.name": $otel_provider, "gen_ai.request.model": $otel_model } "info" { trace_id: $span.trace_id, span_id: $span.span_id }
+    if ($env.AGENT_LOG? != null and ( $env.AGENT_LOG | into bool ) ) {
+        print ($result | to json)
+    }
     $result
 }
 
