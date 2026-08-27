@@ -351,10 +351,17 @@ def converse_response_to_openai [response: record] {
 # (e.g. "us.anthropic.claude-opus-4-5-20250929-v1:0" -- on-demand
 # "serverless" usage of Anthropic's newer models on Bedrock requires the
 # inference-profile form, not the bare model ID). Requires
-# $env.AWS_BEARER_TOKEN_BEDROCK (a Bedrock API key) and $env.AWS_REGION.
+# $env.AWS_BEARER_TOKEN_BEDROCK (a Bedrock API key) and $env.AWS_REGION
+# (or $env.AWS_DEFAULT_REGION, the AWS CLI/SDKs' own fallback var).
 export def call_bedrock [model, messages, model_tools, options] {
-    if ($env.AWS_REGION? | default "" | is-empty) {
-        error make { msg: "Bedrock API error: AWS_REGION is not set" }
+    # AWS_REGION takes precedence over AWS_DEFAULT_REGION when both are
+    # set, matching the AWS CLI/SDKs' own resolution order.
+    mut region = ($env.AWS_REGION? | default "")
+    if ($region | is-empty) {
+        $region = ($env.AWS_DEFAULT_REGION? | default "")
+    }
+    if ($region | is-empty) {
+        error make { msg: "Bedrock API error: neither AWS_REGION nor AWS_DEFAULT_REGION is set" }
     }
     if ($env.AWS_BEARER_TOKEN_BEDROCK? | default "" | is-empty) {
         error make { msg: "Bedrock API error: AWS_BEARER_TOKEN_BEDROCK is not set" }
@@ -380,7 +387,7 @@ export def call_bedrock [model, messages, model_tools, options] {
         $json = ($json | insert toolConfig { tools: $bedrock_tools })
     }
 
-    let url = $"https://bedrock-runtime.($env.AWS_REGION).amazonaws.com/model/($model | url encode)/converse"
+    let url = $"https://bedrock-runtime.($region).amazonaws.com/model/($model | url encode)/converse"
 
     mut attempt = 0
     loop {

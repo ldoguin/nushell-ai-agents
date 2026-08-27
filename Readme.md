@@ -53,13 +53,21 @@ requires `max_tokens` to exceed `thinking.budget_tokens` and rejects
 #### Amazon Bedrock
 
 Set `"runtime": "bedrock"` in an agent's `agents.json` entry, with `"model"`
-set to a Bedrock model ID or cross-region inference profile ID (e.g.
-`"us.anthropic.claude-opus-4-5-20250929-v1:0"` -- on-demand/"serverless"
-usage of Anthropic's newer models on Bedrock requires the inference-profile
-form, not the bare model ID), and export a
+set to a Bedrock model ID or cross-region inference profile ID -- on-demand/
+"serverless" usage of Anthropic's newer models on Bedrock requires the
+inference-profile form, not the bare model ID. The same Claude models this
+repo's `anthropic` runtime uses are available on Bedrock too, e.g. (verified
+live against a `us-west-2` account):
+
+- `us.anthropic.claude-haiku-4-5-20251001-v1:0`
+- `us.anthropic.claude-sonnet-4-5-20250929-v1:0`
+- `us.anthropic.claude-opus-4-5-20251101-v1:0`
+
+Export a
 [Bedrock API key](https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html)
 (a bearer token generated in the Bedrock console) plus the region it's
-scoped to:
+scoped to (`AWS_DEFAULT_REGION`, the AWS CLI/SDKs' own standard var, works
+too -- `AWS_REGION` just takes precedence when both are set):
 
 ```sh
 export AWS_BEARER_TOKEN_BEDROCK=bedrock-api-key-xxxxxxxxxxxxxxxxxxxx
