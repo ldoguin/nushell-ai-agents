@@ -50,6 +50,33 @@ directly in the agent's `options` in `agents.json`; note Anthropic
 requires `max_tokens` to exceed `thinking.budget_tokens` and rejects
 `temperature` alongside `thinking`.
 
+#### Amazon Bedrock
+
+Set `"runtime": "bedrock"` in an agent's `agents.json` entry, with `"model"`
+set to a Bedrock model ID or cross-region inference profile ID (e.g.
+`"us.anthropic.claude-opus-4-5-20250929-v1:0"` -- on-demand/"serverless"
+usage of Anthropic's newer models on Bedrock requires the inference-profile
+form, not the bare model ID), and export a
+[Bedrock API key](https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html)
+(a bearer token generated in the Bedrock console) plus the region it's
+scoped to:
+
+```sh
+export AWS_BEARER_TOKEN_BEDROCK=bedrock-api-key-xxxxxxxxxxxxxxxxxxxx
+export AWS_REGION=us-east-1
+```
+
+This avoids IAM SigV4 request signing entirely -- `agent/model.nu`'s
+`call_bedrock` is a plain HTTPS call to Bedrock's Converse API with an
+`Authorization: Bearer` header, shaped like `call_anthropic`/`calloai`
+rather than needing the AWS CLI or an AWS SDK. Converse is
+provider-agnostic across every model Bedrock hosts, so tool-calling
+(`model_tools`/`tool_functions`) works the same way it does for the other
+runtimes -- `call_bedrock` translates this repo's OpenAI-shaped
+messages/tools/response convention to and from Converse's shape, so
+`agent/agents.nu` and `agent/internal.nu` need no runtime-specific
+handling.
+
 #### Ollama
 
 Follow their documentation on [https://github.com/ollama/ollama/blob/main/README.md#quickstart](https://github.com/ollama/ollama/blob/main/README.md#quickstart)
