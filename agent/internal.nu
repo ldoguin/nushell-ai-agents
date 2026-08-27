@@ -1,4 +1,5 @@
 use ../common/utils.nu *
+use ../common/otel.nu *
 use ../tools/tools.nu *
 
 export def call [ $agent, $message] {
@@ -41,6 +42,15 @@ export def call [ $agent, $message] {
 }
 
 export def execute [] {
+    # $in.otel_parent/otel_runtime/otel_model are optional fields riding
+    # along on the agent record (set by run-pipeline-agent/run_agent), not
+    # part of model_call's own captured state -- reading them here needs no
+    # signature changes anywhere in the call chain.
+    let otel_parent = ($in | get -o otel_parent | default {})
+    let otel_runtime = ($in | get -o otel_runtime | default "unknown")
+    let otel_model = ($in | get -o otel_model | default "unknown")
+    let span = (otel-start-span "gen_ai.chat" $otel_parent { "gen_ai.system": $otel_runtime, "gen_ai.request.model": $otel_model })
+
     mut result = do $in.model_call $in.messages
     let save_path = new_logfile
     # Only get the first choice when model propose different choices
@@ -49,6 +59,13 @@ export def execute [] {
         let message = ( $choice0.message | insert finish_reason  $choice0.finish_reason )
         $result = ( $result | insert message $message )
     }
+
+    let usage = ($result | get -o usage | default {})
+    otel-end-span $span {
+        "gen_ai.usage.input_tokens": ($usage | get -o prompt_tokens | default 0)
+        "gen_ai.usage.output_tokens": ($usage | get -o completion_tokens | default 0)
+    }
+
     $result | to json | save $"logs/($save_path)"
     $result
 }

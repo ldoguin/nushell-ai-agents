@@ -1,4 +1,5 @@
 use ../common/utils.nu *
+use ../common/otel.nu *
 
 # Ceiling on how long any single model completion call is allowed to take
 # before nu's http client aborts it. Without this, a stalled TCP
@@ -65,6 +66,38 @@ def retry-backoff [attempt: int, label: string, headers: table = []] {
     sleep $delay
 }
 
+# Normalizes each provider's differently-shaped token-usage field into
+# OpenAI's {prompt_tokens, completion_tokens, total_tokens} naming -- the
+# convention every other part of this file already normalizes responses
+# toward. Anthropic's Messages API and Bedrock's Converse API both discard
+# usage today before this existed (translated away by
+# anthropic_response_to_openai/converse_response_to_openai below, which
+# only ever read content/stop_reason) -- this fixes that as a side effect
+# of adding it once here, rather than duplicating token-usage extraction
+# in all four provider functions individually.
+def normalize-usage [runtime: string, raw: record] {
+    match $runtime {
+        "anthropic" => {
+            prompt_tokens: ($raw | get -o usage.input_tokens | default 0)
+            completion_tokens: ($raw | get -o usage.output_tokens | default 0)
+            total_tokens: (($raw | get -o usage.input_tokens | default 0) + ($raw | get -o usage.output_tokens | default 0))
+        }
+        "bedrock" => {
+            prompt_tokens: ($raw | get -o usage.inputTokens | default 0)
+            completion_tokens: ($raw | get -o usage.outputTokens | default 0)
+            total_tokens: ($raw | get -o usage.totalTokens | default 0)
+        }
+        # Ollama's /api/chat has no `usage` object at all -- these two
+        # top-level fields are its equivalent.
+        "ollama" => {
+            prompt_tokens: ($raw | get -o prompt_eval_count | default 0)
+            completion_tokens: ($raw | get -o eval_count | default 0)
+            total_tokens: (($raw | get -o prompt_eval_count | default 0) + ($raw | get -o eval_count | default 0))
+        }
+        _ => ($raw | get -o usage | default { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 })  # openai: already OpenAI-shaped
+    }
+}
+
 # Call local ollama API
 export def callama [$model, $messages, $stream, $endpoint, $model_tools, options] {
     let url = $"http://localhost:11434/($endpoint)" 
@@ -105,7 +138,7 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
             continue
         }
 
-        return $outcome.response
+        return ($outcome.response | upsert usage (normalize-usage "ollama" $outcome.response))
     }
 }
 
@@ -149,7 +182,7 @@ export def calloai [model, messages, model_tools, options] {
             continue
         }
 
-        return $response.body
+        return ($response.body | upsert usage (normalize-usage "openai" $response.body))
     }
 }
 
@@ -456,7 +489,7 @@ export def call_bedrock [model, messages, model_tools, options] {
             error make { msg: $"Bedrock API error: ($msg)" }
         }
 
-        return (converse_response_to_openai $response.body)
+        return ((converse_response_to_openai $response.body) | upsert usage (normalize-usage "bedrock" $response.body))
     }
 }
 
@@ -537,6 +570,6 @@ export def call_anthropic [model, messages, model_tools, options] {
             error make { msg: $"Anthropic API error: ($msg)" }
         }
 
-        return (anthropic_response_to_openai $response.body)
+        return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body))
     }
 }
