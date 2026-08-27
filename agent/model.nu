@@ -386,6 +386,15 @@ export def call_bedrock [model, messages, model_tools, options] {
     if ($bedrock_tools | is-not-empty) {
         $json = ($json | insert toolConfig { tools: $bedrock_tools })
     }
+    # additionalModelRequestFields is Converse's passthrough for
+    # model-specific fields Converse itself doesn't standardize --
+    # notably Anthropic's `thinking` (extended-thinking budget), the
+    # same field the direct Anthropic Messages API takes at the top
+    # level. See translate-bedrock-options in .github/scripts/agents/engine.nu.
+    let additional_fields = ($options | get -o additionalModelRequestFields | default {})
+    if ($additional_fields | is-not-empty) {
+        $json = ($json | insert additionalModelRequestFields $additional_fields)
+    }
 
     let url = $"https://bedrock-runtime.($region).amazonaws.com/model/($model | url encode)/converse"
 
