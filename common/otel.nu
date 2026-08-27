@@ -185,6 +185,14 @@ def pb-instrumentation-scope [name: string, version: string] {
     (pb-string 1 $name) ++ (pb-string 2 $version)
 }
 
+# Span.Event: time_unix_nano=1 (fixed64), name=2 (string), attributes=3
+# (repeated KeyValue) -- field numbers verified directly against
+# opentelemetry-proto's trace.proto, same discipline as every other
+# pb-* builder in this file.
+def pb-event [ev: record] {
+    (pb-fixed64-field 1 $ev.time_ns) ++ (pb-string 2 $ev.name) ++ (pb-attributes-fields 3 ($ev.attrs | default {}))
+}
+
 # CI/CD + VCS resource attributes, read directly from the standard env
 # vars GitHub Actions itself sets on every job -- verified against
 # OTel's actual CI/CD semantic conventions doc (cicd.pipeline.*,
@@ -239,6 +247,7 @@ def pb-span [span: record] {
     $payload = $payload ++ (pb-fixed64-field 7 $span.start_time_unix_nano)
     $payload = $payload ++ (pb-fixed64-field 8 $span.end_time_unix_nano)
     $payload = $payload ++ (pb-attributes-fields 9 ($span.attributes | default {}))
+    $payload = $payload ++ (pb-concat (($span.events? | default []) | each {|ev| pb-message 11 (pb-event $ev) }))
     let status_code = ($span.status_code? | default 0)
     let status_message = ($span.status_message? | default "")
     if $status_code != 0 or ($status_message | is-not-empty) {
@@ -318,11 +327,26 @@ export def otel-start-span [name: string, parent: record = {}, attrs: record = {
     }
 }
 
+# One well-known-shaped span event: OTel's general semantic conventions
+# name exception events "exception" with exception.type/exception.message
+# attributes (exception.stacktrace is optional and omitted here -- Nushell
+# has no reliable equivalent to capture and it'd be redundant with the
+# error message already recorded). This is deliberately separate from the
+# `error.type` span *attribute* some callers also set: the attribute marks
+# the span itself as failed (so a Zipkin/Jaeger-style view can filter
+# error spans without inspecting events), the event captures the specific
+# exception that happened, and OTel's own conventions recommend both.
+export def otel-exception-event [error_type: string, message: string] {
+    { name: "exception", time_ns: (now-ns), attrs: { "exception.type": $error_type, "exception.message": $message } }
+}
+
 # Computes real elapsed duration from ctx.start_ns to now, merges `attrs`
 # into the span's attributes (on top of whatever otel-start-span was given),
 # and sends the OTLP span as protobuf. `status_error`, if non-empty, marks
 # the span ERROR (OTLP status code 2) with that message; otherwise UNSET (0).
-export def otel-end-span [ctx: record, attrs: record = {}, status_error: string = ""] {
+# `events` is a list of {name, time_ns, attrs} records (see
+# otel-exception-event) attached to the span as OTLP Span.Event entries.
+export def otel-end-span [ctx: record, attrs: record = {}, status_error: string = "", events: list<record> = []] {
     try {
         let cfg = (otel-config)
         let end_ns = (now-ns)
@@ -335,6 +359,7 @@ export def otel-end-span [ctx: record, attrs: record = {}, status_error: string 
             start_time_unix_nano: $ctx.start_ns
             end_time_unix_nano: $end_ns
             attributes: $merged_attrs
+            events: $events
             status_code: (if ($status_error | is-empty) { 0 } else { 2 })
             status_message: $status_error
         }
@@ -370,5 +395,43 @@ export def otel-record-histogram [name: string, unit: string, value: float, attr
         http post -H $headers $"($cfg.endpoint)/v1/metrics" $body
     } catch {|e|
         print $"::warning::otel-record-histogram \(($name)\) failed to send: ($e.msg)"
+    }
+}
+
+# NumberDataPoint (metrics.proto): start_time_unix_nano=2, time_unix_nano=3,
+# the value oneof's as_double=4, attributes=7 -- verified directly against
+# the proto source, same as every other field number in this file.
+def pb-number-data-point [value: float, attrs: record, time_ns: int] {
+    mut payload = 0x[]
+    $payload = $payload ++ (pb-fixed64-field 3 $time_ns)
+    $payload = $payload ++ (pb-double-field 4 $value)
+    $payload = $payload ++ (pb-attributes-fields 7 $attrs)
+    $payload
+}
+
+# Sum message: data_points=1, aggregation_temporality=2, is_monotonic=3.
+# is_monotonic=true here since every counter this module emits (tool
+# calls, agent iterations) only ever increases -- same DELTA-per-call
+# design as the histogram side: one data point per observation, letting
+# the collector accumulate the running total.
+def pb-sum-metric [name: string, unit: string, data_point_payload: binary] {
+    let sum_payload = (pb-message 1 $data_point_payload) ++ (pb-varint-field 2 1) ++ (pb-bool-field 3 true)
+    (pb-string 1 $name) ++ (pb-string 3 $unit) ++ (pb-message 7 $sum_payload)
+}
+
+# Records one increment of a monotonic counter (OTLP Sum metric) -- for
+# counts like "how many tool calls", "how many agent iterations" where a
+# running total, not a distribution, is what you actually want to graph.
+# Same fail-open/best-effort guarantee as otel-end-span/otel-record-histogram.
+export def otel-record-counter [name: string, unit: string, value: float = 1.0, attrs: record = {}] {
+    try {
+        let cfg = (otel-config)
+        let dp = (pb-number-data-point $value $attrs (now-ns))
+        let metric = (pb-sum-metric $name $unit $dp)
+        let body = (build-export-metrics-request $metric $cfg.service)
+        let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
+        http post -H $headers $"($cfg.endpoint)/v1/metrics" $body
+    } catch {|e|
+        print $"::warning::otel-record-counter \(($name)\) failed to send: ($e.msg)"
     }
 }

@@ -37,9 +37,11 @@ def execute-tool-with-span [name: string, call_id: string, args_json: string, to
             {}
         })
         otel-end-span $span $end_attrs
+        otel-record-counter "agent.tool.call.count" "{call}" 1.0 { "gen_ai.tool.name": $name, "status": "ok" }
         $result
     } catch {|e|
-        otel-end-span $span { "error.type": "_OTHER" } $e.msg
+        otel-end-span $span { "error.type": "_OTHER" } $e.msg [(otel-exception-event "_OTHER" $e.msg)]
+        otel-record-counter "agent.tool.call.count" "{call}" 1.0 { "gen_ai.tool.name": $name, "status": "error" }
         error make { msg: $e.msg }
     }
 }
@@ -111,7 +113,7 @@ export def execute [] {
     mut result = (try {
         do $agent.model_call $agent.messages
     } catch {|e|
-        otel-end-span $span { "error.type": "_OTHER" } $e.msg
+        otel-end-span $span { "error.type": "_OTHER" } $e.msg [(otel-exception-event "_OTHER" $e.msg)]
         error make { msg: $e.msg }
     })
     let save_path = new_logfile

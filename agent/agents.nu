@@ -61,6 +61,7 @@ export def run_agent [query] {
     # caller seeded one, e.g. engine.nu's run-pipeline-agent) becomes its
     # parent, otherwise this starts a fresh root trace.
     let run_span = (otel-start-span "agent.run" ($agent | get -o otel_parent | default {}))
+    let iteration_count_attrs = { "gen_ai.provider.name": (otel-provider-name ($agent | get -o otel_runtime | default "unknown")), "gen_ai.request.model": ($agent | get -o otel_model | default "unknown") }
     mut next_prompt = $query
     mut answer: any = null
     while $x < $max_iterations {
@@ -94,6 +95,7 @@ export def run_agent [query] {
             # model's actual reply.
             $answer = ( $response.agent.messages | last ).content
             otel-end-span $run_span { "iterations": $x }
+            otel-record-counter "agent.iteration.count" "{iteration}" ($x | into float) $iteration_count_attrs
             return $answer
         }
         $agent = ($response.agent | upsert otel_parent $run_span)
@@ -102,10 +104,12 @@ export def run_agent [query] {
 
         if ( $answer != null ) {
             otel-end-span $run_span { "iterations": $x }
+            otel-record-counter "agent.iteration.count" "{iteration}" ($x | into float) $iteration_count_attrs
             return $answer
         }
     }
     otel-end-span $run_span { "iterations": $x, "max_iterations_reached": true }
+    otel-record-counter "agent.iteration.count" "{iteration}" ($x | into float) $iteration_count_attrs
     # sound play drop.mp3 -d 0.2sec
     $answer
 }

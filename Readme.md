@@ -132,6 +132,24 @@ When run inside GitHub Actions, every span's resource picks up
 `GITHUB_*` environment variables Actions itself sets -- no configuration
 needed, and these stay absent for local runs.
 
+A model call or tool call that fails records a standard OTel `exception`
+span event (`exception.type`/`exception.message`), in addition to marking
+the span ERROR -- both the event (the specific failure) and the
+error-status attribute (so a failed span can be filtered without
+inspecting events) are populated, per OTel's own general span conventions.
+
+Two counters (OTLP Sum metrics, monotonic) round out the metrics:
+`agent.tool.call.count` (tagged `gen_ai.tool.name`/`status`) and
+`agent.iteration.count` (one increment per `agent.run`, valued at the
+total iterations taken), for graphing call/iteration volume directly
+instead of deriving it from span counts.
+
+`engine.nu`'s `run-pipeline-agent` chains every `pipeline.agent:*` span --
+across rounds within a step and across steps in the same job -- into one
+linear parent/child sequence (`logs/.otel-parent-span-id`, alongside the
+existing `logs/.otel-trace-id`), rather than each being an unrelated
+root-level span that only shares a trace ID.
+
 Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
 (a local dev collector) and Arize Phoenix (a real external one, protobuf-only).
 
