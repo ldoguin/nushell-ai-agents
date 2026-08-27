@@ -335,6 +335,32 @@ def converse_response_to_openai [response: record] {
     { choices: [{ message: $message, finish_reason: $finish_reason }] }
 }
 
+# http post's own error message for anything raised before a response is
+# received (dropped connection, TLS failure, DNS, but ALSO a malformed
+# request the HTTP client itself refuses to send, e.g. a header value
+# containing a stray newline) is a generic "Network failure" string --
+# nu's ShellError::NetworkFailure display, shared across every one of
+# those cases. That's misleading enough to cost real debugging time: an
+# 8-attempt exponential-backoff retry loop treating a non-transient,
+# guaranteed-to-repeat request-construction error (like a corrupted
+# bearer token containing a trailing newline -- confirmed live, see
+# ldoguin/nushell-ai-agents#9) as if it might be a flaky connection.
+# The actually-useful detail nu's http client attaches (e.g. "protocol:
+# authorization header is not a string") lives in the error's `json`
+# field's first label, not `.msg` -- pull it out so retry-backoff/the
+# final error message says the real thing instead of "Network failure"
+# eight times in a row.
+def bedrock-exception-detail [e: record] {
+    let label = (try {
+        ($e | get -o json | default "" | from json | get -o labels.0.text | default "")
+    } catch { "" })
+    if ($label | is-not-empty) and ($label != $e.msg) {
+        $"($e.msg) -- ($label)"
+    } else {
+        $e.msg
+    }
+}
+
 # Call Amazon Bedrock's Converse API using a Bedrock API key (a bearer
 # token, generated in the Bedrock console) rather than IAM SigV4 request
 # signing -- this keeps the call a plain HTTPS POST shaped like
@@ -408,14 +434,14 @@ export def call_bedrock [model, messages, model_tools, options] {
             ] --content-type "application/json")
             { kind: "response", response: $response }
         } catch {|e|
-            { kind: "exception", error: $e }
+            { kind: "exception", error: (bedrock-exception-detail $e) }
         })
 
         if $outcome.kind == "exception" {
             if $attempt >= $MAX_ATTEMPTS {
-                error make { msg: $"Bedrock API error: request failed after ($MAX_ATTEMPTS) attempts: ($outcome.error.msg)" }
+                error make { msg: $"Bedrock API error: request failed after ($MAX_ATTEMPTS) attempts: ($outcome.error)" }
             }
-            retry-backoff $attempt $"Bedrock request error: ($outcome.error.msg)"
+            retry-backoff $attempt $"Bedrock request error: ($outcome.error)"
             continue
         }
 
