@@ -138,7 +138,7 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
             continue
         }
 
-        return ($outcome.response | upsert usage (normalize-usage "ollama" $outcome.response))
+        return ($outcome.response | upsert usage (normalize-usage "ollama" $outcome.response) | upsert retry_attempts $attempt)
     }
 }
 
@@ -182,7 +182,7 @@ export def calloai [model, messages, model_tools, options] {
             continue
         }
 
-        return ($response.body | upsert usage (normalize-usage "openai" $response.body))
+        return ($response.body | upsert usage (normalize-usage "openai" $response.body) | upsert retry_attempts $attempt)
     }
 }
 
@@ -489,7 +489,7 @@ export def call_bedrock [model, messages, model_tools, options] {
             error make { msg: $"Bedrock API error: ($msg)" }
         }
 
-        return ((converse_response_to_openai $response.body) | upsert usage (normalize-usage "bedrock" $response.body))
+        return ((converse_response_to_openai $response.body) | upsert usage (normalize-usage "bedrock" $response.body) | upsert retry_attempts $attempt)
     }
 }
 
@@ -570,6 +570,6 @@ export def call_anthropic [model, messages, model_tools, options] {
             error make { msg: $"Anthropic API error: ($msg)" }
         }
 
-        return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body))
+        return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert retry_attempts $attempt)
     }
 }

@@ -115,6 +115,23 @@ both as possibly sensitive:
 export OTEL_CAPTURE_TOOL_CONTENT=true
 ```
 
+Each `gen_ai.chat` span also emits three GenAI metrics (OTLP/HTTP+protobuf to
+`<endpoint>/v1/metrics`) as OTel's required Histogram instrument type:
+`gen_ai.client.token.usage` (once per token type, `gen_ai.token.type` =
+`input`/`output`) and `gen_ai.client.operation.duration` (seconds), all
+tagged with `gen_ai.operation.name`/`gen_ai.provider.name`/
+`gen_ai.request.model`. A `retry_count` attribute (from each provider
+function's own retry loop) rides on the span alongside the existing token
+counts. If the underlying model call fails after exhausting its retries, the
+span is still ended (status ERROR, `error.type`) instead of being silently
+dropped -- the original error still propagates to the caller unchanged.
+
+When run inside GitHub Actions, every span's resource picks up
+`cicd.pipeline.name`/`cicd.pipeline.run.id`/`cicd.pipeline.run.url.full`/
+`vcs.repository.name`/`vcs.ref.head.name` automatically from the standard
+`GITHUB_*` environment variables Actions itself sets -- no configuration
+needed, and these stay absent for local runs.
+
 Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
 (a local dev collector) and Arize Phoenix (a real external one, protobuf-only).
 

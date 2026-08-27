@@ -90,16 +90,30 @@ export def call [ $agent, $message] {
 }
 
 export def execute [] {
+    # Captured once, up front: $in inside a nested `try` block does not
+    # reliably resolve back to this function's own $in after it's already
+    # been read once via pipe (a real Nushell quirk, confirmed with an
+    # isolated repro) -- so model_call/messages must be read into plain
+    # variables here rather than accessed as $in.model_call/$in.messages
+    # inside the try below.
+    let agent = $in
     # $in.otel_parent/otel_runtime/otel_model are optional fields riding
     # along on the agent record (set by run-pipeline-agent/run_agent), not
     # part of model_call's own captured state -- reading them here needs no
     # signature changes anywhere in the call chain.
-    let otel_parent = ($in | get -o otel_parent | default {})
-    let otel_runtime = ($in | get -o otel_runtime | default "unknown")
-    let otel_model = ($in | get -o otel_model | default "unknown")
-    let span = (otel-start-span "gen_ai.chat" $otel_parent { "gen_ai.operation.name": "chat", "gen_ai.system": $otel_runtime, "gen_ai.request.model": $otel_model })
+    let otel_parent = ($agent | get -o otel_parent | default {})
+    let otel_runtime = ($agent | get -o otel_runtime | default "unknown")
+    let otel_model = ($agent | get -o otel_model | default "unknown")
+    let otel_provider = (otel-provider-name $otel_runtime)
+    let start_ns = (now-ns)
+    let span = (otel-start-span "gen_ai.chat" $otel_parent { "gen_ai.operation.name": "chat", "gen_ai.provider.name": $otel_provider, "gen_ai.request.model": $otel_model })
 
-    mut result = do $in.model_call $in.messages
+    mut result = (try {
+        do $agent.model_call $agent.messages
+    } catch {|e|
+        otel-end-span $span { "error.type": "_OTHER" } $e.msg
+        error make { msg: $e.msg }
+    })
     let save_path = new_logfile
     # Only get the first choice when model propose different choices
     if ( $result | column_exist "choices" ) {
@@ -109,9 +123,20 @@ export def execute [] {
     }
 
     let usage = ($result | get -o usage | default {})
+    let input_tokens = ($usage | get -o prompt_tokens | default 0)
+    let output_tokens = ($usage | get -o completion_tokens | default 0)
+    let retry_count = ($result | get -o retry_attempts | default 1)
+    let duration_s = (((now-ns) - $start_ns) | into float) / 1_000_000_000.0
+
+    let metric_attrs = { "gen_ai.operation.name": "chat", "gen_ai.provider.name": $otel_provider, "gen_ai.request.model": $otel_model }
+    otel-record-histogram "gen_ai.client.token.usage" "{token}" ($input_tokens | into float) ($metric_attrs | insert "gen_ai.token.type" "input")
+    otel-record-histogram "gen_ai.client.token.usage" "{token}" ($output_tokens | into float) ($metric_attrs | insert "gen_ai.token.type" "output")
+    otel-record-histogram "gen_ai.client.operation.duration" "s" $duration_s $metric_attrs
+
     otel-end-span $span {
-        "gen_ai.usage.input_tokens": ($usage | get -o prompt_tokens | default 0)
-        "gen_ai.usage.output_tokens": ($usage | get -o completion_tokens | default 0)
+        "gen_ai.usage.input_tokens": $input_tokens
+        "gen_ai.usage.output_tokens": $output_tokens
+        "retry_count": $retry_count
     }
 
     $result | to json | save $"logs/($save_path)"
