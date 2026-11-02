@@ -597,6 +597,26 @@ export def call_anthropic [model, messages, model_tools, options] {
             error make { msg: $"Anthropic API error: ($msg)" }
         }
 
+        # A 200 with neither a text block nor a tool_use block (only
+        # thinking, a refusal, or a reply cut off by max_tokens while
+        # thinking) would reach agent/internal.nu with `content: null` and
+        # crash there as "Input type not supported". Retry a plain
+        # end_turn once or twice in case it was a one-off, then fail with
+        # what the API actually said.
+        let blocks = ($response.body | get -o content | default [])
+        let has_output = ($blocks | where type in ["text" "tool_use"] | is-not-empty)
+        if not $has_output {
+            let stop_reason = ($response.body | get -o stop_reason | default "")
+            let block_types = ($blocks | get -o type | default [] | str join ",")
+            let output_tokens = ($response.body | get -o usage.output_tokens | default 0)
+            let detail = $"stop_reason: ($stop_reason), content blocks: [($block_types)], output_tokens: ($output_tokens)"
+            if $stop_reason == "end_turn" and $attempt < 3 {
+                retry-backoff $attempt $"Anthropic returned no text \(($detail)\)"
+                continue
+            }
+            error make { msg: $"Anthropic returned no text \(($detail)\)" }
+        }
+
         return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert retry_attempts $attempt)
     }
 }

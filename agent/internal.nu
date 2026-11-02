@@ -71,7 +71,7 @@ export def call [ $agent, $message] {
             #$magent.messages = ($magent.messages | append  {"role": "user", "content": $"Observation: ($toolresponse)"} )
         }
     } else if ($msg.role == "assistant" ) {
-        let steps = ( $msg.content | split row  "\n" )
+        let steps = ( $msg.content | default "" | split row  "\n" )
         let step = ($steps  | parse --regex '^(?P<step>Action|Observation|Thought|Pause): (?P<content>.*)$')
         if ($step | column_exist "step"  ) {
             for $s in ( $step | enumerate) {
