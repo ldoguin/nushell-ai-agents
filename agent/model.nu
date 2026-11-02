@@ -609,7 +609,12 @@ export def call_anthropic [model, messages, model_tools, options] {
             let stop_reason = ($response.body | get -o stop_reason | default "")
             let block_types = ($blocks | get -o type | default [] | str join ",")
             let output_tokens = ($response.body | get -o usage.output_tokens | default 0)
-            let detail = $"stop_reason: ($stop_reason), content blocks: [($block_types)], output_tokens: ($output_tokens)"
+            let stop_details = ($response.body | get -o stop_details | default null)
+            let detail = (if $stop_details == null {
+                $"stop_reason: ($stop_reason), content blocks: [($block_types)], output_tokens: ($output_tokens)"
+            } else {
+                $"stop_reason: ($stop_reason), stop_details: ($stop_details | to json --raw), content blocks: [($block_types)], output_tokens: ($output_tokens)"
+            })
             if $stop_reason == "end_turn" and $attempt < 3 {
                 retry-backoff $attempt $"Anthropic returned no text \(($detail)\)"
                 continue
