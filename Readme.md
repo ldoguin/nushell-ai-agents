@@ -31,12 +31,26 @@ OpenAI Agents will work as long as you have set your OpenAi API key.
 
 `export OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx`
 
+To call any OpenAI-compatible server instead of api.openai.com (LiteLLM,
+vLLM, ...), set `OPENAI_BASE_URL`. It follows the OpenAI SDKs' convention of
+including the version segment, and the call goes to
+`<base>/chat/completions`:
+
+`export OPENAI_BASE_URL=http://localhost:4000/v1`
+
 #### Anthropic
 
 Set `"runtime": "anthropic"` in an agent's `agents.json` entry (e.g.
 `"model": "claude-opus-4-5"`) and export your API key:
 
 `export ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxx`
+
+To call a server that speaks the Messages API instead of api.anthropic.com
+(LiteLLM's `/v1/messages`, for example), set `ANTHROPIC_BASE_URL`. It follows
+the Anthropic SDKs' convention of omitting the version segment, and the call
+goes to `<base>/v1/messages` (a trailing `/v1` is tolerated):
+
+`export ANTHROPIC_BASE_URL=http://localhost:4000`
 
 Tool-calling (`model_tools`/`tool_functions`) works the same way it does
 for the `openai` runtime -- `agent/model.nu`'s `call_anthropic` translates

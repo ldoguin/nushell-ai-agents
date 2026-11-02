@@ -66,6 +66,19 @@ def retry-backoff [attempt: int, label: string, headers: table = []] {
     sleep $delay
 }
 
+# Base URL for a provider's API, read from an environment variable so a call
+# can go through a proxy such as LiteLLM instead of the provider directly.
+# Falls back to `default` when the variable is unset or blank. A trailing
+# slash is dropped so callers can append a path without doubling it.
+def provider-base-url [env_name: string, default: string] {
+    let configured = ($env | get -o $env_name | default "" | str trim)
+    if ($configured | is-empty) {
+        $default
+    } else {
+        $configured | str trim --right --char '/'
+    }
+}
+
 # Normalizes each provider's differently-shaped token-usage field into
 # OpenAI's {prompt_tokens, completion_tokens, total_tokens} naming -- the
 # convention every other part of this file already normalizes responses
@@ -143,8 +156,14 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
 }
 
 # Call openai api
+#
+# OPENAI_BASE_URL (optional) points this at any OpenAI-compatible server --
+# LiteLLM, vLLM, Azure's /openai/v1 endpoint, ... -- and follows the OpenAI
+# SDKs' convention of including the version segment, e.g.
+# http://litellm:4000/v1. Unset, it calls api.openai.com.
 export def calloai [model, messages, model_tools, options] {
-    let url = "https://api.openai.com/v1/chat/completions" 
+    let base = (provider-base-url "OPENAI_BASE_URL" "https://api.openai.com/v1")
+    let url = $"($base)/chat/completions"
     let json = {
         model: $model,
         messages: $messages,
@@ -158,7 +177,7 @@ export def calloai [model, messages, model_tools, options] {
         $attempt = $attempt + 1
 
         let outcome = (try {
-            let response = ( http post  -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY) " ]   --content-type "application/json")
+            let response = ( http post  -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers ["Authorization" $"Bearer ($env.OPENAI_API_KEY)" ]   --content-type "application/json")
             { kind: "response", response: $response }
         } catch {|e|
             { kind: "exception", error: $e }
@@ -508,7 +527,15 @@ export def call_bedrock [model, messages, model_tools, options] {
 # budget_tokens: N } }`) work by setting them directly in agents.json --
 # note Anthropic requires max_tokens > thinking.budget_tokens and
 # rejects `temperature` alongside `thinking`.
+#
+# ANTHROPIC_BASE_URL (optional) points this at any server that speaks the
+# Messages API -- LiteLLM's /v1/messages, for instance -- and follows the
+# Anthropic SDKs' convention of omitting the version segment, e.g.
+# http://litellm:4000. A trailing /v1 is tolerated and stripped, since
+# proxy docs often write the URL that way. Unset, it calls api.anthropic.com.
 export def call_anthropic [model, messages, model_tools, options] {
+    let base = (provider-base-url "ANTHROPIC_BASE_URL" "https://api.anthropic.com" | str replace --regex '/v1$' '')
+    let url = $"($base)/v1/messages"
     let translated = (openai_messages_to_anthropic $messages)
     let anthropic_tools = (if ($model_tools | is-empty) { [] } else { openai_tools_to_anthropic $model_tools })
 
@@ -531,7 +558,7 @@ export def call_anthropic [model, messages, model_tools, options] {
         $attempt = $attempt + 1
 
         let outcome = (try {
-            let response = (http post -e -f --max-time $MODEL_CALL_TIMEOUT "https://api.anthropic.com/v1/messages" $json --headers [
+            let response = (http post -e -f --max-time $MODEL_CALL_TIMEOUT $url $json --headers [
                 "x-api-key" $env.ANTHROPIC_API_KEY
                 "anthropic-version" "2023-06-01"
             ] --content-type "application/json")
