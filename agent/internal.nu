@@ -129,6 +129,27 @@ export def execute [] {
     let retry_count = ($result | get -o retry_attempts | default 1)
     let duration_s = (((now-ns) - $start_ns) | into float) / 1_000_000_000.0
 
+    # One line per model call for whoever wants to total up a run's cost: set
+    # AGENT_COST_FILE to a path and every call appends a JSON record to it
+    # (cost fields are null unless the endpoint is a proxy that reports
+    # them, see proxy-cost in model.nu). Best effort: a failure here must
+    # never fail the call itself.
+    let cost_file = ($env.AGENT_COST_FILE? | default "")
+    if ($cost_file | is-not-empty) {
+        try {
+            let cost = ($result | get -o cost | default {})
+            ({
+                agent: ($agent | get -o agent_name | default "")
+                model: $otel_model
+                input_tokens: $input_tokens
+                output_tokens: $output_tokens
+                cost_usd: ($cost | get -o cost_usd | default null)
+                key_spend: ($cost | get -o key_spend | default null)
+                key_max_budget: ($cost | get -o key_max_budget | default null)
+            } | to json --raw) + "\n" | save --append $cost_file
+        } catch {|e| print $"::warning::Could not record this call's cost: ($e.msg)" }
+    }
+
     let metric_attrs = { "gen_ai.operation.name": "chat", "gen_ai.provider.name": $otel_provider, "gen_ai.request.model": $otel_model }
     otel-record-histogram "gen_ai.client.token.usage" "{token}" ($input_tokens | into float) ($metric_attrs | insert "gen_ai.token.type" "input")
     otel-record-histogram "gen_ai.client.token.usage" "{token}" ($output_tokens | into float) ($metric_attrs | insert "gen_ai.token.type" "output")

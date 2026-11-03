@@ -88,6 +88,25 @@ def provider-base-url [env_name: string, default: string] {
 # only ever read content/stop_reason) -- this fixes that as a side effect
 # of adding it once here, rather than duplicating token-usage extraction
 # in all four provider functions individually.
+# What a call cost, as a LiteLLM proxy reports it in response headers:
+# x-litellm-response-cost (USD, input + output), plus the key's running
+# x-litellm-key-spend and x-litellm-key-max-budget. All null when the
+# endpoint is not a LiteLLM proxy (api.anthropic.com sends none of them), so
+# callers must treat cost as optional. Values arrive as strings such as
+# "8.3e-06".
+def proxy-cost [headers: table] {
+    let lowered = ($headers | each {|h| { name: ($h.name | str downcase), value: $h.value } })
+    let num = {|name|
+        let raw = ($lowered | where name == $name | get -o 0.value | default null)
+        if $raw == null { null } else { try { $raw | into float } catch { null } }
+    }
+    {
+        cost_usd: (do $num "x-litellm-response-cost")
+        key_spend: (do $num "x-litellm-key-spend")
+        key_max_budget: (do $num "x-litellm-key-max-budget")
+    }
+}
+
 def normalize-usage [runtime: string, raw: record] {
     match $runtime {
         "anthropic" => {
@@ -642,6 +661,6 @@ export def call_anthropic [model, messages, model_tools, options] {
             error make { msg: $"Anthropic returned no text \(($detail)\)($raw)" }
         }
 
-        return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert retry_attempts $attempt)
+        return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert cost (proxy-cost $response.headers.response) | upsert retry_attempts $attempt)
     }
 }
