@@ -597,6 +597,21 @@ export def call_anthropic [model, messages, model_tools, options] {
             error make { msg: $"Anthropic API error: ($msg)" }
         }
 
+        # A proxy (LiteLLM) reports its own failures as { error: { message,
+        # type, code } } with no top-level `type`, which the check above does
+        # not see: a spent key budget, a bad key, an unknown model alias.
+        # Retry only what is retryable (429/5xx, above); anything else would
+        # fail the same way again, so say what the proxy said, now.
+        let proxy_message = ($response.body | get -o error.message | default "")
+        if ($proxy_message | is-not-empty) {
+            let proxy_type = ($response.body | get -o error.type | default "error")
+            if ($response.status in $RETRYABLE_STATUSES) and ($attempt < $MAX_ATTEMPTS) {
+                retry-backoff $attempt $"Proxy error \(HTTP ($response.status)\): ($proxy_message)" $response.headers.response
+                continue
+            }
+            error make { msg: $"Anthropic API error \(HTTP ($response.status), ($proxy_type)\): ($proxy_message)" }
+        }
+
         # A 200 with neither a text block nor a tool_use block (only
         # thinking, a refusal, or a reply cut off by max_tokens while
         # thinking) would reach agent/internal.nu with `content: null` and
@@ -615,11 +630,16 @@ export def call_anthropic [model, messages, model_tools, options] {
             } else {
                 $"stop_reason: ($stop_reason), stop_details: ($stop_details | to json --raw), content blocks: [($block_types)], output_tokens: ($output_tokens)"
             })
-            if $stop_reason == "end_turn" and $attempt < 3 {
-                retry-backoff $attempt $"Anthropic returned no text \(($detail)\)"
+            # No stop_reason at all means the body was not a message (an
+            # empty or foreign reply from the endpoint or a proxy): retry it
+            # like an end_turn with no text, and show what actually came back.
+            let malformed = ($stop_reason | is-empty)
+            let raw = (if $malformed { $" -- raw body: ($response.body | to json --raw | str substring 0..<300)" } else { "" })
+            if ($stop_reason == "end_turn" or $malformed) and $attempt < 3 {
+                retry-backoff $attempt $"Anthropic returned no text \(($detail)\)($raw)"
                 continue
             }
-            error make { msg: $"Anthropic returned no text \(($detail)\)" }
+            error make { msg: $"Anthropic returned no text \(($detail)\)($raw)" }
         }
 
         return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert retry_attempts $attempt)
