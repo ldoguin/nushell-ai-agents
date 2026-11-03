@@ -54,9 +54,13 @@ export def agent [ config ] {
 }
 
 export def run_agent [query] {
-    let max_iterations = 9
     mut x = 0;
     mut agent = $in
+    # How many model calls (each one possibly a round of tool calls) the
+    # loop may take before it gives up. 9 by default; an agent that
+    # legitimately needs more (e.g. reading through a codebase) sets
+    # `max_iterations` on its agent record.
+    let max_iterations = ($agent | get -o max_iterations | default 9)
     # "agent.run" wraps the whole ReAct loop; $agent.otel_parent (if the
     # caller seeded one, e.g. engine.nu's run-pipeline-agent) becomes its
     # parent, otherwise this starts a fresh root trace.
@@ -66,6 +70,13 @@ export def run_agent [query] {
     mut answer: any = null
     while $x < $max_iterations {
         $x = $x + 1
+        # On the last permitted iteration, ask for the answer from what has
+        # been gathered instead of letting the agent spend it on another
+        # tool call -- hitting the cap otherwise discards everything it
+        # learned and returns nothing.
+        if $x == $max_iterations and $x > 1 {
+            $next_prompt = "You have used your tool budget. Do not call any more tools. Give your final answer now, in the format your instructions require, using only what you have already gathered, and say plainly what you did not get to."
+        }
         # Each iteration gets its own child span, and becomes the parent
         # `call`/`execute` see for that iteration's gen_ai.chat span --
         # upsert rather than dot-assignment since a caller that never
