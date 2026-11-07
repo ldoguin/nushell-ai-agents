@@ -90,7 +90,12 @@ export def callTool [$toolCall, tool_functions] {
      #mut arguments = parseArg $toolCall.arguments 
     mut arguments =  $toolCall.arguments 
     $arguments | log
-    mut fInArg = ( $arguments | parse --regex '(?P<fname>\w+)\((?P<arguments>.*?)\)' )
+    # Nested calls like `outer(inner(x))` only exist in the legacy plain-text
+    # form. A structured tool call arrives as a JSON string (or a record), and
+    # a URL such as .../Foo_(bar) inside it would match the regex and be
+    # mistaken for a nested call, so only look for them in non-JSON text.
+    let is_plain_text = (($arguments | describe) == "string") and (not ($arguments | str trim | str starts-with "{")) and (not ($arguments | str trim | str starts-with "["))
+    mut fInArg = (if $is_plain_text { $arguments | parse --regex '(?P<fname>\w+)\((?P<arguments>.*?)\)' } else { [] })
     if ( $fInArg != [] ) {
         mut responses = []
         for $fun in ( $fInArg | enumerate) {
