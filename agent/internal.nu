@@ -110,7 +110,7 @@ export def execute [] {
     # One line per model call for whoever wants to total up a run's cost: set
     # AGENT_COST_FILE to a path and every call appends a JSON record to it
     # (cost fields are null unless the endpoint is a proxy that reports
-    # them, see proxy-cost in model.nu). Best effort: a failure here must
+    # them, see proxy-cost in http.nu). Best effort: a failure here must
     # never fail the call itself.
     let cost_file = ($env.AGENT_COST_FILE? | default "")
     if ($cost_file | is-not-empty) {

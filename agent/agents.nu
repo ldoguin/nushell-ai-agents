@@ -1,7 +1,11 @@
 use internal.nu *
 use ../common/utils.nu *
 use ../common/otel.nu *
-use model.nu *
+use providers/openai.nu
+use providers/ollama.nu
+use providers/anthropic.nu
+use providers/bedrock.nu
+use providers/mock.nu
 use ../tools/runtime.nu [tool-context]
 
 def build_agent [model_call: closure, prompt?: string, tools?: record] {
@@ -49,11 +53,11 @@ export def agent [ config ] {
     let tools = (tool-context $config $model_tools)
 
     match $config.runtime {
-        "openai" => ( build_agent { |messages| calloai $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "ollama" => ( build_agent { |messages| callama $config.model $messages false "api/chat" $model_tools $config.options } $system_prompt $tools )
-        "anthropic" => ( build_agent { |messages| call_anthropic $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "bedrock" => ( build_agent { |messages| call_bedrock $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "mock" => ( build_agent { |messages| call_mock ($config.responses? | default []) $messages } $system_prompt $tools )
+        "openai" => ( build_agent { |messages| openai call $config.model $messages $model_tools $config.options } $system_prompt $tools )
+        "ollama" => ( build_agent { |messages| ollama call $config.model $messages $model_tools $config.options } $system_prompt $tools )
+        "anthropic" => ( build_agent { |messages| anthropic call $config.model $messages $model_tools $config.options } $system_prompt $tools )
+        "bedrock" => ( build_agent { |messages| bedrock call $config.model $messages $model_tools $config.options } $system_prompt $tools )
+        "mock" => ( build_agent { |messages| mock call ($config.responses? | default []) $messages } $system_prompt $tools )
         _ => ( error make { msg: $"Unknown runtime '($config.runtime? | default '')' -- expected one of: openai, ollama, anthropic, bedrock, mock" } )
     }
 }

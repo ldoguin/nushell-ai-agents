@@ -25,6 +25,15 @@ Install [nu_plugin_audio_hook](https://github.com/FMotalleb/nu_plugin_audio_hook
 
 ### Models
 
+### Providers
+
+Each runtime is a module under `agent/providers/` exporting
+`call [model messages model_tools options]`. They all take and return the same
+OpenAI-shaped conversation (`{ choices: [{ message, finish_reason }], usage }`),
+so the loop never knows which one answered; `agent/http.nu` supplies the shared
+timeout, retry (with `retry-after`) and error reporting. Retry delays start at
+`$env.AGENT_RETRY_BASE_DELAY` (default `2sec`) and double up to 60s.
+
 #### OpenAi
 
 OpenAI Agents will work as long as you have set your OpenAi API key.
@@ -53,7 +62,7 @@ goes to `<base>/v1/messages` (a trailing `/v1` is tolerated):
 `export ANTHROPIC_BASE_URL=http://localhost:4000`
 
 Tool-calling (`model_tools`/`tool_functions`) works the same way it does
-for the `openai` runtime -- `agent/model.nu`'s `call_anthropic` translates
+for the `openai` runtime -- `agent/providers/anthropic.nu` translates
 this repo's OpenAI-shaped messages/tools/response to and from Anthropic's
 Messages API shape, so `agent/agents.nu` and `agent/internal.nu` need no
 runtime-specific handling.
@@ -88,13 +97,13 @@ export AWS_BEARER_TOKEN_BEDROCK=bedrock-api-key-xxxxxxxxxxxxxxxxxxxx
 export AWS_REGION=us-east-1
 ```
 
-This avoids IAM SigV4 request signing entirely -- `agent/model.nu`'s
-`call_bedrock` is a plain HTTPS call to Bedrock's Converse API with an
-`Authorization: Bearer` header, shaped like `call_anthropic`/`calloai`
+This avoids IAM SigV4 request signing entirely -- `agent/providers/bedrock.nu`
+is a plain HTTPS call to Bedrock's Converse API with an
+`Authorization: Bearer` header, shaped like the other providers
 rather than needing the AWS CLI or an AWS SDK. Converse is
 provider-agnostic across every model Bedrock hosts, so tool-calling
 (`model_tools`/`tool_functions`) works the same way it does for the other
-runtimes -- `call_bedrock` translates this repo's OpenAI-shaped
+runtimes -- `bedrock.nu` translates this repo's OpenAI-shaped
 messages/tools/response convention to and from Converse's shape, so
 `agent/agents.nu` and `agent/internal.nu` need no runtime-specific
 handling.

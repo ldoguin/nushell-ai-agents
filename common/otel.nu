@@ -21,7 +21,7 @@
 # left the actual pipeline call it was instrumenting completely unaffected.
 
 # Read fresh on every call (not cached) so an env change mid-process is
-# picked up, same convention call_bedrock uses for AWS_REGION.
+# picked up, same convention the Bedrock provider uses for AWS_REGION.
 # OpenTelemetry's own standard kill switch (OTEL_SDK_DISABLED=true): every
 # send below becomes a no-op, so a run with no collector neither pays for a
 # failed POST per span nor prints a warning per span.
@@ -39,7 +39,7 @@ def otel-config [] {
 
 # "k=v,k2=v2" -> a flat list ["k" "v" "k2" "v2"] suitable for `http post`'s
 # --headers flag directly (matching the [key value key value] shape
-# model.nu's provider functions already use for Authorization headers).
+# the provider modules already use for Authorization headers).
 export def otel-parse-headers [raw: string] {
     if ($raw | is-empty) {
         []
