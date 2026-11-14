@@ -22,6 +22,13 @@
 
 # Read fresh on every call (not cached) so an env change mid-process is
 # picked up, same convention call_bedrock uses for AWS_REGION.
+# OpenTelemetry's own standard kill switch (OTEL_SDK_DISABLED=true): every
+# send below becomes a no-op, so a run with no collector neither pays for a
+# failed POST per span nor prints a warning per span.
+export def otel-disabled [] {
+    ($env.OTEL_SDK_DISABLED? | default "" | into string | str lowercase) in ["true" "1" "yes"]
+}
+
 def otel-config [] {
     {
         endpoint: ($env.OTEL_EXPORTER_OTLP_ENDPOINT? | default "http://localhost:4318")
@@ -347,6 +354,7 @@ export def otel-exception-event [error_type: string, message: string] {
 # `events` is a list of {name, time_ns, attrs} records (see
 # otel-exception-event) attached to the span as OTLP Span.Event entries.
 export def otel-end-span [ctx: record, attrs: record = {}, status_error: string = "", events: list<record> = []] {
+    if (otel-disabled) { return }
     try {
         let cfg = (otel-config)
         let end_ns = (now-ns)
@@ -386,6 +394,7 @@ export def otel-end-span [ctx: record, attrs: record = {}, status_error: string 
 # current GenAI metrics semantic conventions doc). Same fail-open/
 # best-effort guarantee as otel-end-span.
 export def otel-record-histogram [name: string, unit: string, value: float, attrs: record = {}] {
+    if (otel-disabled) { return }
     try {
         let cfg = (otel-config)
         let dp = (pb-histogram-data-point $value $attrs (now-ns))
@@ -424,6 +433,7 @@ def pb-sum-metric [name: string, unit: string, data_point_payload: binary] {
 # running total, not a distribution, is what you actually want to graph.
 # Same fail-open/best-effort guarantee as otel-end-span/otel-record-histogram.
 export def otel-record-counter [name: string, unit: string, value: float = 1.0, attrs: record = {}] {
+    if (otel-disabled) { return }
     try {
         let cfg = (otel-config)
         let dp = (pb-number-data-point $value $attrs (now-ns))
@@ -498,6 +508,7 @@ def otel-severity-number [severity: string] {
 # no trace association. Same fail-open/best-effort guarantee as every other
 # send in this module.
 export def otel-send-log [body: string, attrs: record = {}, severity: string = "info", span_ctx: record = {}] {
+    if (otel-disabled) { return }
     try {
         let cfg = (otel-config)
         let rec = {

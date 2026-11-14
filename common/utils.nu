@@ -18,6 +18,7 @@ export def new_logfile [] {
 # Log the input in the "myHistory" file
 export def log [] {
     let s = $in
+    mkdir logs
     "\n" | save -a  "logs/history.log"
     if ( (  ($s | (describe ) ) != "nothing" ) and ( $s != "" ) ) {
         if ($env.AGENT_LOG? != null and ( $env.AGENT_LOG | into bool ) ) {

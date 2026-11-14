@@ -95,7 +95,7 @@ def provider-base-url [env_name: string, default: string] {
 # callers must treat cost as optional. Values arrive as strings such as
 # "8.3e-06".
 def proxy-cost [headers: table] {
-    let lowered = ($headers | each {|h| { name: ($h.name | str downcase), value: $h.value } })
+    let lowered = ($headers | each {|h| { name: ($h.name | str lowercase), value: $h.value } })
     let num = {|name|
         let raw = ($lowered | where name == $name | get -o 0.value | default null)
         if $raw == null { null } else { try { $raw | into float } catch { null } }
@@ -132,7 +132,7 @@ def normalize-usage [runtime: string, raw: record] {
 
 # Call local ollama API
 export def callama [$model, $messages, $stream, $endpoint, $model_tools, options] {
-    let url = $"http://localhost:11434/($endpoint)" 
+    let url = $"(provider-base-url "OLLAMA_BASE_URL" "http://localhost:11434")/($endpoint)"
     let json = {
         model: $model,
         messages: $messages,
@@ -153,7 +153,7 @@ export def callama [$model, $messages, $stream, $endpoint, $model_tools, options
         $attempt = $attempt + 1
 
         let outcome = (try {
-            { kind: "response", response: (http post --max-time $MODEL_CALL_TIMEOUT $url  $json) }
+            { kind: "response", response: (http post --max-time $MODEL_CALL_TIMEOUT --content-type "application/json" $url $json) }
         } catch {|e|
             # Most common case locally: ollama still loading the model
             # into memory refuses connections briefly right after
@@ -218,6 +218,14 @@ export def calloai [model, messages, model_tools, options] {
             let msg = ($response.body | get -o error.message | default "unknown error")
             retry-backoff $attempt $"OpenAI API error \(HTTP ($response.status)\): ($msg)" $response.headers.response
             continue
+        }
+
+        # Any other non-2xx is not going to succeed on retry (bad key, unknown
+        # model, malformed request): raise with the API's own message rather
+        # than hand the error body downstream as if it were a completion.
+        if $response.status >= 300 {
+            let msg = ($response.body | get -o error.message | default "unknown error")
+            error make { msg: $"OpenAI API error \(HTTP ($response.status)\): ($msg)" }
         }
 
         return ($response.body | upsert usage (normalize-usage "openai" $response.body) | upsert retry_attempts $attempt)
@@ -493,7 +501,8 @@ export def call_bedrock [model, messages, model_tools, options] {
         $json = ($json | insert additionalModelRequestFields $additional_fields)
     }
 
-    let url = $"https://bedrock-runtime.($region).amazonaws.com/model/($model | url encode)/converse"
+    let base = (provider-base-url "BEDROCK_BASE_URL" $"https://bedrock-runtime.($region).amazonaws.com")
+    let url = $"($base)/model/($model | url encode)/converse"
 
     mut attempt = 0
     loop {
@@ -663,4 +672,46 @@ export def call_anthropic [model, messages, model_tools, options] {
 
         return ((anthropic_response_to_openai $response.body) | upsert usage (normalize-usage "anthropic" $response.body) | upsert cost (proxy-cost $response.headers.response) | upsert retry_attempts $attempt)
     }
+}
+
+# Deterministic, offline "provider" for tests and demos: replays a scripted
+# conversation instead of calling a model. The Nth model call returns
+# script[N], where N is the number of assistant messages already in the
+# conversation -- derived from the messages themselves so the closure needs
+# no mutable state. Script items:
+#   "text"                                  -> a plain assistant reply
+#   { content: "text", finish_reason: "length" }  -> reply with a given finish
+#   { tool_calls: [{ name, arguments }] }   -> native tool calls (arguments is
+#                                              a record or a JSON string)
+#   { error: "message" }                    -> the call raises this error
+# Running past the end of the script is an error, so a loop that does not
+# stop where a test expects fails loudly instead of repeating itself.
+export def call_mock [script: list, messages: list] {
+    let turn = ($messages | where role == "assistant" | length)
+    let item = ($script | get -o $turn | default null)
+    if $item == null {
+        error make { msg: $"Mock provider: no scripted response for model call ($turn + 1) \(script has ($script | length)\)" }
+    }
+    let usage = { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 }
+    if ($item | describe) == "string" {
+        return { choices: [{ message: { role: "assistant", content: $item }, finish_reason: "stop" }], usage: $usage, retry_attempts: 1 }
+    }
+    let err = ($item | get -o error | default null)
+    if $err != null {
+        error make { msg: $err }
+    }
+    let calls = ($item | get -o tool_calls | default [])
+    if ($calls | is-not-empty) {
+        let tool_calls = ($calls | enumerate | each {|c|
+            let args = ($c.item | get -o arguments | default {})
+            {
+                id: $"call_($turn)_($c.index)"
+                type: "function"
+                function: { name: $c.item.name, arguments: (if ($args | describe) == "string" { $args } else { $args | to json }) }
+            }
+        })
+        let content = ($item | get -o content | default null)
+        return { choices: [{ message: { role: "assistant", content: $content, tool_calls: $tool_calls }, finish_reason: "tool_calls" }], usage: $usage, retry_attempts: 1 }
+    }
+    { choices: [{ message: { role: "assistant", content: ($item | get -o content | default null) }, finish_reason: ($item | get -o finish_reason | default "stop") }], usage: $usage, retry_attempts: 1 }
 }

@@ -1,0 +1,16 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hustcer/setup-nushell@v3
+        with:
+          version: "0.117.0"
+      # The suite needs only nu and python3 (for the scripted fake LLM server).
+      - run: nu tests/run.nu

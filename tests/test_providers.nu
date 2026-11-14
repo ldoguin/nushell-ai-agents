@@ -1,0 +1,267 @@
+# Provider behaviour, exercised end to end against a scripted fake server:
+# request shape, response translation, usage, retry and error handling.
+use std/assert
+use lib.nu *
+use ../agent/model.nu *
+
+const MSGS = [
+    { role: "system", content: "be brief" }
+    { role: "user", content: "hi" }
+]
+
+const OVERLOADED = {
+    status: 529
+    headers: { retry-after: "0" }
+    body: { type: "error", error: { type: "overloaded_error", message: "Overloaded" } }
+}
+
+def anthropic [base: string, action: closure] {
+    with-env { ANTHROPIC_BASE_URL: $base, ANTHROPIC_API_KEY: "sk-test", OTEL_SDK_DISABLED: "true" } { do $action }
+}
+
+# ---------------------------------------------------------------- anthropic
+
+export def test-anthropic-text-reply [] {
+    let r = (fake-llm [(anthropic-text "hello")] {|base|
+        anthropic $base { call_anthropic "claude-x" $MSGS [] { max_tokens: 100 } }
+    })
+    assert $r.ok $r.error
+    let msg = $r.value.choices.0.message
+    assert equal $msg.content "hello"
+    assert equal $r.value.choices.0.finish_reason "stop"
+    assert equal $r.value.usage { prompt_tokens: 7, completion_tokens: 3, total_tokens: 10 }
+
+    let req = $r.requests.0
+    assert equal $req.path "/v1/messages"
+    assert equal $req.headers."x-api-key" "sk-test"
+    assert equal $req.headers."anthropic-version" "2023-06-01"
+    assert equal $req.body.model "claude-x"
+    assert equal $req.body.max_tokens 100
+    assert equal $req.body.system "be brief"
+    assert equal $req.body.messages [{ role: "user", content: "hi" }]
+}
+
+export def test-anthropic-tool-use-round-trip [] {
+    let tool_reply = { status: 200, body: {
+        type: "message", role: "assistant", stop_reason: "tool_use"
+        content: [{ type: "tool_use", id: "toolu_1", name: "lookup", input: { q: "x" } }]
+        usage: { input_tokens: 1, output_tokens: 1 }
+    } }
+    let tools = [{ type: "function", function: { name: "lookup", description: "d", parameters: { type: "object", properties: { q: { type: "string" } } } } }]
+    let r = (fake-llm [$tool_reply (anthropic-text "done")] {|base|
+        anthropic $base {
+            let first = (call_anthropic "claude-x" $MSGS $tools {})
+            let msg = $first.choices.0.message
+            let followup = ($MSGS | append $msg | append { role: "tool", name: "lookup", content: "42", tool_call_id: $msg.tool_calls.0.id })
+            { first: $first, second: (call_anthropic "claude-x" $followup $tools {}) }
+        }
+    })
+    assert $r.ok $r.error
+
+    assert equal $r.value.first.choices.0.finish_reason "tool_calls"
+    let call = $r.value.first.choices.0.message.tool_calls.0
+    assert equal $call.id "toolu_1"
+    assert equal $call.function.name "lookup"
+    assert equal ($call.function.arguments | from json) { q: "x" }
+    assert equal $r.value.second.choices.0.message.content "done"
+
+    # tools are translated to Anthropic's shape...
+    assert equal $r.requests.0.body.tools.0.name "lookup"
+    assert equal $r.requests.0.body.tools.0.input_schema.type "object"
+    # ...and the tool turn comes back as an assistant tool_use + user tool_result
+    let sent = $r.requests.1.body.messages
+    assert equal ($sent | get role) ["user" "assistant" "user"]
+    assert equal $sent.1.content.0 { type: "tool_use", id: "toolu_1", name: "lookup", input: { q: "x" } }
+    assert equal $sent.2.content.0 { type: "tool_result", tool_use_id: "toolu_1", content: "42" }
+}
+
+export def test-anthropic-merges-parallel-tool-results [] {
+    let assistant = { role: "assistant", content: null, tool_calls: [
+        { id: "a", type: "function", function: { name: "t", arguments: "{}" } }
+        { id: "b", type: "function", function: { name: "t", arguments: "{}" } }
+    ] }
+    let msgs = ($MSGS | append $assistant | append [
+        { role: "tool", name: "t", content: "ra", tool_call_id: "a" }
+        { role: "tool", name: "t", content: "rb", tool_call_id: "b" }
+    ])
+    let r = (fake-llm [(anthropic-text "ok")] {|base| anthropic $base { call_anthropic "claude-x" $msgs [] {} } })
+    assert $r.ok $r.error
+    # Anthropic rejects consecutive same-role messages: both results must share one user turn.
+    let sent = $r.requests.0.body.messages
+    assert equal ($sent | get role) ["user" "assistant" "user"]
+    assert equal ($sent.2.content | get tool_use_id) ["a" "b"]
+}
+
+export def test-anthropic-retries-overload-honoring-retry-after [] {
+    let r = (fake-llm [$OVERLOADED (anthropic-text "recovered")] {|base|
+        anthropic $base { call_anthropic "claude-x" $MSGS [] {} }
+    })
+    assert $r.ok $r.error
+    assert equal $r.value.choices.0.message.content "recovered"
+    assert equal $r.value.retry_attempts 2
+    assert equal ($r.requests | length) 2
+}
+
+export def test-anthropic-does-not-retry-client-errors [] {
+    let bad = { status: 400, body: { type: "error", error: { type: "invalid_request_error", message: "max_tokens too large" } } }
+    let r = (fake-llm [$bad (anthropic-text "never")] {|base| anthropic $base { call_anthropic "claude-x" $MSGS [] {} } })
+    assert (not $r.ok)
+    assert ($r.error | str contains "max_tokens too large")
+    assert equal ($r.requests | length) 1
+}
+
+export def test-anthropic-surfaces-proxy-errors [] {
+    let proxy = { status: 401, body: { error: { message: "key budget exceeded", type: "budget_exceeded" } } }
+    let r = (fake-llm [$proxy] {|base| anthropic $base { call_anthropic "claude-x" $MSGS [] {} } })
+    assert (not $r.ok)
+    assert ($r.error | str contains "key budget exceeded")
+    assert equal ($r.requests | length) 1
+}
+
+export def test-anthropic-records-proxy-cost-headers [] {
+    let reply = ((anthropic-text "hi") | insert headers { "x-litellm-response-cost": "8.3e-06", "x-litellm-key-spend": "1.5" })
+    let r = (fake-llm [$reply] {|base| anthropic $base { call_anthropic "claude-x" $MSGS [] {} } })
+    assert $r.ok $r.error
+    assert equal $r.value.cost.cost_usd 8.3e-06
+    assert equal $r.value.cost.key_spend 1.5
+    assert equal $r.value.cost.key_max_budget null
+}
+
+export def test-anthropic-base-url-tolerates-trailing-v1 [] {
+    let r = (fake-llm [(anthropic-text "hi")] {|base|
+        anthropic $"($base)/v1/" { call_anthropic "claude-x" $MSGS [] {} }
+    })
+    assert $r.ok $r.error
+    assert equal $r.requests.0.path "/v1/messages"
+}
+
+# ------------------------------------------------------------------- openai
+
+export def test-openai-text-reply-and-auth [] {
+    let reply = { status: 200, body: { choices: [{ message: { role: "assistant", content: "hello" }, finish_reason: "stop" }], usage: { prompt_tokens: 4, completion_tokens: 2, total_tokens: 6 } } }
+    let r = (fake-llm [$reply] {|base|
+        with-env { OPENAI_BASE_URL: $"($base)/v1", OPENAI_API_KEY: "sk-oai" } {
+            calloai "gpt-x" $MSGS [] { temperature: 0 }
+        }
+    })
+    assert $r.ok $r.error
+    assert equal $r.value.choices.0.message.content "hello"
+    assert equal $r.value.usage.total_tokens 6
+    assert equal $r.requests.0.path "/v1/chat/completions"
+    # no stray whitespace in the bearer token
+    assert equal $r.requests.0.headers.authorization "Bearer sk-oai"
+    assert equal $r.requests.0.body.temperature 0
+    assert equal $r.requests.0.body.model "gpt-x"
+}
+
+export def test-openai-retries-rate-limit [] {
+    let limited = { status: 429, headers: { retry-after: "0" }, body: { error: { message: "slow down", type: "rate_limit" } } }
+    let ok = { status: 200, body: { choices: [{ message: { role: "assistant", content: "fine" }, finish_reason: "stop" }] } }
+    let r = (fake-llm [$limited $ok] {|base|
+        with-env { OPENAI_BASE_URL: $"($base)/v1", OPENAI_API_KEY: "k" } { calloai "gpt-x" $MSGS [] {} }
+    })
+    assert $r.ok $r.error
+    assert equal $r.value.choices.0.message.content "fine"
+    assert equal ($r.requests | length) 2
+}
+
+export def test-openai-raises-on-non-retryable-error [] {
+    let bad = { status: 401, body: { error: { message: "Incorrect API key provided", type: "invalid_request_error" } } }
+    let r = (fake-llm [$bad] {|base|
+        with-env { OPENAI_BASE_URL: $"($base)/v1", OPENAI_API_KEY: "wrong" } { calloai "gpt-x" $MSGS [] {} }
+    })
+    assert (not $r.ok) "a 401 must raise instead of returning the error body as if it were a reply"
+    assert ($r.error | str contains "Incorrect API key")
+    assert equal ($r.requests | length) 1
+}
+
+# ------------------------------------------------------------------ bedrock
+
+export def test-bedrock-converse-round-trip [] {
+    let reply = { status: 200, body: {
+        output: { message: { role: "assistant", content: [{ text: "hola" }] } }
+        stopReason: "end_turn"
+        usage: { inputTokens: 5, outputTokens: 2, totalTokens: 7 }
+    } }
+    let r = (fake-llm [$reply] {|base|
+        with-env { BEDROCK_BASE_URL: $base, AWS_REGION: "us-west-2", AWS_BEARER_TOKEN_BEDROCK: "brk", OTEL_SDK_DISABLED: "true" } {
+            call_bedrock "us.anthropic.claude-haiku-4-5-20251001-v1:0" $MSGS [] { max_tokens: 50, temperature: 0.2 }
+        }
+    })
+    assert $r.ok $r.error
+    assert equal $r.value.choices.0.message.content "hola"
+    assert equal $r.value.usage { prompt_tokens: 5, completion_tokens: 2, total_tokens: 7 }
+    let req = $r.requests.0
+    # (nu's `url encode` percent-escapes "-"; compare what the server decodes)
+    assert equal ($req.path | url decode) "/model/us.anthropic.claude-haiku-4-5-20251001-v1:0/converse"
+    assert equal $req.headers.authorization "Bearer brk"
+    assert equal $req.body.system [{ text: "be brief" }]
+    assert equal $req.body.messages [{ role: "user", content: [{ text: "hi" }] }]
+    assert equal $req.body.inferenceConfig { maxTokens: 50, temperature: 0.2 }
+}
+
+export def test-bedrock-tool-use-translation [] {
+    let reply = { status: 200, body: {
+        output: { message: { role: "assistant", content: [{ toolUse: { toolUseId: "tu1", name: "lookup", input: { q: 1 } } }] } }
+        stopReason: "tool_use"
+        usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 }
+    } }
+    let r = (fake-llm [$reply] {|base|
+        with-env { BEDROCK_BASE_URL: $base, AWS_REGION: "us-west-2", AWS_BEARER_TOKEN_BEDROCK: "brk", OTEL_SDK_DISABLED: "true" } {
+            call_bedrock "m" $MSGS [{ type: "function", function: { name: "lookup", description: "d", parameters: { type: "object" } } }] {}
+        }
+    })
+    assert $r.ok $r.error
+    assert equal $r.value.choices.0.finish_reason "tool_calls"
+    assert equal $r.value.choices.0.message.tool_calls.0.id "tu1"
+    assert equal $r.requests.0.body.toolConfig.tools.0.toolSpec.name "lookup"
+}
+
+export def test-bedrock-raises-with-api-message [] {
+    let bad = { status: 400, body: { message: "The provided model identifier is invalid." } }
+    let r = (fake-llm [$bad] {|base|
+        with-env { BEDROCK_BASE_URL: $base, AWS_REGION: "us-west-2", AWS_BEARER_TOKEN_BEDROCK: "brk", OTEL_SDK_DISABLED: "true" } { call_bedrock "bad" $MSGS [] {} }
+    })
+    assert (not $r.ok)
+    assert ($r.error | str contains "model identifier is invalid")
+    assert equal ($r.requests | length) 1
+}
+
+export def test-bedrock-requires-credentials [] {
+    let msg = (error-of { with-env { AWS_REGION: "us-east-1", AWS_BEARER_TOKEN_BEDROCK: "" } { call_bedrock "m" $MSGS [] {} } })
+    assert ($msg | str contains "AWS_BEARER_TOKEN_BEDROCK")
+}
+
+# ------------------------------------------------------------------- ollama
+
+export def test-ollama-chat [] {
+    let reply = { status: 200, body: { message: { role: "assistant", content: "yo" }, prompt_eval_count: 4, eval_count: 2 } }
+    let r = (fake-llm [$reply] {|base|
+        with-env { OLLAMA_BASE_URL: $base } { callama "qwen" $MSGS false "api/chat" [] { temperature: 0 } }
+    })
+    assert $r.ok $r.error
+    assert equal $r.value.message.content "yo"
+    assert equal $r.value.usage { prompt_tokens: 4, completion_tokens: 2, total_tokens: 6 }
+    assert equal $r.requests.0.path "/api/chat"
+    assert equal $r.requests.0.body.model "qwen"
+    assert equal $r.requests.0.body.stream false
+}
+
+# ---------------------------------------------------------------- mock
+
+export def test-mock-replays-script-by-turn [] {
+    let script = ["first" { tool_calls: [{ name: "t", arguments: { a: 1 } }] } { content: "cut", finish_reason: "length" }]
+    let one = (call_mock $script [{ role: "user", content: "q" }])
+    assert equal $one.choices.0.message.content "first"
+    let two = (call_mock $script [{ role: "user", content: "q" }, { role: "assistant", content: "first" }])
+    assert equal $two.choices.0.finish_reason "tool_calls"
+    assert equal ($two.choices.0.message.tool_calls.0.function.arguments | from json) { a: 1 }
+    assert equal $two.choices.0.message.tool_calls.0.id "call_1_0"
+    let three = (call_mock $script [{ role: "assistant" }, { role: "assistant" }])
+    assert equal $three.choices.0.finish_reason "length"
+}
+
+export def test-mock-fails-loudly-past-end-of-script [] {
+    let msg = (error-of { call_mock ["only"] [{ role: "assistant" }] })
+    assert ($msg | str contains "no scripted response")
+}

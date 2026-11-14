@@ -50,6 +50,8 @@ export def agent [ config ] {
         "ollama" => ( build_agent { |messages| callama $config.model $messages false "api/chat" $model_tools $config.options } $system_prompt $config.tool_functions? )
         "anthropic" => ( build_agent { |messages| call_anthropic $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
         "bedrock" => ( build_agent { |messages| call_bedrock $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
+        "mock" => ( build_agent { |messages| call_mock ($config.responses? | default []) $messages } $system_prompt $config.tool_functions? )
+        _ => ( error make { msg: $"Unknown runtime '($config.runtime? | default '')' -- expected one of: openai, ollama, anthropic, bedrock, mock" } )
     }
 }
 
