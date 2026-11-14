@@ -25,10 +25,19 @@ export def agent [ config ] {
         $config
     }
 
-    let system_prompt = if ($config.prompt? != null) {
+    let base_prompt = if ($config.prompt? != null) {
         open $config.prompt
     } else {
         ""
+    }
+    # Optional persistent memory: a markdown file of lessons learned in
+    # earlier runs (written by the `remember` tool or by the
+    # self-improvement loop, see improve/README.md), appended to the
+    # system prompt every time the agent is built.
+    let system_prompt = if ($config.memory? != null) and ($config.memory | path exists) {
+        $"($base_prompt)\n\n# Lessons from previous runs\n(open --raw $config.memory)"
+    } else {
+        $base_prompt
     }
     let model_tools = if ($config.model_tools? != null) {
         open $config.model_tools
@@ -44,17 +53,38 @@ export def agent [ config ] {
     }
     let config = $config
 
-    match $config.runtime {
+    let built = match $config.runtime {
         "openai" => ( build_agent { |messages| calloai $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
         "ollama" => ( build_agent { |messages| callama $config.model $messages false "api/chat" $model_tools $config.options } $system_prompt $config.tool_functions? )
         "anthropic" => ( build_agent { |messages| call_anthropic $config.model $messages $model_tools $config.options } $system_prompt $config.tool_functions? )
+        "mock" => ( build_agent { |messages| call_mock $messages $config.options } $system_prompt $config.tool_functions? )
+        _ => ( error make { msg: $"Unknown runtime '($config.runtime)' -- must be openai, ollama, anthropic or mock." } )
+    }
+    # Per-agent loop settings, both optional in agents.json:
+    #   - tool_call_mode: "legacy" (default) or "json", see callTool
+    #   - max_iterations: model round-trips run_agent allows (default 9)
+    $built | merge {
+        tool_call_mode: ($config.tool_call_mode? | default "legacy")
+        max_iterations: ($config.max_iterations? | default 9)
     }
 }
 
+# Build and run one of the agents declared in any agents.json, by name.
+# Same behaviour as agent.nu's `agent_run`, but exported from a module
+# so it can be called without sourcing agent.nu.
+export def run_named [agent_name: string, query: string] {
+    init_logger
+    let all_agents = ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
+    if not ($agent_name in ($all_agents | columns)) {
+        error make { msg: $"Unknown agent '($agent_name)'." }
+    }
+    agent ( $all_agents | get $agent_name ) | run_agent $query
+}
+
 export def run_agent [query] {
-    let max_iterations = 9
     mut x = 0; 
     mut agent = $in
+    let max_iterations = ($agent.max_iterations? | default 9)
     mut next_prompt = $query
     mut answer: any = null
     while $x < $max_iterations {

@@ -241,7 +241,16 @@ def anthropic_response_to_openai [response: record] {
         $message = ($message | insert tool_calls $tool_calls)
     }
 
-    { choices: [{ message: $message, finish_reason: $finish_reason }] }
+    # Keep token usage, in OpenAI's field names, so callers that track
+    # cost (improve/eval.nu) read one shape for every runtime.
+    let usage = ($response | get -o usage | default {})
+    let prompt_tokens = ($usage | get -o input_tokens | default 0)
+    let completion_tokens = ($usage | get -o output_tokens | default 0)
+
+    {
+        choices: [{ message: $message, finish_reason: $finish_reason }]
+        usage: { prompt_tokens: $prompt_tokens, completion_tokens: $completion_tokens, total_tokens: ($prompt_tokens + $completion_tokens) }
+    }
 }
 
 # Call Anthropic's Messages API. Shares calloai/callama's OpenAI-shaped
@@ -323,4 +332,39 @@ export def call_anthropic [model, messages, model_tools, options] {
 
         return (anthropic_response_to_openai $response.body)
     }
+}
+
+
+# Scripted stand-in for a model, for testing the harness without an API
+# key or network. `options.script` is the path of a JSON list of steps;
+# step N answers the Nth model call of a conversation (N = number of
+# assistant messages so far). A step is either
+#   { "content": "text" }                               a final reply
+#   { "tool_calls": [{ "name": "f", "arguments": {} }] } tool calls
+# and `content` may use the placeholders {{system}}, {{last_user}} and
+# {{last_tool}} (the system prompt, last user message, last tool result).
+export def call_mock [messages, options] {
+    let script = (open $options.script)
+    let idx = ($messages | where role == "assistant" | length)
+    if $idx >= ($script | length) {
+        error make { msg: $"Mock script ($options.script) has no step ($idx)." }
+    }
+    let step = ($script | get $idx)
+    let system = ($messages | where role == "system" | get -o content | default [] | str join "\n")
+    let users = ($messages | where role == "user" | get -o content | default [])
+    let tools = ($messages | where role == "tool" | get -o content | default [])
+    let last_user = (if ($users | is-empty) { "" } else { $users | last })
+    let last_tool = (if ($tools | is-empty) { "" } else { $tools | last | into string })
+
+    if ($step | get -o tool_calls | default [] | is-not-empty) {
+        let tool_calls = ($step.tool_calls | enumerate | each {|tc|
+            { id: $"mock_($idx)_($tc.index)", type: "function", function: { name: $tc.item.name, arguments: ($tc.item | get -o arguments | default {} | to json) } }
+        })
+        return { choices: [{ message: { role: "assistant", content: null, tool_calls: $tool_calls }, finish_reason: "tool_calls" }] }
+    }
+    let content = ($step | get -o content | default ""
+        | str replace --all "{{system}}" $system
+        | str replace --all "{{last_user}}" $last_user
+        | str replace --all "{{last_tool}}" $last_tool)
+    { choices: [{ message: { role: "assistant", content: $content }, finish_reason: "stop" }] }
 }

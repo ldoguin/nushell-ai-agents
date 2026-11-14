@@ -66,6 +66,14 @@ Make sure you have pulled models used by your agents first, and that your server
 
 The search tool relies on [DDGR](https://github.com/jarun/ddgr?tab=readme-ov-file#installation).
 
+## Self-improving agents
+
+An agent can edit the prompt, tool definitions and tool functions of another agent, or its own, and keep the change only if it scores better on a task file. See [improve/README.md](improve/README.md).
+
+```
+nu improve/improve.nu run <agent> -n 3
+```
+
 ## Slides
 
 Slides are displayed using [presenterm](https://github.com/mfontanini/presenterm).

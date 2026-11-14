@@ -1,0 +1,5 @@
+{
+    "writable": ["prompts", "tools_catalog", "memory"],
+    "protected": ["tools_catalog/self/functions.nu"],
+    "unreadable": ["evals", "logs", "improve/archive"]
+}

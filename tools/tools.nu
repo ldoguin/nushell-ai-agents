@@ -84,8 +84,42 @@ export def search_internet [options] {
 }
 
 
-export def callTool [$toolCall, tool_functions] {
+# "json" tool-call mode: hand the model's arguments to the tool function
+# as one record, read from a temp file instead of being pasted into the
+# command line. Unlike the legacy path below, the arguments are never
+# parsed as nushell source and never scanned for nested `name(args)`
+# calls, so a tool can safely receive arbitrary text (source code, quotes,
+# newlines, parentheses). The result is always a string: stdout on
+# success, an error report the model can read on failure.
+def run-tool-json [toolCall, tool_functions] {
+    let name = $toolCall.name
+    if ($name !~ '^\w+$') {
+        return $"TOOL ERROR: invalid tool name '($name)'"
+    }
+    let args = $toolCall.arguments
+    let json = if ($args | describe) == "string" {
+        if ($args | str trim | is-empty) { "{}" } else { $args }
+    } else {
+        $args | to json
+    }
+    let tmp = (mktemp -t tool-args.XXXXXX)
+    $json | save -f $tmp
+    let r = (with-env { TOOL_ARGS_FILE: $tmp } {
+        tool-shell-run $"source ($tool_functions); ($name) \(open --raw $env.TOOL_ARGS_FILE | from json\)"
+    })
+    rm -f $tmp
+    if $r.exit_code == 0 {
+        $r.stdout
+    } else {
+        $"TOOL ERROR \(exit ($r.exit_code)\):\n($r.stderr)\n($r.stdout)"
+    }
+}
+
+export def callTool [$toolCall, tool_functions, mode: string = "legacy"] {
     $toolCall | log
+    if $mode == "json" {
+        return (run-tool-json $toolCall $tool_functions)
+    }
     let functionName = $toolCall.name
      #mut arguments = parseArg $toolCall.arguments 
     mut arguments =  $toolCall.arguments 

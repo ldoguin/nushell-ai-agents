@@ -1,0 +1,91 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "list_files",
+      "description": "List the files and folders in a directory of the repository.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "Directory, relative to the repository root. Defaults to the root." }
+        },
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "read_file",
+      "description": "Read a text file of the repository. Long files are truncated.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "File path, relative to the repository root." }
+        },
+        "required": ["path"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "write_file",
+      "description": "Create a file or replace its whole content. Only works inside the writable areas. .nu and .json files are syntax-checked after saving and any problem is reported in the result.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "File path, relative to the repository root." },
+          "content": { "type": "string", "description": "The complete new content of the file." }
+        },
+        "required": ["path", "content"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "edit_file",
+      "description": "Replace one exact excerpt of a file with new text. Prefer this over write_file for small changes. The excerpt must occur exactly once in the file. .nu and .json files are syntax-checked after saving.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "File path, relative to the repository root." },
+          "old_string": { "type": "string", "description": "The exact text to replace, copied from the file." },
+          "new_string": { "type": "string", "description": "The text to put in its place." }
+        },
+        "required": ["path", "old_string", "new_string"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "try_agent",
+      "description": "Run an agent on one query and return its answer. Use it to try out a change you made before finishing. Each call costs a full agent run, so use it sparingly.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string", "description": "Agent name, as declared in agents.json." },
+          "query": { "type": "string", "description": "The question to ask the agent." }
+        },
+        "required": ["agent", "query"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "remember",
+      "description": "Save one short, general lesson to an agent's memory file. The lesson is added to that agent's system prompt on its later runs. Use it for durable facts about how to do the job well, not for the details of one task.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string", "description": "Name of the agent that should remember this." },
+          "note": { "type": "string", "description": "The lesson, in one or two sentences (500 characters at most)." }
+        },
+        "required": ["agent", "note"]
+      }
+    }
+  }
+]

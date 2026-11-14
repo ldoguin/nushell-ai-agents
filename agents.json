@@ -85,5 +85,17 @@
             "stream": false,
             "temperature": 0
             }
+    },
+    "self_improver" : {
+        "runtime" : "anthropic",
+        "model":"claude-opus-5-5",
+        "folder":"tools_catalog/self",
+        "tool_call_mode":"json",
+        "max_iterations": 40,
+        "memory":"memory/self_improver.md",
+        "description":"An agent that improves other agents (or itself) by editing their prompts, tool definitions and tool functions. Driven by improve/improve.nu.",
+        "options" : {
+            "max_tokens": 8192
+            }
     }
 }
