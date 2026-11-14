@@ -41,3 +41,33 @@ export def test-unknown-runtime-is-an-error [] {
     let msg = (error-of { agent { runtime: "nope", model: "m" } })
     assert ($msg | str contains "Unknown runtime 'nope'")
 }
+
+export def test-failing-tool-reaches-the-model-as-an-error-string [] {
+    let tools = (make-tools)
+    let responses = [{ tool_calls: [{ name: "fail_tool", arguments: {} }] } "sorry about that"]
+    let a = (agent (mock-agent-config $responses $tools))
+    let step = (call $a "go")
+    let tool_msg = ($step.agent.messages | last)
+    assert equal ($tool_msg.content | describe) "string" "a failed tool must not put a record into the conversation"
+    assert ($tool_msg.content | str starts-with "Error: ")
+    assert ($tool_msg.content | str contains "boom")
+    # and the loop carries on to the model's recovery
+    assert equal ($a | run_agent "go") "sorry about that"
+}
+
+export def test-unknown-tool-call-is-recoverable [] {
+    let tools = (make-tools)
+    let responses = [{ tool_calls: [{ name: "injected", arguments: {} }] } "ok, never mind"]
+    let step = (call (agent (mock-agent-config $responses $tools)) "go")
+    let tool_msg = ($step.agent.messages | last)
+    assert ($tool_msg.content | str contains "Unknown tool 'injected'")
+    assert (not ($tool_msg.content | str contains "SHOULD NOT RUN"))
+}
+
+export def test-agent-policy-comes-from-config [] {
+    let tools = (make-tools)
+    let responses = [{ tool_calls: [{ name: "echo_tool", arguments: { text: "x" } }] } "done"]
+    let cfg = ((mock-agent-config $responses $tools) | insert tool_policy { echo_tool: "deny" })
+    let step = (call (agent $cfg) "go")
+    assert ((($step.agent.messages | last).content) | str contains "not permitted")
+}

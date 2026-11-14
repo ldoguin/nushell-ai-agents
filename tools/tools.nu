@@ -1,24 +1,5 @@
 use ../common/utils.nu *
 
-# callTool's shell-out target, configurable via the TOOL_SHELL environment
-# variable:
-#   - unset or "nu"   -> shell out via `nu -c "..."` (default)
-#   - "cbsh"          -> shell out via `cbsh -c "..."` (legacy/opt-in,
-#                        needed only for tool functions that call into
-#                        Couchbase Shell specifically, e.g. ask_repo /
-#                        import_git_repo)
-#   - anything else   -> treated as a tool-call-time error (same shape
-#                        `callTool` already returns for a failed shell-out),
-#                        not a silent fallback to either shell.
-def tool-shell-run [cmd: string] {
-    let shell = ($env.TOOL_SHELL? | default "nu")
-    match $shell {
-        "nu" => (^nu -c $cmd | complete)
-        "cbsh" => (^cbsh -c $cmd | complete)
-        _ => { stdout: "", stderr: $"Invalid TOOL_SHELL value '($shell)' -- must be 'nu' or 'cbsh'.", exit_code: 1 }
-    }
-}
-
 # Function Library
 export def cbsh_tool_library [] {
     let tools = open "tools/nushell/cbsh-cat-couchbase.json"
@@ -30,28 +11,34 @@ export def tool_library [] {
     $tools
 }
 
+# Arguments reach cbsh through environment variables, never spliced into the
+# command string, so a repo name or question cannot inject nu code.
 export def ask_repo [options] {
-    let repoName = $options.repoName
-    let question = $options.question
-    let r = cbsh -c $"source tools/cbsh.nu; ask_repo \"($repoName)\" \"($question)\" "
-    $r
+    with-env { ASK_REPO_NAME: $options.repoName, ASK_REPO_QUESTION: $options.question } {
+        cbsh -c 'source tools/cbsh.nu; ask_repo $env.ASK_REPO_NAME $env.ASK_REPO_QUESTION'
+    }
 }
 
-export def import_git_repo [options ] {
-    let repoPath = $options.repoPath
-    let repoName = $options.repoName
-    let r =  cbsh -c $"source tools/cbsh.nu; import_git_repo \"($repoPath)\" \"($repoName)\" "
-    $r
+export def import_git_repo [options] {
+    with-env { IMPORT_REPO_PATH: $options.repoPath, IMPORT_REPO_NAME: $options.repoName } {
+        cbsh -c 'source tools/cbsh.nu; import_git_repo $env.IMPORT_REPO_PATH $env.IMPORT_REPO_NAME'
+    }
 }
 
-export def calculate [$op] {
-    let xpr = ( $op | str replace --all -r 'x' '*' ) 
-    let x: string = nu -c $xpr
-    $x
+# Evaluate an arithmetic expression. Only digits, whitespace and the
+# operators + - * / % ^ x ( ) . are accepted ("x" and "^" are the usual
+# written forms of multiply and power), so nothing but arithmetic can reach nu.
+export def calculate [options] {
+    let expression = ($options.expression | into string)
+    if ($expression !~ '^[0-9\s+\-*/%^x().]+$') {
+        error make { msg: $"Not an arithmetic expression: ($expression)" }
+    }
+    let xpr = ($expression | str replace --all 'x' '*' | str replace --all '^' '**')
+    ^nu --no-config-file -c $xpr | str trim
 }
 
-export def get_planet_mass [$planet] {
-    match ( $planet | str lowercase ) {
+export def get_planet_mass [options] {
+    match ( $options.planet | str lowercase ) {
         "earth" => 5
         "jupiter" => 1.898e27
         "mars" => 6.39e23
@@ -66,9 +53,7 @@ export def get_planet_mass [$planet] {
 
 export def search_internet [options] {
     let query = $options.search
-    print $query
     let queryResult = ( ddgr --json -n1 $query |  from json )
-    print $queryResult
     mut answer = []
     for $u in ( $queryResult | enumerate) {
         let url = $u.item.url
@@ -81,83 +66,4 @@ export def search_internet [options] {
         $answer = $answer | append $u.item
     }
     $answer
-}
-
-
-export def callTool [$toolCall, tool_functions] {
-    $toolCall | log
-    let functionName = $toolCall.name
-     #mut arguments = parseArg $toolCall.arguments 
-    mut arguments =  $toolCall.arguments 
-    $arguments | log
-    # Nested calls like `outer(inner(x))` only exist in the legacy plain-text
-    # form. A structured tool call arrives as a JSON string (or a record), and
-    # a URL such as .../Foo_(bar) inside it would match the regex and be
-    # mistaken for a nested call, so only look for them in non-JSON text.
-    let is_plain_text = (($arguments | describe) == "string") and (not ($arguments | str trim | str starts-with "{")) and (not ($arguments | str trim | str starts-with "["))
-    mut fInArg = (if $is_plain_text { $arguments | parse --regex '(?P<fname>\w+)\((?P<arguments>.*?)\)' } else { [] })
-    if ( $fInArg != [] ) {
-        mut responses = []
-        for $fun in ( $fInArg | enumerate) {
-            let tc = {
-                name : $fun.item.fname,
-                arguments: { "args" : ( $fun.item.arguments | split row , ) }
-            }
-            print " $tc.arguments"
-            let q = ( $tc.arguments.args | str replace -r '^"' '' | str replace -r '"$' '' ) 
-            let tcResult = ( callTool $tc $tool_functions )
-            $responses = ( $responses | append {value : $tcResult} )
-            $arguments = ( $arguments |  str replace -r '(?P<fname>\w+)\((?P<arguments>.*?)\)' $tcResult )
-        }
-        $fInArg = ( $fInArg | merge $responses )
-        print $fInArg
-    }
-    let fcall = $" source ($tool_functions); ($functionName)   ($arguments)  "
-    $fcall | log
-    if ($env.PROMPT_TOOLS? != null and ($env.PROMPT_TOOLS?  | into bool )) {
-        print $fcall
-        let keys = {
-            # [ key.code key.modifiers ]
-            y:      [ 'y' [] ]
-            n:      [ 'n' [] ]
-            ctrl-c: [ 'c' ['keymodifiers(control)'] ]
-        }
-        mut key = {keycode: '', modifiers: ['']}
-        print "Do you want to execute this tool call ? (y/N)"
-
-        loop {
-            let $key = (input listen --types [key])
-            match [$key.code $key.modifiers] {
-                $keymatch if $keymatch == $keys.y => {print 'Running';break}
-                $keymatch if $keymatch == $keys.n  => {print 'Stop'; break}
-                $keymatch if $keymatch == $keys.ctrl-c => {print 'Terminated with Ctrl-C'; break}
-                _ => {
-                print "That key wasn't recognized"
-                print "Do you want to execute this tool ? (y/N)"
-                continue
-                }
-            }
-        }
-        # Act on the captured keypress from the mutable variable
-        match [$key.code $key.modifiers] {
-            $k if $k == $keys.y => {
-                let result_tool = (tool-shell-run $" source ($tool_functions);  ($functionName) ($arguments ) ")
-                if ( $result_tool.exit_code == 0 ) {
-                    return $result_tool.stdout
-                } else {
-                    print $result_tool.stderr
-                    return $result_tool
-                }
-            }
-        }
-        "Tool call has been cancelled by user"
-    } else {
-        let result_tool = (tool-shell-run $" source ($tool_functions);  ($functionName) ($arguments ) ")
-        if ( $result_tool.exit_code == 0 ) {
-            return $result_tool.stdout
-        } else {
-            print $result_tool.stderr
-            return $result_tool
-        }
-    }
 }

@@ -188,6 +188,42 @@ Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/ot
 
 The search tool relies on [DDGR](https://github.com/jarun/ddgr?tab=readme-ov-file#installation).
 
+## Writing tools
+
+A tool is a nu function that takes **one record** -- the model's parsed
+arguments -- defined in the agent's `tool_functions` file and declared in its
+`model_tools` JSON schema:
+
+```nushell
+def get_planet_mass [options] { match ($options.planet | str lowercase) { "mars" => 6.39e23, _ => 0.0 } }
+```
+
+The harness runs it with `tools/runtime.nu`'s `run-tool`: the arguments are
+passed to the child process as data (never spliced into code), only tools the
+agent declared can be called, each call has a timeout and an output cap, and a
+failing tool is reported to the model as an `Error: ...` message so it can
+recover. Per-agent settings in `agents.json`:
+
+| key | meaning |
+| --- | --- |
+| `tool_policy` | `{ "default": "allow", "import_git_repo": "ask", "rm_rf": "deny" }` -- `ask` prompts at the terminal and refuses when there is none. The default falls back to `$env.AGENT_TOOL_POLICY`, then `allow`. |
+| `tool_timeout` | seconds a single tool call may run (default 120). Needs `timeout` (or `gtimeout`) on the PATH. |
+| `tool_shell` | `nu` (default) or `cbsh`, for tools that call Couchbase Shell (falls back to `$env.TOOL_SHELL`). |
+
+`$env.AGENT_TOOL_MAX_OUTPUT` (default 50000) caps how many characters of a tool's
+output reach the model.
+
+## Tests
+
+```sh
+nu tests/run.nu                  # whole suite
+nu tests/run.nu --filter retry   # tests whose name contains "retry"
+```
+
+Needs `nu` and `python3` (a scripted fake LLM server stands in for the
+providers). The `mock` runtime replays a scripted conversation offline:
+`{ "runtime": "mock", "responses": ["text", { "tool_calls": [{ "name": "t", "arguments": {} }] }] }`.
+
 ## Slides
 
 Slides are displayed using [presenterm](https://github.com/mfontanini/presenterm).

@@ -1,23 +1,19 @@
 use ../common/utils.nu *
 use ../common/otel.nu *
-use ../tools/tools.nu *
+use ../tools/runtime.nu *
 
-# Wraps one callTool invocation with an "execute_tool" span, per
+# Wraps one run-tool invocation with an "execute_tool" span, per
 # OpenTelemetry's GenAI semantic conventions (gen_ai.operation.name =
 # execute_tool, span name `execute_tool <tool name>`, gen_ai.tool.name/
 # gen_ai.tool.call.id attributes). Arguments/results are only recorded as
 # span attributes when otel-capture-tool-content is enabled -- the spec
 # itself flags both gen_ai.tool.call.arguments and gen_ai.tool.call.result
 # as "may contain sensitive information", opt-in attributes, not
-# recommended/required ones. `args_json` is expected pre-serialized (the
-# native tool_calls path already carries arguments as a JSON string; the
-# legacy Action:-parsing path below serializes its plain record before
-# calling this). Re-raises on failure (after recording error.type and the
-# error message on the span) so callTool failures propagate exactly as
-# they did before this instrumentation existed -- this must never change
-# what error reaches run-pipeline-agent's own try/catch, only add a span
-# alongside it.
-def execute-tool-with-span [name: string, call_id: string, args_json: string, tool_functions: string, parent: record, tool: record] {
+# recommended/required ones. `args_json` is the model's raw arguments.
+# Returns the text to give back to the model. run-tool never raises: a failed
+# tool is a result, so the span is marked ERROR but the loop carries on and
+# the model gets to see the error and recover.
+def execute-tool-with-span [name: string, call_id: string, args_json: string, tools: record, parent: record, tool: record] {
     mut attrs = {
         "gen_ai.operation.name": "execute_tool"
         "gen_ai.tool.name": $name
@@ -29,21 +25,17 @@ def execute-tool-with-span [name: string, call_id: string, args_json: string, to
         $attrs = ($attrs | insert "gen_ai.tool.call.arguments" $args_json)
     }
     let span = (otel-start-span $"execute_tool ($name)" $parent $attrs)
-    try {
-        let result = (callTool $tool $tool_functions)
-        let end_attrs = (if (otel-capture-tool-content) {
-            { "gen_ai.tool.call.result": (if ($result | describe) == "string" { $result } else { $result | to json }) }
-        } else {
-            {}
-        })
+    let result = (run-tool $tools $tool)
+    let text = (tool-result-text $result)
+    if $result.ok {
+        let end_attrs = (if (otel-capture-tool-content) { { "gen_ai.tool.call.result": $text } } else { {} })
         otel-end-span $span $end_attrs
         otel-record-counter "agent.tool.call.count" "{call}" 1.0 { "gen_ai.tool.name": $name, "status": "ok" }
-        $result
-    } catch {|e|
-        otel-end-span $span { "error.type": "_OTHER" } $e.msg [(otel-exception-event "_OTHER" $e.msg)]
+    } else {
+        otel-end-span $span { "error.type": "tool_error" } $result.error [(otel-exception-event "tool_error" $result.error)]
         otel-record-counter "agent.tool.call.count" "{call}" 1.0 { "gen_ai.tool.name": $name, "status": "error" }
-        error make { msg: $e.msg }
     }
+    $text
 }
 
 export def call [ $agent, $message] {
@@ -62,7 +54,7 @@ export def call [ $agent, $message] {
         $magent.messages = ($magent.messages | append  $result.message )
         for $tc in ( $msg.tool_calls | enumerate) {
             let call_id = ($tc.item | get -o id | default "")
-            let toolresponse = (execute-tool-with-span $tc.item.function.name $call_id $tc.item.function.arguments $agent.tool_functions $tool_parent $tc.item.function)
+            let toolresponse = (execute-tool-with-span $tc.item.function.name $call_id $tc.item.function.arguments ($agent | get -o tools | default (tool-context {} [])) $tool_parent $tc.item.function)
             mut tool_call_back_msg = {"role": "tool", "name" : $tc.item.function.name , "content": $toolresponse};
             if ($tc.item | column_exist "id") {
                 $tool_call_back_msg  = ( $tool_call_back_msg | merge {"id" : $tc.item.id, "tool_call_id" : $tc.item.id } )
@@ -71,20 +63,6 @@ export def call [ $agent, $message] {
             #$magent.messages = ($magent.messages | append  {"role": "user", "content": $"Observation: ($toolresponse)"} )
         }
     } else if ($msg.role == "assistant" ) {
-        let steps = ( $msg.content | default "" | split row  "\n" )
-        let step = ($steps  | parse --regex '^(?P<step>Action|Observation|Thought|Pause): (?P<content>.*)$')
-        if ($step | column_exist "step"  ) {
-            for $s in ( $step | enumerate) {
-                if ( $s.item.step == "Action") {
-                    let tool = ( $s.item.content | parse --regex '^(?P<fname>\w+): (?P<args>.*)$')
-                    let functionName = $tool.fname.0
-                    let args = ( $tool.args.0  | split row , )
-                    let tool_call = {name: $functionName, arguments:  { "args" : $args } }
-                    let result_tool = (execute-tool-with-span $functionName "" ({ "args" : $args } | to json) "tools/tools.nu" $tool_parent $tool_call)
-                    $magent.messages = ($magent.messages | append  {"role": "user", "content": $"Observation: ($result_tool)"} )
-                }
-            }
-        }
         $magent.messages = ($magent.messages | append $result.message )
     }
     let rep =  {agent: $magent, result : ($result | to json )  }
