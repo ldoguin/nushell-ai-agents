@@ -34,7 +34,6 @@
     "qwen_general_local" : {
         "runtime" : "ollama",
         "model":"qwen2.5:7b",
-        "prompt":"prompts/toolSystemPrompt.txt",
         "model_tools":"tools/tools.json",
         "tool_functions":"tools/tools.nu",
         "description":"This agent uses qwen model to answer general question",

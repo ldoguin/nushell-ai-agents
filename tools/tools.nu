@@ -1,5 +1,3 @@
-use ../common/utils.nu *
-
 # Function Library
 export def cbsh_tool_library [] {
     let tools = open "tools/nushell/cbsh-cat-couchbase.json"

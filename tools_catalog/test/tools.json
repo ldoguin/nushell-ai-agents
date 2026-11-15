@@ -3,42 +3,22 @@
     "type": "function",
     "function": {
       "name": "agent_runner",
-      "description": "Runs the agent regis, capable of doing things like finding regis's name.",
+      "description": "Runs a test agent. 'regis' and 'fouf' are the available agents; each can find its own name.",
       "parameters": {
         "type": "object",
         "properties": {
           "name": {
-            "description": "always use 'regis' for the value of this parameter",
-            "type": "string"
+            "description": "which agent to run",
+            "type": "string",
+            "enum": ["regis", "fouf"]
           },
           "query": {
-            "description": "the regis you are looking for",
+            "description": "what you are looking for",
             "type": "string"
           }
         },
         "required": [
-          "query"
-        ]
-      }
-    }
-  },{
-    "type": "function",
-    "function": {
-      "name": "agent_runner",
-      "description": "Runs the agent fouf, capable of doing things like finding fouf's name.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "always use 'fouf' for the value of this parameter",
-            "type": "string"
-          },
-          "query": {
-            "description": "the fouf you are looking for",
-            "type": "string"
-          }
-        },
-        "required": [
+          "name",
           "query"
         ]
       }

@@ -1,144 +1,47 @@
-use internal.nu *
-use ../common/utils.nu *
-use ../common/otel.nu *
+# Build a runnable agent record from a config entry.
+use config.nu [resolve-config]
+use ../tools/runtime.nu [tool-context]
 use providers/openai.nu
 use providers/ollama.nu
 use providers/anthropic.nu
 use providers/bedrock.nu
 use providers/mock.nu
-use ../tools/runtime.nu [tool-context]
 
-def build_agent [model_call: closure, prompt?: string, tools?: record] {
-    mut agent = {
-        messages : []
-        system : $prompt,
-        model_call : $model_call
-    }
-    if ($prompt != null) {
-        $agent.messages = ($agent.messages | append {"role": "system", "content": $prompt})
-    }
-    if ($tools != null) {
-        $agent.tools = $tools
-    }
-    $agent
-}
+# `config` is one agents.json entry (see agent/config.nu for the keys); it is
+# validated first, so a bad entry fails here with a message naming the agent
+# and the problem. Relative paths resolve against `--base-dir` (default: the
+# current directory) -- the manifest loader passes the manifest's directory.
+#
+# The record is plain data plus the closure that calls the model:
+#   { name, runtime, model, messages, model_call, tools, max_iterations }
+# `messages` starts as just the system prompt; run-agent (agent/loop.nu)
+# appends the conversation and returns it, so a conversation can be continued by
+# putting the returned messages back into a new agent record.
+export def agent [config: record, --name: string = "", --base-dir: string = ""] {
+    let label = (if ($name | is-empty) { "agent" } else { $"agent '($name)'" })
+    let base = (if ($base_dir | is-empty) { pwd } else { $base_dir })
+    let config = (resolve-config $config $base $label)
 
-export def agent [ config ] {
-    let config = if ($config.folder? != null) {
-        let config_folder = load_folder $config.folder
-        ( $config | merge $config_folder)
-    } else {
-        $config
-    }
+    let system_prompt = (if ($config.prompt? != null) { open --raw $config.prompt } else { "" })
+    let model_tools = (if ($config.model_tools? != null) { open $config.model_tools } else { [] })
+    let model = ($config | get -o model | default "")
+    let options = $config.options
 
-    let system_prompt = if ($config.prompt? != null) {
-        open $config.prompt
-    } else {
-        ""
-    }
-    let model_tools = if ($config.model_tools? != null) {
-        open $config.model_tools
-    } else {
-        []
-    }
-    mut config = $config
-    $config = if ($config.options? != null) {
-        $config
-    } else {
-        $config = $config | merge { options : {} }
-        $config
-    }
-    let config = $config
+    let model_call = (match $config.runtime {
+        "openai" => {|messages| openai call $model $messages $model_tools $options }
+        "ollama" => {|messages| ollama call $model $messages $model_tools $options }
+        "anthropic" => {|messages| anthropic call $model $messages $model_tools $options }
+        "bedrock" => {|messages| bedrock call $model $messages $model_tools $options }
+        "mock" => {|messages| mock call ($config.responses? | default []) $messages }
+    })
 
-    let tools = (tool-context $config $model_tools)
-
-    match $config.runtime {
-        "openai" => ( build_agent { |messages| openai call $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "ollama" => ( build_agent { |messages| ollama call $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "anthropic" => ( build_agent { |messages| anthropic call $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "bedrock" => ( build_agent { |messages| bedrock call $config.model $messages $model_tools $config.options } $system_prompt $tools )
-        "mock" => ( build_agent { |messages| mock call ($config.responses? | default []) $messages } $system_prompt $tools )
-        _ => ( error make { msg: $"Unknown runtime '($config.runtime? | default '')' -- expected one of: openai, ollama, anthropic, bedrock, mock" } )
+    {
+        name: $name
+        runtime: $config.runtime
+        model: $model
+        messages: (if ($system_prompt | is-empty) { [] } else { [{ role: "system", content: $system_prompt }] })
+        model_call: $model_call
+        tools: (tool-context $config $model_tools)
+        max_iterations: $config.max_iterations
     }
-}
-
-export def run_agent [query] {
-    mut x = 0;
-    mut agent = $in
-    # How many model calls (each one possibly a round of tool calls) the
-    # loop may take before it gives up. 9 by default; an agent that
-    # legitimately needs more (e.g. reading through a codebase) sets
-    # `max_iterations` on its agent record.
-    let max_iterations = ($agent | get -o max_iterations | default 9)
-    # "agent.run" wraps the whole ReAct loop; $agent.otel_parent (if the
-    # caller seeded one, e.g. engine.nu's run-pipeline-agent) becomes its
-    # parent, otherwise this starts a fresh root trace.
-    let run_span = (otel-start-span "agent.run" ($agent | get -o otel_parent | default {}))
-    let iteration_count_attrs = { "gen_ai.provider.name": (otel-provider-name ($agent | get -o otel_runtime | default "unknown")), "gen_ai.request.model": ($agent | get -o otel_model | default "unknown") }
-    mut next_prompt = $query
-    mut answer: any = null
-    while $x < $max_iterations {
-        $x = $x + 1
-        # On the last permitted iteration, ask for the answer from what has
-        # been gathered instead of letting the agent spend it on another
-        # tool call -- hitting the cap otherwise discards everything it
-        # learned and returns nothing.
-        if $x == $max_iterations and $x > 1 {
-            $next_prompt = "You have used your tool budget. Do not call any more tools. Give your final answer now, in the format your instructions require, using only what you have already gathered, and say plainly what you did not get to."
-        }
-        # Each iteration gets its own child span, and becomes the parent
-        # `call`/`execute` see for that iteration's gen_ai.chat span --
-        # upsert rather than dot-assignment since a caller that never
-        # seeded otel_parent at all (e.g. using this submodule directly,
-        # outside engine.nu) won't have the field to assign into yet.
-        let iter_span = (otel-start-span "agent.iteration" $run_span { "iteration": $x })
-        $agent = ($agent | upsert otel_parent $iter_span)
-        let response = call $agent $next_prompt
-        let $msg = ( $response.result | from json | $in.message )
-        if ( ( $msg.role == "assistant") and ( $msg.content != null ) ) {
-            $msg | log
-            let steps = ( $msg.content | split row  "\n" )
-            let step = ($steps  | parse --regex '^(?P<step>Action|Observation|Thought|Pause|Answer): (?P<content>.*)$')
-            for $s in ( $step | enumerate) {
-                if ( $s.item.step == "Answer") {
-                    $answer = $s.item.content
-                    $answer | log
-                }
-            }
-        }
-        otel-end-span $iter_span { "finish_reason": ($msg | get -o finish_reason | default "") }
-        if ( ($msg | column_exist "finish_reason") and ( $msg.finish_reason == "stop" ) ) {
-            # $agent here is still the pre-call agent object (its messages end
-            # with the system prompt) -- the assistant's reply only exists on
-            # $response.agent, appended inside `call`. Read from there instead
-            # of $agent, otherwise this returns the system prompt, not the
-            # model's actual reply.
-            $answer = ( $response.agent.messages | last ).content
-            otel-end-span $run_span { "iterations": $x }
-            otel-record-counter "agent.iteration.count" "{iteration}" ($x | into float) $iteration_count_attrs
-            return $answer
-        }
-        $agent = ($response.agent | upsert otel_parent $run_span)
-
-        $next_prompt = null
-
-        if ( $answer != null ) {
-            otel-end-span $run_span { "iterations": $x }
-            otel-record-counter "agent.iteration.count" "{iteration}" ($x | into float) $iteration_count_attrs
-            return $answer
-        }
-    }
-    otel-end-span $run_span { "iterations": $x, "max_iterations_reached": true }
-    otel-record-counter "agent.iteration.count" "{iteration}" ($x | into float) $iteration_count_attrs
-    # sound play drop.mp3 -d 0.2sec
-    $answer
-}
-
-def load_folder [folder : string] {
-    let folder =  {
-        "prompt":$"($folder)/prompt.txt",
-        "model_tools":$"($folder)/tools.json",
-        "tool_functions": $"($folder)/functions.nu"
-    }
-    $folder
 }

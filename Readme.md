@@ -6,10 +6,32 @@
 This repository contains an example of Ai agents built with Nushell.
 
 ```nushell
-cbsh
-source agent.nu
-run "who are the contibutors of the github project couchbaselabs/couchbase-shell "
+# from a shell
+nu agent.nu "who are the contributors of couchbaselabs/couchbase-shell?" --agent general_oai
+
+# from nu
+use agent.nu *
+agent-list                                    # the agents in agents.json
+agent-ask "summarize this" --agent writer     # returns the answer
+"some text" | agent-ask "summarize:" -a writer
+agent-ask "..." -a writer --full              # the whole result record
 ```
+
+## How it fits together
+
+- **`agents.json`** (or `--manifest` / `$env.AGENTS_FILE`) maps agent names to
+  config entries: runtime, model, prompt, tools, limits. Entries are validated
+  when loaded (`agent/config.nu` lists every key) and relative paths resolve
+  against the manifest's directory, so it works from any directory.
+- **`agent/loop.nu`'s `run-agent`** runs the loop and always returns a record:
+  `status` (`done`, `truncated`, `max_turns` or `error`), `answer`, `error`,
+  the whole `messages` conversation, summed `usage` and the `iterations` used.
+  Pass the returned `messages` into a new agent record to continue a
+  conversation. The last permitted iteration asks the model to answer from what
+  it has gathered, so hitting `max_iterations` (default 9, per agent) usually
+  still yields an answer.
+- **Providers** (`agent/providers/`) and **tools** (`tools/runtime.nu`) are
+  described below.
 
 ## Dependencies
 

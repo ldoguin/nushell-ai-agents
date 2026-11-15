@@ -1,118 +1,59 @@
-# Agent
-use agent/agents.nu [ run_agent, agent ]
-use common/utils.nu *
+# Nushell Agents -- entry points.
+#
+#   nu agent.nu "who contributes to couchbase-shell?" --agent general_oai
+#   use agent.nu *; "some text" | agent-ask "summarize this" --agent writer
+#
+# Agents come from a manifest (agents.json by default; --manifest or
+# $env.AGENTS_FILE to use another). `agent-list` shows what is there.
+use agent/registry.nu [get-agent, list-agents]
+use agent/loop.nu [run-agent]
 
-def think_code [$query] {
-    init_logger
-    "## Calling think_code" | log
-    $query | log
-
-    let all_agents =  ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
-    mut agent = agent $all_agents.cbes_oai
-
-    let answer = ( $agent | run_agent $query )
-    $answer
+# The agent to use when none is named: $env.AGENT_NAME, else the manifest's
+# only agent.
+def default-agent [manifest?: string] {
+    let named = ($env.AGENT_NAME? | default "")
+    if ($named | is-not-empty) { return $named }
+    let all = (list-agents --manifest $manifest | get name)
+    if ($all | length) == 1 { return ($all | first) }
+    error make { msg: $"Choose an agent with --agent or $env.AGENT_NAME. Available: ($all | str join ', ')" }
 }
 
-
-
-def run [$query] {
-    let s = $in
-    init_logger
-    "## Calling run" | log
-    let all_agents =  ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
-    mut agent = agent $all_agents.cbes_oai
-    mut agentPrompt = "";
-    if ( $s != null ) {
-        $agentPrompt = ( [$query, " ", $s] | str join )
-    } else {
-        $agentPrompt = $query
-    }
-    let answer = $agent | run_agent $agentPrompt
-    $answer
+# The agents in the manifest.
+export def agent-list [--manifest (-m): string] {
+    list-agents --manifest $manifest
 }
 
+# Ask an agent a question. Text piped in is appended to the question. Returns
+# the answer; with --full, returns the whole result record (status, answer,
+# messages, usage, ...) and never raises for a failed run.
+export def agent-ask [
+    query: string
+    --agent (-a): string       # which agent (default: $env.AGENT_NAME, else the manifest's only one)
+    --manifest (-m): string    # agents.json to use
+    --full (-f)                # return the full result record
+] {
+    let piped = $in
+    # (not `default (default-agent ...)`: that would evaluate the fallback, and fail, even when an agent was given)
+    let name = (if $agent != null { $agent } else { default-agent $manifest })
+    let prompt = (if $piped == null { $query } else { $"($query) ($piped)" })
 
-def agent_run [agent_name, query] {
-    let s = $in
-    init_logger
-    "## Calling run" | log
-    echo ( ls agents.json )
-    let all_agents = ( ls **/agents.json | get name | reduce --fold {} { |e, acc| ( open $e | merge $acc) } )
-    mut agent = agent ( $all_agents | get $agent_name )
-    mut agentPrompt = "";
-    if ( $s != null ) {
-        $agentPrompt = ( [$query, " ", $s] | str join )
-    } else {
-        $agentPrompt = $query
+    let result = (get-agent $name --manifest $manifest | run-agent $prompt)
+    if $full { return $result }
+
+    match $result.status {
+        "error" => { error make { msg: $"Agent '($name)' failed: ($result.error)" } }
+        "truncated" => { print --stderr $"warning: agent '($name)' hit its output limit; the answer is cut off" }
+        "max_turns" => { print --stderr $"warning: agent '($name)' ran out of iterations" }
+        _ => {}
     }
-    let answer = $agent | run_agent $agentPrompt
-    $answer
+    $result.answer
 }
 
-def agent_as_tools [query] {
-    
-    let s = $in
-    init_logger
-    "## Calling run" | log
-    mut agent = agent {
-        "runtime" : "openai",
-        "model":"gpt-4o-mini",
-        "prompt":"agent_as_tools.txt",
-        "model_tools":"agent_as_tools.json",
-        "tool_functions":"functions.nu",
-        "description":"An agent calling other agents as tools",
-        "options" : {
-            "stream": false,
-            "temperature": 0
-            }
-    }
-    mut agentPrompt = "";
-    if ( $s != null ) {
-        $agentPrompt = ( [$query, " ", $s] | str join )
-    } else {
-        $agentPrompt = $query
-    }
-    let answer = $agent | run_agent $agentPrompt
-    $answer
+def main [
+    query: string
+    --agent (-a): string
+    --manifest (-m): string
+    --full (-f)
+] {
+    agent-ask $query --agent $agent --manifest $manifest --full=$full
 }
-
-
-def function_from_json [jsonPath] {
-    let agents = open $jsonPath
-    let tuples = $agents | transpose k v | each { |a|
-        let tool =  {
-            "type": "function",
-            "function": {
-            "name": $a.k,
-            "description": $a.v.description,
-            "parameters": {
-                "type": "object",
-                "properties": {
-                "query": {
-                    "description": "the question you want to ask the agent",
-                    "type": "string"
-                }
-                },
-                "required": [
-                "query"
-                ]
-            }
-            }
-        }
-        let function = $"  def ($a.k) [query] {\n    let result_tool = \( cbsh -c \( $\" source agent.nu;  agent_run \"($a.k)\" \"\($query\)\" \"  \)  \) | complete \n    if \( $result_tool.exit_code == 0 \) { \n      return $result_tool.stdout \n    } else {\n      print $result_tool.stderr \n     return $result_tool \n  } \n}"
-        [$tool, $function]
-    }
-    mut  tools = []
-    mut  functions  = []
-    for t in $tuples {
-        $tools = $tools | append $t.0
-        $functions = $functions | append $t.1
-    }
-
-    $functions | to text | save -f functions.nu
-    $tools | to json | save -f agent_as_tools.json
-
-
-}
-

@@ -18,7 +18,7 @@ def main [--filter: string = ""] {
     let results = ($tests | par-each --keep-order {|t|
         let scratch = (mktemp --directory)
         let started = (date now)
-        let out = (do { cd $scratch; ^$nu_bin --no-config-file -c $"use '($t.file)' *; ($t.name)" } | complete)
+        let out = (with-env { OTEL_SDK_DISABLED: "true" } { do { cd $scratch; ^$nu_bin --no-config-file -c $"use '($t.file)' *; ($t.name)" } | complete })
         rm --recursive --force $scratch
         $t | insert ok ($out.exit_code == 0) | insert output ($out.stdout + $out.stderr | str trim) | insert took ((date now) - $started)
     })
