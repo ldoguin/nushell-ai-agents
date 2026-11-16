@@ -84,5 +84,16 @@
             "stream": false,
             "temperature": 0
             }
+    },
+    "assistant" : {
+        "runtime" : "openai",
+        "model":"gpt-4o-mini",
+        "prompt":"prompts/orchestrator.txt",
+        "description":"A coordinator: breaks a request down, delegates to the specialist agents, and combines their answers.",
+        "agents":["general_oai", "capella_oai", "cbes_oai", "writer", "reviewer"],
+        "options" : {
+            "stream": false,
+            "temperature": 0
+            }
     }
 }

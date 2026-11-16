@@ -31,10 +31,15 @@ const DEFAULT_MAX_OUTPUT = 50000
 #   tool_timeout    seconds a single tool call may run (default 120)
 #   tool_shell      "nu" (default) or "cbsh" -- the shell tools run in
 #                   (falls back to $env.TOOL_SHELL)
+#   agents          names of other agents offered to this one as tools
 export def tool-context [config: record, model_tools: list] {
+    let subagents = ($config | get -o agents | default [])
     {
         functions: ($config | get -o tool_functions | default null)
-        names: ($model_tools | each {|t| $t.function.name })
+        # every name the model may call: the declared tools plus the sub-agents
+        names: (($model_tools | each {|t| $t.function.name }) | append $subagents)
+        # the names among those that are other agents, run by the loop itself
+        subagents: $subagents
         policy: ($config | get -o tool_policy | default {})
         timeout: (($config | get -o tool_timeout | default null) | if $in == null { $DEFAULT_TIMEOUT } else { $in * 1sec })
         shell: ($config | get -o tool_shell | default ($env.TOOL_SHELL? | default "nu"))
@@ -93,17 +98,59 @@ def truncate-output [text: string] {
     }
 }
 
-# Run one tool call: { name: string, arguments: string (JSON) | record }.
-export def run-tool [ctx: record, call: record] {
+# Everything that must hold before a call may run, in order: the name is one
+# the agent declared (a tool or a sub-agent), the arguments are a JSON object,
+# and the agent's policy allows it. Shared by tools and sub-agents.
+# Returns { ok: true, name, args } or { ok: false, error }.
+export def prepare-call [ctx: record, call: record] {
     let name = ($call | get -o name | default "")
 
     if $name not-in $ctx.names {
-        return (failure $"Unknown tool '($name)'. Available tools: ($ctx.names | str join ', ')")
+        return { ok: false, error: $"Unknown tool '($name)'. Available tools: ($ctx.names | str join ', ')" }
     }
-    # Belt and braces: the name ends up in the code string below.
+    # Belt and braces: for a tool the name ends up in the code string.
     if ($name !~ '^[A-Za-z_][A-Za-z0-9_-]*$') {
-        return (failure $"Refusing tool name '($name)': not a plain identifier")
+        return { ok: false, error: $"Refusing tool name '($name)': not a plain identifier" }
     }
+
+    let raw = ($call | get -o arguments | default {})
+    let args = (if ($raw | describe) == "string" {
+        if ($raw | str trim | is-empty) {
+            {}
+        } else {
+            try { $raw | from json } catch { return { ok: false, error: $"Arguments for '($name)' are not valid JSON: ($raw | str substring 0..<200)" } }
+        }
+    } else {
+        $raw
+    })
+    if ($args | describe | str starts-with "record") == false {
+        return { ok: false, error: $"Arguments for '($name)' must be a JSON object, got: ($args | describe)" }
+    }
+
+    match (tool-policy $ctx $name) {
+        "deny" => { return { ok: false, error: $"Tool '($name)' is not permitted by this agent's tool policy" } }
+        "ask" => {
+            if not (confirm-tool $name $args) {
+                return { ok: false, error: $"Tool call '($name)' was not approved" }
+            }
+        }
+        _ => {}
+    }
+    { ok: true, name: $name, args: $args }
+}
+
+# Run one tool call: { name: string, arguments: string (JSON) | record }.
+export def run-tool [ctx: record, call: record] {
+    let prepared = (prepare-call $ctx $call)
+    if not $prepared.ok {
+        return (failure $prepared.error)
+    }
+    let name = $prepared.name
+    let args = $prepared.args
+    if $name in $ctx.subagents {
+        return (failure $"'($name)' is an agent, not a tool function; the agent loop runs it")
+    }
+
     let functions = $ctx.functions
     if $functions == null {
         return (failure $"Tool '($name)' was requested but this agent has no tool_functions file")
@@ -114,30 +161,6 @@ export def run-tool [ctx: record, call: record] {
     }
     if ($functions =~ "['\"\n]") {
         return (failure $"Refusing tool functions path with quote characters: ($functions)")
-    }
-
-    let raw = ($call | get -o arguments | default {})
-    let args = (if ($raw | describe) == "string" {
-        if ($raw | str trim | is-empty) {
-            {}
-        } else {
-            try { $raw | from json } catch { return (failure $"Arguments for '($name)' are not valid JSON: ($raw | str substring 0..<200)") }
-        }
-    } else {
-        $raw
-    })
-    if ($args | describe | str starts-with "record") == false {
-        return (failure $"Arguments for '($name)' must be a JSON object, got: ($args | describe)")
-    }
-
-    match (tool-policy $ctx $name) {
-        "deny" => { return (failure $"Tool '($name)' is not permitted by this agent's tool policy") }
-        "ask" => {
-            if not (confirm-tool $name $args) {
-                return (failure $"Tool call '($name)' was not approved")
-            }
-        }
-        _ => {}
     }
 
     let shell = $ctx.shell

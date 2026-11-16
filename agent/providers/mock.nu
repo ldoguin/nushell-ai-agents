@@ -8,8 +8,18 @@
 #   { tool_calls: [{ name, arguments }] }   -> native tool calls (arguments is
 #                                              a record or a JSON string)
 #   { error: "message" }                    -> the call raises this error
+# Any reply text may contain {{last_user}}, replaced by the content of the most
+# recent user message -- so a scripted agent can show what it was asked.
 # Running past the end of the script is an error, so a loop that does not
 # stop where a test expects fails loudly instead of repeating itself.
+def expand [text: any, messages: list] {
+    if $text == null {
+        null
+    } else {
+        $text | str replace --all "{{last_user}}" ($messages | where role == "user" | last | get -o content | default "")
+    }
+}
+
 export def call [script: list, messages: list] {
     let turn = ($messages | where role == "assistant" | length)
     let item = ($script | get -o $turn | default null)
@@ -18,7 +28,7 @@ export def call [script: list, messages: list] {
     }
     let usage = { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 }
     if ($item | describe) == "string" {
-        return { choices: [{ message: { role: "assistant", content: $item }, finish_reason: "stop" }], usage: $usage, retry_attempts: 1 }
+        return { choices: [{ message: { role: "assistant", content: (expand $item $messages) }, finish_reason: "stop" }], usage: $usage, retry_attempts: 1 }
     }
     let err = ($item | get -o error | default null)
     if $err != null {
@@ -34,8 +44,8 @@ export def call [script: list, messages: list] {
                 function: { name: $c.item.name, arguments: (if ($args | describe) == "string" { $args } else { $args | to json }) }
             }
         })
-        let content = ($item | get -o content | default null)
+        let content = (expand ($item | get -o content | default null) $messages)
         return { choices: [{ message: { role: "assistant", content: $content, tool_calls: $tool_calls }, finish_reason: "tool_calls" }], usage: $usage, retry_attempts: 1 }
     }
-    { choices: [{ message: { role: "assistant", content: ($item | get -o content | default null) }, finish_reason: ($item | get -o finish_reason | default "stop") }], usage: $usage, retry_attempts: 1 }
+    { choices: [{ message: { role: "assistant", content: (expand ($item | get -o content | default null) $messages) }, finish_reason: ($item | get -o finish_reason | default "stop") }], usage: $usage, retry_attempts: 1 }
 }

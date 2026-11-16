@@ -16,6 +16,10 @@
 #   options          passed through to the provider (temperature, max_tokens, ...)
 #   max_iterations   model calls the loop may take (default 9)
 #   tool_policy / tool_timeout / tool_shell   see tools/runtime.nu
+#   agents           names of other agents in the same manifest, offered to
+#                    this one as tools: each becomes a tool named after the
+#                    agent, taking a `query`, that runs that agent on a fresh
+#                    conversation and returns its answer
 #   responses        mock runtime only: the scripted replies
 #
 # Relative paths resolve against the directory of the manifest the entry came
@@ -23,7 +27,7 @@
 # works from anywhere.
 
 const RUNTIMES = ["openai" "ollama" "anthropic" "bedrock" "mock"]
-const KEYS = [runtime model description prompt model_tools tool_functions folder options max_iterations tool_policy tool_timeout tool_shell responses]
+const KEYS = [runtime model description prompt model_tools tool_functions folder options max_iterations tool_policy tool_timeout tool_shell responses agents]
 const PATH_KEYS = [prompt model_tools tool_functions]
 
 def bad [label: string, msg: string] {
@@ -108,6 +112,20 @@ export def resolve-config [config: record, base_dir: string, label: string = "ag
         bad $label "'responses' must be a list for the mock runtime"
     }
 
+    let agents = ($merged | get -o agents | default [])
+    if ($agents | describe | str replace --regex '^(table|list).*' 'list') != "list" {
+        bad $label "'agents' must be a list of agent names"
+    }
+    for a in $agents {
+        if ($a | describe) != "string" or ($a !~ '^[A-Za-z0-9_-]{1,64}$') {
+            bad $label $"'agents' entry '($a)' is not usable as a tool name -- agent names used this way must be 1-64 letters, digits, '_' or '-'"
+        }
+    }
+    let repeated = ($agents | uniq --repeated)
+    if ($repeated | is-not-empty) {
+        bad $label $"'agents' lists ($repeated | str join ', ') more than once"
+    }
+
     # the schema must be a well-formed tools list whose functions exist
     let schema_file = ($merged | get -o model_tools | default null)
     if $schema_file != null {
@@ -116,6 +134,10 @@ export def resolve-config [config: record, base_dir: string, label: string = "ag
         let dupes = ($names | uniq --repeated)
         if ($dupes | is-not-empty) {
             bad $label $"'model_tools' declares duplicate tool name\(s\): ($dupes | str join ', ')"
+        }
+        let clashes = ($names | where {|n| $n in $agents })
+        if ($clashes | is-not-empty) {
+            bad $label $"'agents' and 'model_tools' both define a tool named ($clashes | str join ', ')"
         }
         let functions_file = ($merged | get -o tool_functions | default null)
         if $functions_file == null {
@@ -128,5 +150,5 @@ export def resolve-config [config: record, base_dir: string, label: string = "ag
         }
     }
 
-    $merged | upsert options $options | upsert max_iterations $iterations
+    $merged | upsert options $options | upsert max_iterations $iterations | upsert agents $agents
 }

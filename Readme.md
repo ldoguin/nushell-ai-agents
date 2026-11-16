@@ -219,6 +219,25 @@ Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/ot
 
 The search tool relies on [DDGR](https://github.com/jarun/ddgr?tab=readme-ov-file#installation).
 
+## Sub-agents
+
+An agent can use other agents as tools. List them in its manifest entry:
+
+```json
+"assistant": { "runtime": "openai", "model": "gpt-4o-mini",
+               "agents": ["writer", "reviewer"], "description": "..." }
+```
+
+Each listed agent becomes a tool named after it, taking a `query`; its
+description comes from that agent's own `description`. A call builds the agent
+from the same manifest and runs it on a fresh conversation (it does not see the
+caller's), and its answer is the tool result. A failing or incomplete sub-agent
+is reported to the calling model as text, `tool_policy` can `ask` or `deny` a
+sub-agent like any tool, and the run's `usage` and `subagents` include theirs.
+Cycles (`a` -> `b` -> `a`), unknown names and broken sub-agent configs are
+rejected when the agent is loaded; nesting deeper than `$env.AGENT_MAX_DEPTH`
+(default 4) is refused at call time.
+
 ## Writing tools
 
 A tool is a nu function that takes **one record** -- the model's parsed

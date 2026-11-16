@@ -126,7 +126,7 @@ export def test-manifest-comes-from-the-env-when-not-given [] {
     let dir = (temp-dir)
     let manifest = (write-manifest $dir { only: { runtime: "mock", description: "d" } })
     let listed = (with-env { AGENTS_FILE: $manifest } { list-agents })
-    assert equal $listed [{ name: "only", runtime: "mock", model: "", description: "d" }]
+    assert equal $listed [{ name: "only", runtime: "mock", model: "", description: "d", agents: [] }]
 }
 
 export def test-bad-manifests-are-reported [] {
