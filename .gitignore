@@ -11,3 +11,4 @@ scratchpad
 logs/*
 # ...and the CI workflows
 !.github/
+sessions/

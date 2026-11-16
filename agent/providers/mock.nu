@@ -8,6 +8,7 @@
 #   { tool_calls: [{ name, arguments }] }   -> native tool calls (arguments is
 #                                              a record or a JSON string)
 #   { error: "message" }                    -> the call raises this error
+#   any record may add cost_usd: 0.01      -> reported as the call's cost
 # Any reply text may contain {{last_user}}, replaced by the content of the most
 # recent user message -- so a scripted agent can show what it was asked.
 # Running past the end of the script is an error, so a loop that does not
@@ -21,6 +22,15 @@ def expand [text: any, messages: list] {
 }
 
 export def call [script: list, messages: list] {
+    let turn = ($messages | where role == "assistant" | length)
+    let item = ($script | get -o $turn | default null)
+    let result = (reply $script $messages)
+    # a record item may report what the call cost, as a LiteLLM proxy would
+    let cost = (if ($item | describe | str starts-with "record") { $item | get -o cost_usd | default null } else { null })
+    if $cost == null { $result } else { $result | insert cost { cost_usd: $cost } }
+}
+
+def reply [script: list, messages: list] {
     let turn = ($messages | where role == "assistant" | length)
     let item = ($script | get -o $turn | default null)
     if $item == null {

@@ -24,7 +24,7 @@ agent-ask "..." -a writer --full              # the whole result record
   when loaded (`agent/config.nu` lists every key) and relative paths resolve
   against the manifest's directory, so it works from any directory.
 - **`agent/loop.nu`'s `run-agent`** runs the loop and always returns a record:
-  `status` (`done`, `truncated`, `max_turns` or `error`), `answer`, `error`,
+  `status` (`done`, `truncated`, `max_turns`, `budget_exceeded` or `error`), `answer`, `error`,
   the whole `messages` conversation, summed `usage` and the `iterations` used.
   Pass the returned `messages` into a new agent record to continue a
   conversation. The last permitted iteration asks the model to answer from what
@@ -206,6 +206,61 @@ events in the journal, and `console` replaces printing raw replies.
 #### DDGR
 
 The search tool relies on [DDGR](https://github.com/jarun/ddgr?tab=readme-ov-file#installation).
+
+## Sessions
+
+A conversation can outlive the process that started it:
+
+```nushell
+agent-ask "start a draft" -a writer --session draft1   # saves as it goes
+agent-ask "now shorten it" --session draft1            # continues it (same agent)
+agent-ask --resume draft1                              # picks up a run that was interrupted
+agent-sessions                                         # what is saved
+```
+
+Sessions live in `$env.AGENT_SESSION_DIR` (default `sessions/`), one JSON file
+each, mode `0600`, written atomically. A snapshot is the conversation itself
+(not a log of it, so it works whether or not event content is captured). It is
+saved when a run starts, after **every completed tool round**, and when the run
+ends, so it never holds a tool call without its result. A run killed while a tool
+or model call was in flight resumes from the last completed round: the model is
+asked again and normally repeats the call. `--resume` takes no question for
+that; give one to carry on with a follow-up instead.
+
+Each snapshot has a revision number, and a save is refused if another process
+changed the session in the meantime: the run stops with an error rather than
+overwriting the other process's work. `run-agent --session <id>` is the same
+thing from code; sub-agent runs are never sessions of their own.
+
+## Budgets and context size
+
+```json
+"researcher": {
+  "runtime": "openai", "model": "gpt-4o-mini",
+  "max_total_tokens": 200000,
+  "max_cost_usd": 0.50,
+  "context": { "max_prompt_tokens": 60000, "keep_rounds": 2, "min_result_chars": 500 }
+}
+```
+
+- **`max_total_tokens` / `max_cost_usd`** bound one run, sub-agents included. They
+  are checked before each model call; once a run has used its allowance it stops
+  with status `budget_exceeded` and returns whatever text the model had produced
+  alongside its last tool calls. A sub-agent can use at most what is left of its
+  caller's budget (and its own, if tighter). A single call that is already under
+  way cannot be stopped, so a run can overshoot by up to one call. Cost needs a
+  provider that reports it (a LiteLLM proxy does; api.anthropic.com does not):
+  without it a warning is printed once and only the token budget is enforced.
+- **`context`**: once the conversation grows past `max_prompt_tokens` (estimated
+  at ~4 characters per token, or the last call's real prompt size if larger), the
+  output of old tool calls is replaced by `[output elided to save context: N
+  characters]`. The system prompt, user messages, the model's own messages and
+  tool calls, the results of the last `keep_rounds` tool rounds, and outputs under
+  `min_result_chars` are kept. It is deterministic and makes no model call, so it
+  is free and cannot lose what the model itself wrote; it does lose the elided
+  outputs themselves (the event journal still has them if content is captured).
+  A `context.compacted` event records each time. Summarising with a model is not
+  implemented.
 
 ## Sub-agents
 

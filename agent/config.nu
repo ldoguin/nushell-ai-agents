@@ -20,6 +20,12 @@
 #                    this one as tools: each becomes a tool named after the
 #                    agent, taking a `query`, that runs that agent on a fresh
 #                    conversation and returns its answer
+#   max_total_tokens / max_cost_usd
+#                    stop the run (status budget_exceeded) once it has used this
+#                    many tokens / dollars, sub-agents included (agent/context.nu)
+#   context          { max_prompt_tokens, keep_rounds (2), min_result_chars (500) }:
+#                    once the conversation passes max_prompt_tokens, old tool
+#                    outputs are replaced by a marker (agent/context.nu)
 #   responses        mock runtime only: the scripted replies
 #
 # Relative paths resolve against the directory of the manifest the entry came
@@ -27,7 +33,7 @@
 # works from anywhere.
 
 const RUNTIMES = ["openai" "ollama" "anthropic" "bedrock" "mock"]
-const KEYS = [runtime model description prompt model_tools tool_functions folder options max_iterations tool_policy tool_timeout tool_shell responses agents]
+const KEYS = [runtime model description prompt model_tools tool_functions folder options max_iterations tool_policy tool_timeout tool_shell responses agents max_total_tokens max_cost_usd context]
 const PATH_KEYS = [prompt model_tools tool_functions]
 
 def bad [label: string, msg: string] {
@@ -112,6 +118,39 @@ export def resolve-config [config: record, base_dir: string, label: string = "ag
         bad $label "'responses' must be a list for the mock runtime"
     }
 
+    let max_tokens = ($merged | get -o max_total_tokens | default null)
+    if $max_tokens != null and (($max_tokens | describe) != "int" or $max_tokens < 1) {
+        bad $label $"'max_total_tokens' must be a whole number >= 1, got: ($max_tokens)"
+    }
+    let max_cost = ($merged | get -o max_cost_usd | default null)
+    if $max_cost != null and ((($max_cost | describe) not-in ["int" "float"]) or $max_cost <= 0) {
+        bad $label $"'max_cost_usd' must be a positive number, got: ($max_cost)"
+    }
+    let context = ($merged | get -o context | default null)
+    let context = (if $context == null {
+        null
+    } else {
+        if ($context | describe | str starts-with "record") == false {
+            bad $label "'context' must be an object such as { \"max_prompt_tokens\": 50000, \"keep_rounds\": 2 }"
+        }
+        let unknown_context = ($context | columns | where {|k| $k not-in [max_prompt_tokens keep_rounds min_result_chars] })
+        if ($unknown_context | is-not-empty) {
+            bad $label $"'context' has unknown key\(s\): ($unknown_context | str join ', '). Known: max_prompt_tokens, keep_rounds, min_result_chars"
+        }
+        let limit = ($context | get -o max_prompt_tokens | default null)
+        if $limit == null or ($limit | describe) != "int" or $limit < 1 {
+            bad $label $"'context.max_prompt_tokens' is required and must be a whole number >= 1, got: ($limit)"
+        }
+        let full = ({ keep_rounds: 2, min_result_chars: 500 } | merge $context)
+        for key in [keep_rounds min_result_chars] {
+            let v = ($full | get $key)
+            if ($v | describe) != "int" or $v < 0 {
+                bad $label $"'context.($key)' must be a whole number >= 0, got: ($v)"
+            }
+        }
+        $full
+    })
+
     let agents = ($merged | get -o agents | default [])
     if ($agents | describe | str replace --regex '^(table|list).*' 'list') != "list" {
         bad $label "'agents' must be a list of agent names"
@@ -150,5 +189,5 @@ export def resolve-config [config: record, base_dir: string, label: string = "ag
         }
     }
 
-    $merged | upsert options $options | upsert max_iterations $iterations | upsert agents $agents
+    $merged | upsert options $options | upsert max_iterations $iterations | upsert agents $agents | upsert context $context
 }

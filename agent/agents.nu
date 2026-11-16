@@ -35,7 +35,7 @@ def subagent-tool [name: string, description: string] {
 #
 # The record is plain data plus the closure that calls the model:
 #   { name, runtime, model, messages, model_call, tools, tool_schema,
-#     max_iterations, manifest }
+#     max_iterations, budget, context, manifest }
 # `tool_schema` is what the model is shown: the declared tools plus one tool per
 # agent in `agents`. Those need their descriptions, which live in the other
 # agents' entries, so the registry passes them in `--subagents` ({ name:
@@ -76,6 +76,8 @@ export def agent [config: record, --name: string = "", --base-dir: string = "", 
         tools: (tool-context $config $declared_tools)
         tool_schema: $model_tools
         max_iterations: $config.max_iterations
+        budget: { max_total_tokens: ($config.max_total_tokens? | default null), max_cost_usd: ($config.max_cost_usd? | default null) }
+        context: ($config.context? | default null)
         manifest: (if ($manifest_path | is-empty) { null } else { $manifest_path })
     }
 }

@@ -88,3 +88,17 @@ def injected [args] { "SHOULD NOT RUN" }
 export def mock-agent-config [responses: list, tools: record] {
     { runtime: "mock", responses: $responses, model_tools: $tools.schema, tool_functions: $tools.functions, options: {} }
 }
+
+# Write a manifest of mock agents next to the shared test tools and return its
+# path. An entry with `tools: true` gets the echo/fail/slow test tools.
+export def write-team [agents: record] {
+    let t = (make-tools)
+    let resolved = ($agents | items {|name, cfg|
+        let base = ($cfg | reject -o tools)
+        let full = (if ($cfg | get -o tools | default false) { $base | merge { model_tools: "tools.json", tool_functions: "tools.nu" } } else { $base })
+        { k: $name, v: $full }
+    } | reduce --fold {} {|e, acc| $acc | insert $e.k $e.v })
+    let file = ($t.dir | path join agents.json)
+    $resolved | to json | save $file
+    $file
+}
