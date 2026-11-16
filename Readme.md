@@ -136,78 +136,66 @@ Follow their documentation on [https://github.com/ollama/ollama/blob/main/README
 
 Make sure you have pulled models used by your agents first, and that your server is running on _localhost:11434_.
 
-### Observability (OpenTelemetry)
+### Events, journals and observability
 
-`agent/common/otel.nu` sends real OTLP/HTTP+protobuf traces -- one span per
-model call (`gen_ai.chat`, with token usage), one per agent run/iteration
-(`agent.run`/`agent.iteration`), and one per tool call (`execute_tool
-<name>`, per [OpenTelemetry's GenAI semantic
-conventions](https://github.com/open-telemetry/semantic-conventions-genai)).
-Off by default in the sense that a down/unreachable collector never blocks
-or fails a real call -- point it at a real one to actually see anything:
+The loop reports everything it does as typed events (`agent/events.nu` has the
+schema) and knows nothing about where they go. Choose sinks with
+`$env.AGENT_SINKS` (or `--sinks` on `agent-ask`); the default is none, so a
+plain run writes no files and sends nothing.
 
 ```sh
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318  # default if unset
+export AGENT_SINKS=jsonl,console,otel
+```
+
+| sink | what it does |
+| --- | --- |
+| `jsonl` | appends every event to a journal as it happens: `$AGENT_LOG_DIR` (default `logs/`) `/<time>-<run id>.jsonl`, readable only by you. The whole tree of sub-agent runs shares one file. |
+| `console` | one-line progress on stderr: `▶ agent`, `→ tool`, `← tool ok`, `◀ done, 2 iteration(s), 30 tokens` |
+| `otel` | exports spans, metrics and logs to an OTLP collector, in batches at the end of each iteration and of the run |
+
+**The journal is what survives a crash.** Each event is written before anything
+else happens to it, with start events as well as end events, so a journal that
+ends in `tool.start` shows the process died inside that tool, and a gap in an
+event's `seq` means lost lines. It is written whenever `jsonl` *or* `otel` is
+selected. A journal can hold prompts and tool output: `AGENT_LOG_CONTENT=false`
+keeps metadata only, and `AGENT_LOG_MAX_CONTENT` (default 20000) clips each
+payload. Logging never stops a run: an unwritable directory or a down collector
+warns once and the run carries on.
+
+**Replaying a journal.** `agent-export [journal]` sends a journal (or every one
+in the log directory) to the collector. Spans a killed process left open are
+closed as failed (`run did not finish`), spans already sent are skipped (they
+are listed in `<journal>.exported`), and a failed export can simply be retried.
+With `AGENT_RECOVER=true`, `agent-ask` first replays any journal untouched for
+`AGENT_RECOVER_MIN_AGE` (default `10min`).
+
+On an ephemeral CI runner the disk goes with the job, so replay from a later
+step of the same job (`if: always()`) to cover a crashed process; nothing but
+data already sent survives the runner itself dying.
+
+OTLP/HTTP+protobuf, configured with the standard environment:
+
+```sh
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318   # default
 export OTEL_EXPORTER_OTLP_HEADERS=x-api-key=abc,x-team=obs # optional, "k=v,k2=v2"
-export OTEL_SERVICE_NAME=authoring-pipeline                # default if unset
+export OTEL_SERVICE_NAME=my-service                        # default nushell-agents
+export OTEL_RESOURCE_ATTRIBUTES=deployment.environment=ci  # optional, "k=v,k2=v2"
+export OTEL_SDK_DISABLED=true                              # turn all exporting off
+export OTEL_CAPTURE_TOOL_CONTENT=true                      # also attach tool arguments/results to spans
 ```
 
-Tool call arguments/results (`gen_ai.tool.call.arguments`/
-`gen_ai.tool.call.result`) are opt-in, since the semantic conventions flag
-both as possibly sensitive:
+Spans follow OpenTelemetry's GenAI conventions: `agent.run` > `agent.iteration`
+> `gen_ai.chat` (with `gen_ai.client.token.usage` and
+`gen_ai.client.operation.duration` histograms, and the raw reply as a log
+record correlated to the span) and `execute_tool <name>`, plus counters
+`agent.tool.call.count` and `agent.iteration.count`. A sub-agent's run nests
+under the tool call that started it. Tool arguments and results are opt-in
+because the spec flags them as possibly sensitive. Verified live against
+[otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer) (a
+local collector) and Arize Phoenix (an external one, protobuf-only).
 
-```sh
-export OTEL_CAPTURE_TOOL_CONTENT=true
-```
-
-Each `gen_ai.chat` span also emits three GenAI metrics (OTLP/HTTP+protobuf to
-`<endpoint>/v1/metrics`) as OTel's required Histogram instrument type:
-`gen_ai.client.token.usage` (once per token type, `gen_ai.token.type` =
-`input`/`output`) and `gen_ai.client.operation.duration` (seconds), all
-tagged with `gen_ai.operation.name`/`gen_ai.provider.name`/
-`gen_ai.request.model`. A `retry_count` attribute (from each provider
-function's own retry loop) rides on the span alongside the existing token
-counts. If the underlying model call fails after exhausting its retries, the
-span is still ended (status ERROR, `error.type`) instead of being silently
-dropped -- the original error still propagates to the caller unchanged.
-
-When run inside GitHub Actions, every span's resource picks up
-`cicd.pipeline.name`/`cicd.pipeline.run.id`/`cicd.pipeline.run.url.full`/
-`vcs.repository.name`/`vcs.ref.head.name` automatically from the standard
-`GITHUB_*` environment variables Actions itself sets -- no configuration
-needed, and these stay absent for local runs.
-
-A model call or tool call that fails records a standard OTel `exception`
-span event (`exception.type`/`exception.message`), in addition to marking
-the span ERROR -- both the event (the specific failure) and the
-error-status attribute (so a failed span can be filtered without
-inspecting events) are populated, per OTel's own general span conventions.
-
-Two counters (OTLP Sum metrics, monotonic) round out the metrics:
-`agent.tool.call.count` (tagged `gen_ai.tool.name`/`status`) and
-`agent.iteration.count` (one increment per `agent.run`, valued at the
-total iterations taken), for graphing call/iteration volume directly
-instead of deriving it from span counts.
-
-`engine.nu`'s `run-pipeline-agent` chains every `pipeline.agent:*` span --
-across rounds within a step and across steps in the same job -- into one
-linear parent/child sequence (`logs/.otel-parent-span-id`, alongside the
-existing `logs/.otel-trace-id`), rather than each being an unrelated
-root-level span that only shares a trace ID.
-
-`execute []` also sends an OTLP log record (`otel-send-log`, `/v1/logs`)
-correlated to its `gen_ai.chat` span, carrying the full raw model response.
-This **replaces** the old behavior of dumping that same response to a file
-under `logs/` on every call -- those files never survived an ephemeral CI
-runner once the job ended, whereas the log record lands wherever
-`OTEL_EXPORTER_OTLP_ENDPOINT` already points, alongside the exact span it
-belongs to. Set `AGENT_LOG=true` to also print it locally (useful when no
-collector is running); this carries the same content-sensitivity profile
-the old log files always had, just persisted centrally instead of on local
-disk.
-
-Verified live against both [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
-(a local dev collector) and Arize Phoenix (a real external one, protobuf-only).
+`AGENT_COST_FILE` and `AGENT_LOG` are gone: per-call cost is on the `model.end`
+events in the journal, and `console` replaces printing raw replies.
 
 ### Tools
 

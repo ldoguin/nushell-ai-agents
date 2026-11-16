@@ -1,39 +1,56 @@
-# Minimal OpenTelemetry client: hand-built OTLP/HTTP+protobuf requests sent
-# via plain `http post`, no SDK dependency -- inspired by
-# couchbaselabs/ais-hol's scripts/otel_client.nu (python-workshop branch),
-# but sending real protobuf-encoded ExportTraceServiceRequest messages
-# rather than that reference's OTLP/HTTP+JSON. JSON was the first version
-# of this module and worked fine against otel-desktop-viewer, but a real
-# spec-compliant collector (Arize Phoenix, live-tested) rejects OTLP/HTTP
-# JSON outright with HTTP 415 -- protobuf is the one encoding every OTLP
-# collector is required to accept. There's no protobuf library available in
+# Minimal OpenTelemetry client: hand-built OTLP/HTTP+protobuf requests sent via
+# plain `http post`, no SDK dependency. Transport only -- WHEN to emit and WHAT
+# goes in a span is decided by the event layer (agent/events.nu) and the OTel
+# sink that maps events to spans and metrics (agent/sinks/otel.nu).
+#
+# JSON-encoded OTLP is not used: a real spec-compliant collector (Arize Phoenix,
+# live-tested) rejects OTLP/HTTP JSON with HTTP 415, while protobuf is the one
+# encoding every collector must accept. There is no protobuf library in
 # Nushell, so the wire format (varints, length-delimited fields, tags) is
 # encoded by hand below -- verified byte-for-byte against a real collector's
-# own stored/round-tripped span data (trace/span IDs, timestamps, and all
-# three attribute types) before relying on it here.
+# own stored spans (trace/span ids, timestamps, all three attribute types).
 #
-# Every span-emitting call is best-effort / fail-open -- a down or
-# unreachable collector must never throw, retry, or add meaningful latency
-# to a real content-generation run. That guarantee lives once, here, in
-# otel-end-span; callers don't need to wrap their own calls in try/catch.
-# Also verified live: every span failing to send (a collector that's
-# reachable but rejects the request, not just an unreachable one) still
-# left the actual pipeline call it was instrumenting completely unaffected.
+# `otel-export` sends a whole batch (spans, metrics, logs) in at most one
+# request per signal, with a timeout, and NEVER throws: it returns
+# { ok, errors } so the caller can decide what to do about a down collector
+# (the sink keeps the events on disk and retries them later).
+#
+# Configuration is the standard OpenTelemetry environment:
+#   OTEL_EXPORTER_OTLP_ENDPOINT   default http://localhost:4318
+#   OTEL_EXPORTER_OTLP_HEADERS    "k=v,k2=v2"
+#   OTEL_SERVICE_NAME             default nushell-agents
+#   OTEL_RESOURCE_ATTRIBUTES      "k=v,k2=v2" added to every resource
+#   OTEL_SDK_DISABLED             true turns every export into a no-op
 
-# Read fresh on every call (not cached) so an env change mid-process is
-# picked up, same convention the Bedrock provider uses for AWS_REGION.
-# OpenTelemetry's own standard kill switch (OTEL_SDK_DISABLED=true): every
-# send below becomes a no-op, so a run with no collector neither pays for a
-# failed POST per span nor prints a warning per span.
+# OpenTelemetry's own standard kill switch (OTEL_SDK_DISABLED=true).
 export def otel-disabled [] {
     ($env.OTEL_SDK_DISABLED? | default "" | into string | str lowercase) in ["true" "1" "yes"]
 }
 
+# Read fresh on every call (not cached) so an env change mid-process is
+# picked up.
 def otel-config [] {
     {
-        endpoint: ($env.OTEL_EXPORTER_OTLP_ENDPOINT? | default "http://localhost:4318")
+        endpoint: ($env.OTEL_EXPORTER_OTLP_ENDPOINT? | default "http://localhost:4318" | str trim --right --char '/')
         headers: (otel-parse-headers ($env.OTEL_EXPORTER_OTLP_HEADERS? | default ""))
-        service: ($env.OTEL_SERVICE_NAME? | default "authoring-pipeline")
+        service: ($env.OTEL_SERVICE_NAME? | default "nushell-agents")
+        resource: (otel-parse-resource ($env.OTEL_RESOURCE_ATTRIBUTES? | default ""))
+    }
+}
+
+# "k=v,k2=v2" -> { k: "v", k2: "v2" }
+export def otel-parse-resource [raw: string] {
+    if ($raw | is-empty) {
+        {}
+    } else {
+        $raw
+        | split row ","
+        | where {|kv| ($kv | str trim | is-not-empty) }
+        | each {|kv|
+            let parts = ($kv | split row "=")
+            { k: ($parts | get 0 | str trim), v: ($parts | skip 1 | str join "=" | str trim) }
+        }
+        | reduce --fold {} {|e, acc| $acc | upsert $e.k $e.v }
     }
 }
 
@@ -60,44 +77,6 @@ export def otel-parse-headers [raw: string] {
 # the requested length (a single UUID's 32 hex digits aren't enough for a
 # 32-char trace id once dashes are removed... actually they are exactly 32,
 # but doubling first keeps this correct for any n <= 32 without relying on
-# that coincidence).
-export def otel-gen-id [n: int] {
-    let base = (random uuid | str replace --all "-" "")
-    let twice = $"($base)($base)"
-    $twice | str substring 0..<$n
-}
-
-export def now-ns [] {
-    date now | date to-timezone GMT | into int
-}
-
-# Maps this repo's own runtime naming ("bedrock", "anthropic", "openai",
-# "ollama") to OTel's gen_ai.provider.name well-known values, verified
-# against the current GenAI semantic conventions spec directly (fetched,
-# not from memory) -- note the spec's attribute is gen_ai.provider.name,
-# NOT gen_ai.system, which was this module's first (incorrect) attempt at
-# this before checking the actual spec doc. Runtimes with no well-known
-# value (ollama) pass through as a custom value, which the spec explicitly
-# allows.
-export def otel-provider-name [runtime: string] {
-    match $runtime {
-        "bedrock" => "aws.bedrock"
-        "anthropic" => "anthropic"
-        "openai" => "openai"
-        _ => $runtime
-    }
-}
-
-# Gates capturing tool-call arguments/results as span attributes -- opt-in
-# via $env.OTEL_CAPTURE_TOOL_CONTENT ("true"/"1"/"yes"), off by default.
-# OTel's own gen_ai.tool.call.arguments/gen_ai.tool.call.result attributes
-# are explicitly flagged in the semantic conventions as "may contain
-# sensitive information" (tool inputs/outputs can carry anything a prompt
-# or a tool's data source does), so this defaults to NOT recording them
-# rather than opting every deployment in silently.
-export def otel-capture-tool-content [] {
-    ($env.OTEL_CAPTURE_TOOL_CONTENT? | default "" | str lowercase) in ["true" "1" "yes"]
-}
 
 # ============================================================================
 # Protobuf wire format -- varints, tags, length-delimited fields. Each
@@ -207,30 +186,6 @@ def pb-event [ev: record] {
 # outside GitHub Actions, so this stays a no-op for local runs -- genuinely
 # generic (any consumer of this submodule gets it for free), not coupled
 # to this specific pipeline repo's own conventions.
-def ci-resource-attrs [] {
-    mut attrs = {}
-    if not ($env.GITHUB_WORKFLOW? | default "" | is-empty) {
-        $attrs = ($attrs | insert "cicd.pipeline.name" $env.GITHUB_WORKFLOW)
-    }
-    if not ($env.GITHUB_RUN_ID? | default "" | is-empty) {
-        $attrs = ($attrs | insert "cicd.pipeline.run.id" $env.GITHUB_RUN_ID)
-    }
-    if (not ($env.GITHUB_SERVER_URL? | default "" | is-empty)) and (not ($env.GITHUB_REPOSITORY? | default "" | is-empty)) and (not ($env.GITHUB_RUN_ID? | default "" | is-empty)) {
-        $attrs = ($attrs | insert "cicd.pipeline.run.url.full" $"($env.GITHUB_SERVER_URL)/($env.GITHUB_REPOSITORY)/actions/runs/($env.GITHUB_RUN_ID)")
-    }
-    if not ($env.GITHUB_REPOSITORY? | default "" | is-empty) {
-        $attrs = ($attrs | insert "vcs.repository.name" $env.GITHUB_REPOSITORY)
-    }
-    if not ($env.GITHUB_REF_NAME? | default "" | is-empty) {
-        $attrs = ($attrs | insert "vcs.ref.head.name" $env.GITHUB_REF_NAME)
-    }
-    $attrs
-}
-
-def pb-resource [service_name: string] {
-    pb-attributes-fields 1 ({ "service.name": $service_name } | merge (ci-resource-attrs))
-}
-
 def pb-status [code: int, message: string] {
     mut payload = 0x[]
     if ($message | is-not-empty) { $payload = $payload ++ (pb-string 2 $message) }
@@ -266,11 +221,7 @@ def pb-span [span: record] {
 # Full ExportTraceServiceRequest for one span -- one resourceSpans, one
 # scopeSpans, one span, matching this module's one-span-per-HTTP-call
 # design (same as the JSON version it replaces).
-def build-export-trace-request [span: record, service_name: string] {
-    let scope_spans_payload = (pb-message 1 (pb-instrumentation-scope "authoring-pipeline.nu" "0.1.0")) ++ (pb-message 2 (pb-span $span))
-    let resource_spans_payload = (pb-message 1 (pb-resource $service_name)) ++ (pb-message 2 $scope_spans_payload)
-    pb-message 1 $resource_spans_payload
-}
+
 
 # double is wire-type 1 (64-bit) like fixed64, but the VALUE bits are an
 # IEEE-754 double, not a plain integer -- `value | into float | into
@@ -309,104 +260,6 @@ def pb-histogram-metric [name: string, unit: string, data_point_payload: binary]
     (pb-string 1 $name) ++ (pb-string 3 $unit) ++ (pb-message 9 $histogram_payload)
 }
 
-def build-export-metrics-request [metric_payload: binary, service_name: string] {
-    let scope_metrics_payload = (pb-message 1 (pb-instrumentation-scope "authoring-pipeline.nu" "0.1.0")) ++ (pb-message 2 $metric_payload)
-    let resource_metrics_payload = (pb-message 1 (pb-resource $service_name)) ++ (pb-message 2 $scope_metrics_payload)
-    pb-message 1 $resource_metrics_payload
-}
-
-# ============================================================================
-# Public span API
-# ============================================================================
-
-# Starts a span as a child of `parent` ({trace_id, span_id}, or {} to start
-# a new root trace). Returns a span context record `otel-end-span` needs --
-# no I/O here, so this can't fail.
-export def otel-start-span [name: string, parent: record = {}, attrs: record = {}] {
-    let trace_id = ($parent | get -o trace_id | default (otel-gen-id 32))
-    {
-        trace_id: $trace_id
-        span_id: (otel-gen-id 16)
-        parent_span_id: ($parent | get -o span_id | default null)
-        name: $name
-        start_ns: (now-ns)
-        attrs: $attrs
-    }
-}
-
-# One well-known-shaped span event: OTel's general semantic conventions
-# name exception events "exception" with exception.type/exception.message
-# attributes (exception.stacktrace is optional and omitted here -- Nushell
-# has no reliable equivalent to capture and it'd be redundant with the
-# error message already recorded). This is deliberately separate from the
-# `error.type` span *attribute* some callers also set: the attribute marks
-# the span itself as failed (so a Zipkin/Jaeger-style view can filter
-# error spans without inspecting events), the event captures the specific
-# exception that happened, and OTel's own conventions recommend both.
-export def otel-exception-event [error_type: string, message: string] {
-    { name: "exception", time_ns: (now-ns), attrs: { "exception.type": $error_type, "exception.message": $message } }
-}
-
-# Computes real elapsed duration from ctx.start_ns to now, merges `attrs`
-# into the span's attributes (on top of whatever otel-start-span was given),
-# and sends the OTLP span as protobuf. `status_error`, if non-empty, marks
-# the span ERROR (OTLP status code 2) with that message; otherwise UNSET (0).
-# `events` is a list of {name, time_ns, attrs} records (see
-# otel-exception-event) attached to the span as OTLP Span.Event entries.
-export def otel-end-span [ctx: record, attrs: record = {}, status_error: string = "", events: list<record> = []] {
-    if (otel-disabled) { return }
-    try {
-        let cfg = (otel-config)
-        let end_ns = (now-ns)
-        let merged_attrs = ($ctx.attrs | merge $attrs)
-        let span = {
-            trace_id: $ctx.trace_id
-            span_id: $ctx.span_id
-            parent_span_id: $ctx.parent_span_id
-            name: $ctx.name
-            start_time_unix_nano: $ctx.start_ns
-            end_time_unix_nano: $end_ns
-            attributes: $merged_attrs
-            events: $events
-            status_code: (if ($status_error | is-empty) { 0 } else { 2 })
-            status_message: $status_error
-        }
-        let body = (build-export-trace-request $span $cfg.service)
-        let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
-        http post -H $headers $"($cfg.endpoint)/v1/traces" $body
-    } catch {|e|
-        # Best-effort: never throw/block the real pipeline over a down or
-        # unreachable collector -- that's the common case and must stay
-        # silent to the caller. But fully swallowing every failure (as the
-        # reference otel_client.nu does) means a real bug in the payload
-        # itself would silently never send another span again with no
-        # visible sign anything was wrong. Print instead of throw, matching
-        # this repo's convention for other best-effort steps
-        # (record-history-round, the SEO-polish fallback, etc).
-        print $"::warning::otel-end-span \(($ctx.name)\) failed to send: ($e.msg)"
-    }
-}
-
-# Records one observation of a Histogram metric (the required instrument
-# type for both of OTel's core GenAI client metrics --
-# gen_ai.client.token.usage and gen_ai.client.operation.duration are both
-# specified as Histogram, not a simple counter/gauge, verified against the
-# current GenAI metrics semantic conventions doc). Same fail-open/
-# best-effort guarantee as otel-end-span.
-export def otel-record-histogram [name: string, unit: string, value: float, attrs: record = {}] {
-    if (otel-disabled) { return }
-    try {
-        let cfg = (otel-config)
-        let dp = (pb-histogram-data-point $value $attrs (now-ns))
-        let metric = (pb-histogram-metric $name $unit $dp)
-        let body = (build-export-metrics-request $metric $cfg.service)
-        let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
-        http post -H $headers $"($cfg.endpoint)/v1/metrics" $body
-    } catch {|e|
-        print $"::warning::otel-record-histogram \(($name)\) failed to send: ($e.msg)"
-    }
-}
-
 # NumberDataPoint (metrics.proto): start_time_unix_nano=2, time_unix_nano=3,
 # the value oneof's as_double=4, attributes=7 -- verified directly against
 # the proto source, same as every other field number in this file.
@@ -427,35 +280,6 @@ def pb-sum-metric [name: string, unit: string, data_point_payload: binary] {
     let sum_payload = (pb-message 1 $data_point_payload) ++ (pb-varint-field 2 1) ++ (pb-bool-field 3 true)
     (pb-string 1 $name) ++ (pb-string 3 $unit) ++ (pb-message 7 $sum_payload)
 }
-
-# Records one increment of a monotonic counter (OTLP Sum metric) -- for
-# counts like "how many tool calls", "how many agent iterations" where a
-# running total, not a distribution, is what you actually want to graph.
-# Same fail-open/best-effort guarantee as otel-end-span/otel-record-histogram.
-export def otel-record-counter [name: string, unit: string, value: float = 1.0, attrs: record = {}] {
-    if (otel-disabled) { return }
-    try {
-        let cfg = (otel-config)
-        let dp = (pb-number-data-point $value $attrs (now-ns))
-        let metric = (pb-sum-metric $name $unit $dp)
-        let body = (build-export-metrics-request $metric $cfg.service)
-        let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
-        http post -H $headers $"($cfg.endpoint)/v1/metrics" $body
-    } catch {|e|
-        print $"::warning::otel-record-counter \(($name)\) failed to send: ($e.msg)"
-    }
-}
-
-# ============================================================================
-# Logs signal -- exists specifically to replace this pipeline's old habit of
-# writing per-call debug output (e.g. the full raw model response) to files
-# under logs/, which never survive an ephemeral CI runner once the job ends.
-# Sending it here instead means it lands wherever OTEL_EXPORTER_OTLP_ENDPOINT
-# already points -- the same durable destination every span/metric in this
-# module already relies on -- and, when a span_ctx is given, shows up
-# correlated with the exact span it came from instead of as a same-named
-# file a human has to match up by hand.
-# ============================================================================
 
 # LogRecord (logs.proto): time_unix_nano=1, severity_number=2, severity_text=3,
 # body=5 (AnyValue), attributes=6, trace_id=9 (bytes), span_id=10 (bytes) --
@@ -480,12 +304,6 @@ def pb-log-record [rec: record] {
     $payload
 }
 
-def build-export-logs-request [log_record_payload: binary, service_name: string] {
-    let scope_logs_payload = (pb-message 1 (pb-instrumentation-scope "authoring-pipeline.nu" "0.1.0")) ++ (pb-message 2 $log_record_payload)
-    let resource_logs_payload = (pb-message 1 (pb-resource $service_name)) ++ (pb-message 2 $scope_logs_payload)
-    pb-message 1 $resource_logs_payload
-}
-
 # "debug"/"info"/"warn"/"error"/"fatal" -> OTel's SeverityNumber, per the
 # Log Data Model spec's own enum (INFO=9, WARN=13, ERROR=17, DEBUG=5,
 # FATAL=21) -- an unrecognized value defaults to INFO rather than erroring,
@@ -502,29 +320,85 @@ def otel-severity-number [severity: string] {
     }
 }
 
-# Sends one OTLP log record. `span_ctx` (a {trace_id, span_id} record, e.g.
-# the same value otel-start-span returns) correlates this log with a
-# specific span when given; omit it (default {}) for a standalone log with
-# no trace association. Same fail-open/best-effort guarantee as every other
-# send in this module.
-export def otel-send-log [body: string, attrs: record = {}, severity: string = "info", span_ctx: record = {}] {
-    if (otel-disabled) { return }
-    try {
-        let cfg = (otel-config)
-        let rec = {
-            time_ns: (now-ns)
-            severity_number: (otel-severity-number $severity)
-            severity_text: ($severity | str uppercase)
-            body: $body
-            attrs: $attrs
-            trace_id: ($span_ctx | get -o trace_id | default null)
-            span_id: ($span_ctx | get -o span_id | default null)
-        }
-        let payload = (pb-log-record $rec)
-        let body_req = (build-export-logs-request $payload $cfg.service)
-        let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
-        http post -H $headers $"($cfg.endpoint)/v1/logs" $body_req
-    } catch {|e|
-        print $"::warning::otel-send-log failed to send: ($e.msg)"
+# Resource = who is sending: the service name plus OTEL_RESOURCE_ATTRIBUTES.
+def pb-resource [service_name: string, extra: record] {
+    pb-attributes-fields 1 ({ "service.name": $service_name } | merge $extra)
+}
+
+# One ExportTraceServiceRequest holding all `spans` (OTLP's own repeated
+# field: just more pb-message calls concatenated).
+def build-export-trace-request [spans: list, cfg: record] {
+    let scope = (pb-message 1 (pb-instrumentation-scope "nushell-agents" "0.2.0")) ++ (pb-concat ($spans | each {|s| pb-message 2 (pb-span $s) }))
+    pb-message 1 ((pb-message 1 (pb-resource $cfg.service $cfg.resource)) ++ (pb-message 2 $scope))
+}
+
+# One ExportMetricsServiceRequest: `metrics` are
+# { kind: "histogram" | "sum", name, unit, value, attrs, time_ns }.
+def build-export-metrics-request [metrics: list, cfg: record] {
+    let payloads = ($metrics | each {|m|
+        let metric = (if $m.kind == "histogram" {
+            pb-histogram-metric $m.name $m.unit (pb-histogram-data-point ($m.value | into float) $m.attrs $m.time_ns)
+        } else {
+            pb-sum-metric $m.name $m.unit (pb-number-data-point ($m.value | into float) $m.attrs $m.time_ns)
+        })
+        pb-message 2 $metric
+    })
+    let scope = (pb-message 1 (pb-instrumentation-scope "nushell-agents" "0.2.0")) ++ (pb-concat $payloads)
+    pb-message 1 ((pb-message 1 (pb-resource $cfg.service $cfg.resource)) ++ (pb-message 2 $scope))
+}
+
+# One ExportLogsServiceRequest: `logs` are
+# { body, attrs, severity, time_ns, trace_id, span_id }.
+def build-export-logs-request [logs: list, cfg: record] {
+    let records = ($logs | each {|l|
+        pb-message 2 (pb-log-record {
+            time_ns: $l.time_ns
+            severity_number: (otel-severity-number ($l.severity? | default "info"))
+            severity_text: (($l.severity? | default "info") | str uppercase)
+            body: $l.body
+            attrs: ($l.attrs? | default {})
+            trace_id: ($l.trace_id? | default null)
+            span_id: ($l.span_id? | default null)
+        })
+    })
+    let scope = (pb-message 1 (pb-instrumentation-scope "nushell-agents" "0.2.0")) ++ (pb-concat $records)
+    pb-message 1 ((pb-message 1 (pb-resource $cfg.service $cfg.resource)) ++ (pb-message 2 $scope))
+}
+
+# ============================================================================
+# Public API
+# ============================================================================
+
+# Send a batch: { spans: [span], metrics: [metric], logs: [log] } (each
+# optional; see the build-export-* functions for the shapes, and pb-span for a
+# span's fields: trace_id, span_id, parent_span_id, name, start_time_unix_nano,
+# end_time_unix_nano, attributes, events, status_code, status_message).
+# One request per non-empty signal, each with a timeout so an unreachable
+# collector cannot stall a run. Never throws. Returns { ok, errors, sent }.
+export def otel-export [batch: record] {
+    if (otel-disabled) {
+        return { ok: true, errors: [], sent: [] }
     }
+    let cfg = (otel-config)
+    let headers = (["Content-Type" "application/x-protobuf"] | append $cfg.headers)
+    let spans = ($batch | get -o spans | default [])
+    let metrics = ($batch | get -o metrics | default [])
+    let logs = ($batch | get -o logs | default [])
+
+    let outcomes = ([
+        { name: "traces", path: "/v1/traces", items: $spans, build: {|items| build-export-trace-request $items $cfg } }
+        { name: "metrics", path: "/v1/metrics", items: $metrics, build: {|items| build-export-metrics-request $items $cfg } }
+        { name: "logs", path: "/v1/logs", items: $logs, build: {|items| build-export-logs-request $items $cfg } }
+    ] | where {|signal| $signal.items | is-not-empty } | each {|signal|
+        try {
+            let body = (do $signal.build $signal.items)
+            http post --max-time 15sec -H $headers $"($cfg.endpoint)($signal.path)" $body | ignore
+            { name: $signal.name, error: "" }
+        } catch {|e|
+            { name: $signal.name, error: $"($signal.name): ($e.msg)" }
+        }
+    })
+    let errors = ($outcomes | where error != "" | get error)
+    let sent = ($outcomes | where error == "" | get name)
+    { ok: ($errors | is-empty), errors: $errors, sent: $sent }
 }
